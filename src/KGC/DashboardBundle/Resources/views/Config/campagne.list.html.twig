@@ -1,0 +1,58 @@
+{# src/KGC/DashboardBundle/Resources/views/Config/sms.list.html.twig #}
+
+{% extends not app.request.isXmlHttpRequest() ? '::layout.html.twig' : '::emptylayout.html.twig' %}
+
+{% block body %}
+    {% embed '::widgetlayout.html.twig' %}
+        {% set widget_options = {
+            'titre' : 'Modèle de campagne',
+            'refresh' : '#config_campagne',
+            'no_padding' : true
+        } %}
+
+        {% block widget_main %}
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Nom</th>
+                        <th>Message</th>
+                        <th>Liste</th>
+                        <th><span>Actif</span></th>
+                        <th>Expéditeur</th>
+                        <th>&nbsp;</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for c in campagne %}
+                    <tr>
+                        <td>{{ c.name }}</td>
+                        <td>{{ c.text | truncate(500) | striptags }}</td>
+                        <td>{{ c.list ? c.list.formProperty() : '' }}</td>
+                        <td>
+                            <span class="label label-{{ c.archivage == 0 ? 'success' : 'danger' }}">{{ c.archivage == 0 ? 'OUI' : 'NON' }}</span>
+                        </td>
+                        <td>{{ c.sender }}</td>
+                        <td class="line-actions">
+                            <a href="#" class="valid-campagne-send btn btn-xs btn-success tooltip-success" role="button" title="" data-rel="tooltip" data-placement="left" data-original-title="Envoyer la campagne">
+                                <i class="icon-check"></i>
+                            </a>
+                            <a href="{{ path('kgc_config_campagne_send', {'id': c.id}) }}" class="valid-campagne-send-click hide modal-load btn btn-xs btn-success tooltip-success" role="button" title="" data-rel="tooltip" data-placement="left" data-original-title="Envoyer la campagne">
+                                <i class="icon-check"></i>
+                            </a>
+                            <a href="{{ path('kgc_config_campagne_edit', {'id': c.id}) }}" class="btn btn-xs btn-primary tooltip-primary modal-load" role="button" title="" data-rel="tooltip" data-placement="left" data-original-title="Éditer la campagne">
+                                <i class="icon-pencil"></i>
+                            </a>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        {% endblock widget_main %}
+
+        {% block widget_body_after %}
+        <a href="{{ path('kgc_config_campagne_edit') }}" class="btn btn-block modal-load" role="button" title="Ajouter un modèle de campagne">
+            <i class="icon-plus"></i> Ajouter un modèle de campagne
+        </a>
+        {% endblock %}
+    {% endembed %}
+{% endblock body %}

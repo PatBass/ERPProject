@@ -1,0 +1,24 @@
+{
+    "id": "user.json",
+    "title": "User schema",
+    "type": "object",
+    "properties": {
+        "id": {
+            "type": "integer"
+        },
+        "type": {
+            "type": "string"
+        },
+        "username": {
+            "type": "string"
+        },
+        "token": {
+            "type": "string"
+        },
+        "virtual_psychic": {
+            "type": ["object", "null"],
+            "$ref": "virtual_psychic.json"
+        }
+    },
+    "required": ["id", "token"]
+}

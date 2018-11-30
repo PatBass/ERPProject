@@ -1,0 +1,49 @@
+{# app/Ressources/views/modallayout.html.twig #}
+
+<div class="modal-dialog">
+    {% block modal_dialog_head %}{% endblock %}
+    <div class="modal-content">
+    {% block modal_content %}
+        {% block modal_header %}
+            <div class="modal-header {{ small|default(true) ? 'small-modal-header' }}">
+                {% if refresh is defined %}
+                    <button type="button" class="ajax_reload close" href="{{ refresh }}" title="Recharger">
+                        <i class="icon-refresh"></i>
+                    </button>
+                {% else%}
+                    <button type="button" class="close pull-right" data-dismiss="modal">&times;</button>
+                    {% if resetForm is defined %}
+                        <button type="button" style="margin-right: 10px" class="ajax_reset_form pull-right" title="Initialiser le formulaire">
+                            <i class="icon-refresh"></i>
+                        </button>
+                    {% endif %}
+                {% endif %}
+                <h4 class="blue bigger">{% block modal_title %}{{ title|default('') }}
+                    {% block link_modal_title %}{% if link is defined %}
+                    <a href="{{ link.url }}" class="modal-load" tile="{{ link.title|default('') }}">
+                        {% if link.icon is defined %}
+                        <i class="icon-{{ link.icon }}"></i>
+                        {% endif %}
+                        {{ link.txt }}
+                    </a>
+                    {% endif %}{% endblock %}
+                {% endblock %}</h4>
+            </div>
+        {% endblock modal_header %}
+        {% block modal_main %}
+            {% set modal_body_class = modal_body_class|default('') ~ ' modal-body overflow-visible' %}
+            <div class="{{ modal_body_class }}">
+                {% block modal_body %}
+
+                {% endblock modal_body %}
+            </div>
+
+            {% block modal_footer %}
+            <div class="modal-footer">
+                <button type="button" class="btn btn-sm btn-danger" data-dismiss="modal"><i class="icon-remove"></i> Fermer</button>
+            </div>
+            {% endblock modal_footer %}
+        {% endblock modal_main %}
+    {% endblock modal_content %}
+    </div>
+</div>

@@ -1,0 +1,12 @@
+{# src/KGC/DashboardBundle/Ressources/views/Dashboard/flashbags.html.twig #}
+
+<div class="hidden">
+    {% for flash in flashbag %}
+    <p class="gritter" data-title="{{ flash.titre }}" data-class="gritter-{{ flash.class }}" data-image="{{ app.request.getSchemeAndHttpHost() ~ asset(img_path ~ flash.img ~ '.png') }}">
+        {{ flash.msg }}
+    </p>
+    {% endfor %}
+    {% if modal is not null %}
+        <a class="modal-auto-load" href="{{ modal[0] }}"></a>
+    {% endif %}
+</div>

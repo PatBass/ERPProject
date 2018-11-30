@@ -1,0 +1,31 @@
+KGC\UserBundle\Entity\Utilisateur:
+    user_2:
+        username: 'standard'
+        plainText: 'standard'
+        mainProfil: @profil_4
+        profils: [@profil_4]
+    user_3:
+        username: 'phoniste'
+        plainText: 'phoniste'
+        mainProfil: @profil_2
+        profils: [@profil_2]
+    user_4:
+        username: 'voyant'
+        plainText: 'voyant'
+        mainProfil: @profil_3
+        profils: [@profil_3]
+    user_5:
+        username: 'admin'
+        plainText: 'admin'
+        mainProfil: @profil_5
+        profils: [@profil_5]
+    user_6:
+        username: 'qualite'
+        plainText: 'qualite'
+        mainProfil: @profil_6
+        profils: [@profil_6]
+    user_7:
+        username: 'impaye'
+        plainText: 'impaye'
+        mainProfil: @profil_7
+        profils: [@profil_7]

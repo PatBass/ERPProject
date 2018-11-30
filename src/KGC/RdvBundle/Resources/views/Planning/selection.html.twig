@@ -1,0 +1,79 @@
+{# src/KGC/RdvBundle/Resources/views/Planning/widget.html.twig #}
+
+{% extends '::emptylayout.html.twig' %}
+
+{% block body %}
+    {% if vue == 'inside_widget' %}
+    <div class="widget-toolbox">
+        <div class="toolbar form-inline">
+            <h5>Planning du</h5>
+            {{ form_widget(form.jour) }}
+            {{ form_widget(form.periode) }}
+            {{ form_widget(form._token) }}
+            <button id="planning_maj" class="btn btn-xs btn-default" type="button" data-href="{{ path('kgc_planning_selection', {'vue':'inside_widget'}) }}">
+                <i class="icon-repeat bigger-110"></i>
+                Actualiser
+            </button>
+        </div>
+    </div>
+    <div class="widget-main row">
+    {% else %}
+    <div class="row">
+        <div class="col-sm-4 col-sm-offset-1">
+            {{ form_widget(form.jour) }}
+        </div>
+        <div class="col-sm-3 col-sm-offset-1">
+            {{ form_widget(form.periode) }}
+            {{ form_widget(form._token) }}
+        </div>
+        <div class="pull-right" style="margin-right: 14px;">
+            <button id="planning_maj" class="btn btn-sm btn-default" type="button" data-href="{{ path('kgc_planning_selection') }}">
+                <i class="icon-repeat bigger-110"></i>
+                Actualiser
+            </button>
+        </div>
+    </div>
+    <div class="space"></div>
+    <div class="row">
+    {% endif %}
+
+        {% for horaire, tranche in planning %}
+            {% if loop.first %}
+        <div class="col-sm-6">
+            <table class="table table-striped table-bordered">
+            {% endif %}
+            {% if loop.index0 == loop.length/2 %}
+            </table>
+        </div>
+        <div class="col-sm-6">
+            <table  class="table table-striped table-bordered">
+            {% endif %}
+            {% if loop.index0 is even %}
+                <tr>
+            {% endif %}
+            {% set slots = constant('KGC\\RdvBundle\\Service\\PlanningService::NB_PLAGES') %}
+            {% if tranche.nb == slots %}
+                {% set color = "dark" %}
+            {% elseif tranche.nb > slots/2 %}
+                {% set color = "purple" %}
+            {% elseif tranche.nb > 0 %}
+                {% set color = "primary" %}
+            {% else %}
+                {% set color = "default" %}
+            {% endif %}
+                    <td><label for="horaire-{{ horaire }}" class="{{ color }}">
+                        <input id="horaire-{{ horaire }}" class="ace" type="radio" name="planning_horaire_selection" value="{{ tranche.value }}" {{ tranche.nb >= slots ? 'disabled' }} />
+                        <span class="lbl"> {{ horaire }}</span>
+                        <span class="pull-right indicateur">{{ tranche.nb }}</span>
+                    </label></td>
+            {% if loop.index0 is odd %}
+                </tr>
+            {% endif %}
+            {% if loop.last %}
+            </table>
+        </div>
+            {% endif %}
+        {% endfor %}
+    </div>
+
+{% endblock body %}

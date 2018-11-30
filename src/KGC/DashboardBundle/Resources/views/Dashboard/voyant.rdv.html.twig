@@ -1,0 +1,22 @@
+{# src/KGC/DashboardBundle/Ressources/views/Dashboard/voyant.html.twig #}
+
+{% extends "KGCDashboardBundle::layout.html.twig" %}
+
+{% block ariane %}
+    {% set fil = ['Tableau de bord Voyant'] %}
+    {{ parent() }}
+{% endblock %}
+
+{% block page_header %}
+    {% set infos = { 'titre':'Tableau de bord Voyant', 'desc':'Valider la consultation',} %}
+    {% set reload = { 'url':'#fiche_voyant' } %}
+    {{ parent()}}
+{% endblock %}
+
+{% block dashboard_body %}
+    <div class="row">
+        <div class="col-lg-12">
+            <form method="post" action="{{ path('kgc_rdv_effectuer', {id:rdv.id}) }}" class="ajax_load form-horizontal" id="fiche_voyant"></form>
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,55 @@
+{# src/KGC/UserBundle/Resources/views/Utilisateurs/ajouter.html.twig #}
+
+{% extends not app.request.isXmlHttpRequest() ? '::layout.html.twig' : '::emptylayout.html.twig' %}
+
+{% block body %}
+    {% embed '::modallayout.html.twig' %}
+        {% block modal_title %}
+            {{ modif ?'Modifier' :'Ajouter'}} un utilisateur{{ modif ? ' (Identifiant : '~user.id~')'}}
+        {% endblock %}
+
+        {% block modal_main %}
+            <form id="form_add_user" method="post" action="{{ path('kgc_user_modal_add',{'id': modif ? user.id : 0}) }}" {{ form_enctype(form) }} class="ajax_modal_form form-horizontal" data-refresh="#users_list" {{ close ? 'data-close="1"'}}>
+                {{ parent() }}
+                {{ form_widget(form._token) }}
+            </form>
+        {% endblock modal_main %}
+
+        {% block modal_body %}
+            <div class="row">
+                <div class="col-xs-12">
+                {% if not close and app.session.flashbag.get('info') is defined %}
+                    {% for message in app.session.flashbag.get('success') %}
+                        <p class="alert alert-success">{{ message|raw }}</p>
+                    {% endfor %}
+                {% endif %}
+                {% if not form.vars.valid %}
+                    <p class="alert alert-danger">L&#039;utilisateur n&#039;a pas été enregistré</p>
+                {% endif %}
+                </div>
+            </div>
+            {{ form_row(form.username, {'label':'Identifiant de connexion','label_attr':{'class':'col-xs-5'},'controls_size':'col-xs-6'}) }}
+            {{ form_row(form.password, {'label':'Mot de passe','label_attr':{'class':'col-xs-5'},'controls_size':'col-xs-6'}) }}
+            {{ form_row(form.sexe, {'label':'Sexe','label_attr':{'class':'col-xs-5'},'controls_size':'col-xs-6'}) }}
+            {{ form_row(form.chatType, {'label':'Type de chat','label_attr':{'class':'col-xs-5'},'controls_size':'col-xs-6'}) }}
+            {{ form_row(form.mainProfil, {'label':'Profil du tableau de bord','label_attr':{'class':'col-xs-5'},'controls_size':'col-xs-6'}) }}
+            {{ form_row(form.profils, {'label':'Profils','label_attr':{'class':'col-xs-5'},'controls_size':'col-xs-6'}) }}
+            <div class="form-group row">
+                <label class="col-xs-5 control-label required" for="kgc_userbundle_utilisateur_mainprofil">
+                    Actif
+                </label>
+                <div class="controls col-xs-6 ">
+                    {{ form_widget(form.actif) }}
+                </div>
+            </div>
+        {% endblock %}
+
+        {% block modal_footer %}
+            <div class="modal-footer">
+                <button type="button" class="btn btn-sm" data-dismiss="modal"><i class="icon-remove"></i> Annuler</button>
+                <button type="submit" class="btn btn-sm btn-primary"><i class="icon-ok"></i> Enregistrer</button>
+                {{ form_widget(form.fermeture, {'label':" Fermer automatiquement la fiche sʼil n'y a pas d'erreur", 'attr':{'style':'float: left; font-size: 80%'} }) }}
+            </div>
+        {% endblock %}
+    {% endembed %}
+{% endblock body %}

@@ -1,0 +1,50 @@
+{# src/KGC/StatBundle/Ressources/views/Admin/unpaids.html.twig #}
+
+{% extends not app.request.isXmlHttpRequest() ? '::layout.html.twig' : '::emptylayout.html.twig' %}
+
+{% block body %}
+
+<div class="widget-box">
+    <div class="widget-header header-color-blue3 widget-header-small">
+        <h5>
+            <a href="#" data-action="collapse">
+                <i class="icon-chevron-up"></i>
+                Impayés<b></b>
+            </a>
+        </h5>
+    </div>
+    <div class="widget-body stat-admin-unpaid">
+        <div class="widget-main no-padding">
+            <div class="row center" style="padding: 6px 0; margin:0">
+                <div class="col-md-6">
+                    {{ form_widget(form.past_date) }}
+                </div>
+                <div class="col-md-6">
+                    <button type="submit" class="btn btn-success btn-block btn-sm">
+                        <i class="icon-arrow-right"></i> Appliquer
+                    </button>
+                </div>
+            </div>
+            <table class="table table-striped table-condensed">
+                <thead>
+                <tr>
+                    <th>&nbsp</th>
+                    {%  for headers,values in unpaid | first %}
+                        <th class="{{ headers == 'now'|date('m/Y') ? 'current' }}">{{ headers }}</th>
+                    {% endfor %}
+                </tr>
+                </thead>
+                <tbody>
+                {%  for type, values in unpaid %}
+                    <tr>
+                        <td>{{ type }}</td>
+                        {%  for headers, v in values %}
+                            <td class="{{ headers == 'now'|date('m/Y') ? 'current' }}">{{ v | number_format(2, ',', ' ') }} </td>
+                        {% endfor %}
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock body %}

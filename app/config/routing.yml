@@ -1,0 +1,46 @@
+# app/config/routing.yml
+
+login:
+    pattern:   /login
+    defaults:  { _controller: KGCUserBundle:Security:login }
+
+login_check:
+    pattern:   /login_check
+
+chat_api_login_check:
+    path: /chat/api/login_check
+
+logout:
+    pattern:   /logout
+
+kgc_homepage:
+    pattern:  /
+    defaults: { _controller: KGCDashboardBundle:Dashboard:index }
+
+kgc_dashboard:
+    resource: "@KGCDashboardBundle/Resources/config/routing.yml"
+    prefix:   /
+
+kgc_client:
+    resource: "@KGCClientBundle/Resources/config/routing.yml"
+    prefix:   /client
+
+kgc_user:
+    resource: "@KGCUserBundle/Resources/config/routing.yml"
+    prefix:   /user
+
+kgc_consultation:
+    resource: "@KGCRdvBundle/Resources/config/routing.yml"
+    prefix:   /rdv
+
+kgc_stat:
+    resource: "@KGCStatBundle/Resources/config/routing.yml"
+    prefix:   /stat
+
+kgc_chat:
+    resource: "@KGCChatBundle/Resources/config/routing.yml"
+    prefix: /chat
+
+kgc_payment:
+    resource: "@KGCPaymentBundle/Resources/config/routing.yml"
+    prefix: /payment

@@ -1,0 +1,82 @@
+{# src/KGC/RdvBundle/Ressources/views/Telecollecte/widget.html.twig #}
+
+{% extends not app.request.isXmlHttpRequest() ? '::layout.html.twig' : '::emptylayout.html.twig' %}
+
+{% block body %}
+    {% embed '::widgetlayout.html.twig' %}
+        
+        {% set widget_options = {
+            'titre' : 'Pointage Télécollectes',
+            'header_class' : 'header-color-blue2',
+            'refresh' : '#admin_telecollectes',
+            'collapse' : true,
+            'no_padding' : true
+        } %}
+        
+        {% block widget_toolbar %}
+            <div class="widget-toolbar no-border">
+                <a href="{{ path('kgc_telecollecte_ajouter') }}" class="btn btn-success modal-load" style="padding: 0px 20px; border-width: 3px; margin-right: 0px; margin-bottom: 1px;"> <i class="icon-plus"></i> Ajouter</a>
+            </div>
+        {% endblock %}
+
+        
+        {% block widget_body %}
+            <div class="widget-toolbox">
+                <div class="toolbar form-inline">
+                    <h5>Période :</h5>
+                    {{ form_widget(form.past_date) }}
+                    <h5> TPE :</h5>
+                    {{ form_widget(form.tpe) }}
+                    
+                    {{ form_widget(form._token) }}
+                    <button type="submit" class="btn btn-info btn-xs">
+                        <i class="icon-arrow-right"></i> Appliquer
+                    </button>
+                </div>
+            </div>
+            
+            {{ parent() }}
+        {% endblock %}
+        
+        {% block widget_main %}
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Télé-collecte 1</th>
+                        <th>Télé-collecte 2</th>
+                        <th>Télé-collecte 3</th>
+                        <th>Total</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {%  for tlc in data %}
+                    <tr>
+                        <td>{{ tlc.date|date('d/m/Y') }}</td>
+                        <td>{{ tlc.amountOne|number_format(2, ',', ' ') }}</td>
+                        <td>{{ tlc.amountTwo|number_format(2, ',', ' ') }}</td>
+                        <td>{{ tlc.amountThree|number_format(2, ',', ' ') }}</td>
+                        <td>{{ tlc.total|number_format(2, ',', ' ') }}</td>
+                        <td>
+                            <a href="{{ path('kgc_telecollecte_ajouter', { 'id': tlc.id }) }}" role="button" class="btn btn-xs btn-warning modal-load" title="Modifier">
+                                <i class="icon-pencil bigger-120"></i> Modifier
+                            </a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Télé-collecte 1</th>
+                        <th>Télé-collecte 2</th>
+                        <th>Télé-collecte 3</th>
+                        <th>Total</th>
+                        <th></th>
+                    </tr>
+                </thead>
+            </table>
+        {% endblock %}
+    {% endembed %}
+{% endblock body %}

@@ -1,0 +1,54 @@
+{# src/KGC/DashboardBundle/Resources/views/Config/formurl.list.html.twig #}
+
+{% extends not app.request.isXmlHttpRequest() ? '::layout.html.twig' : '::emptylayout.html.twig' %}
+
+{% block body %}
+    {% embed '::widgetlayout.html.twig' %}
+        {% set widget_options = {
+            'titre' : 'Url des formulaires',
+            'refresh' : '#config_formurl',
+            'collapse' : true,
+            'no_padding' : true
+        } %}
+
+        {% block widget_main %}
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>Label</th>
+                        <th>Site</th>
+                        <th>Source</th>
+                        <th>&nbsp;</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for o in objects %}
+                    <tr>
+                        <td>{{ o.id }}</td>
+                        <td>{{ o.label }}</td>
+                        <td>{{ o.website.libelle }}</td>
+                        <td>{{ o.source is not null ? o.source.label }}</td>
+                        <td class="line-actions">
+                            <a href="http://{{ o.website.url }}/{{ o.label }}" class="btn btn-xs btn-inverse tooltip-inverse"
+                               role="button" title="Accéder au formulaire" data-rel="tooltip" data-placement="left" target="_blank">
+                                <i class="icon-link"></i>
+                            </a>
+                            <a href="{{ path('kgc_config_formurl_edit', {'id': o.id}) }}" class="btn btn-xs btn-primary tooltip-primary modal-load"
+                               role="button" title="Éditer" data-rel="tooltip" data-placement="left">
+                                <i class="icon-pencil"></i>
+                            </a>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        {% endblock widget_main %}
+
+        {% block widget_body_after %}
+            <a href="{{ path('kgc_config_formurl_edit') }}" class="btn btn-block modal-load" role="button" title="Ajouter une source">
+                <i class="icon-plus"></i> Ajouter une URL de formulaire
+            </a>
+        {% endblock %}
+    {% endembed %}
+{% endblock body %}

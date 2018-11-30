@@ -1,0 +1,36 @@
+## src/KGC/ClientBundle/DataFixtures/ORM/website.yml
+
+KGC\ClientBundle\Entity\Website:
+    website1:
+        libelle: MyAstro
+        url: www.myastro.fr
+    website2:
+        libelle: Ascendant Astrologique
+        url: ascendant-astrologique.net
+    website3:
+        libelle: Tirage Tarot Gratuit
+        url: tirage-tarots-gratuit.net
+    website4:
+        libelle: Horoscope de la semaine
+        url: horoscope-de-la-semaine.net
+    website5:
+        libelle: Medium Serieux
+        url: medium-serieux.net
+    website6:
+        libelle: Voyant Virtuel
+        url: voyant-virtuel.com
+    website7:
+        libelle: Numérologie Gratuite
+        url: numerologie-gratuite.com
+    website8:
+        libelle: Voyance par Tchat
+        url: voyance-par-tchat.com
+    website9:
+        libelle: Voyance virtuelle
+        url: www.voyance-virtuelle.eu
+    website9:
+        libelle: Voyance virtuelle
+        url: www.voyance-virtuelle.eu
+    website10:
+        libelle: Axelle voyance
+        url: www.axelle-voyance.com

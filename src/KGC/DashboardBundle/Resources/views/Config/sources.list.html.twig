@@ -1,0 +1,85 @@
+{# src/KGC/DashboardBundle/Resources/views/Config/sources.list.html.twig #}
+
+{% extends not app.request.isXmlHttpRequest() ? '::layout.html.twig' : '::emptylayout.html.twig' %}
+
+{% block body %}
+    {% embed '::widgetlayout.html.twig' %}
+        {% set widget_options = {
+            'titre' : 'Sources',
+            'refresh' : '#config_sources',
+            'collapse' : true,
+            'no_padding' : true
+        } %}
+
+        {% block widget_main %}
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>Label</th>
+                        <th>Code</th>
+                        <th>Gclid</th>
+                        <th>Affiliation</th>
+                        <th>Actif</th>
+                        <th>Inactif depuis</th>
+                        <th>Sites</th>
+                        <th>&nbsp;</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for o in objects %}
+                    <tr>
+                        <td>{{ o.id }}</td>
+                        <td>{{ o.label }}</td>
+                        <td>{{ o.code }}</td>
+                        <td>
+                            {% if o.hasGclid == 0 %}
+                                <span class="label label-default">Non</span>
+                            {% else %}
+                                <span class="label label-success">Oui</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if o.affiliateAllowed == 0 %}
+                                <span class="label label-default">Non</span>
+                            {% else %}
+                                <span class="label label-success">Oui</span>
+                            {% endif %}
+                        </td>
+                        </td>
+                        <td>
+                            {% if o.enabled == 0 %}
+                                <span class="label label-danger">Non</span>
+                            {% else %}
+                                <span class="label label-success">Oui</span>
+                            {% endif %}
+                        </td>
+                        <td>{{ o.disabledDate != null ? o.disabledDate | date('d/m/Y') }}</td>
+                        <td>
+                            {% for website in o.websites %}
+                                {{ website.libelle ~ (loop.last ? '' : ', ' ) }}
+                            {% endfor %}
+                        </td>
+                        <td class="line-actions">
+                            <a href="{{ path('kgc_config_source_edit', {'id': o.id}) }}" class="btn btn-xs btn-primary tooltip-primary modal-load"
+                               role="button" title="Éditer" data-rel="tooltip" data-placement="left">
+                                <i class="icon-pencil"></i>
+                            </a>
+                            <a href="{{ path('kgc_config_source_state', {'id': o.id}) }}" class="btn btn-xs {{ o.enabled ? 'btn-purple tooltip-purple' : 'btn-info tooltip-info' }} gritter-load" data-refresh="#config_sources"
+                               role="button" title="{{ o.enabled ? 'Désactiver' : 'Activer' }}" data-rel="tooltip" data-placement="left">
+                                <i class="icon-{{ o.enabled ? 'ban-circle' : 'circle-blank' }}"></i>
+                            </a>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        {% endblock widget_main %}
+
+        {% block widget_body_after %}
+            <a href="{{ path('kgc_config_source_edit') }}" class="btn btn-block modal-load" role="button" title="Ajouter une source">
+                <i class="icon-plus"></i> Ajouter une source
+            </a>
+        {% endblock %}
+    {% endembed %}
+{% endblock body %}

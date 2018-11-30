@@ -1,0 +1,53 @@
+{# src/KGC/DashboardBundle/Resources/views/Qualite/index.html.twig #}
+
+{% extends "KGCDashboardBundle::layout.html.twig" %}
+
+{% block ariane %}
+    {% set fil = ['Informations','Clients'] %}
+    {{ parent() }}
+{% endblock %}
+
+{% block page_header %}
+    <div class="page-header">
+        <h1>
+            Client {{ client.email }}
+        </h1>
+    </div>
+{% endblock %}
+
+{% block dashboard_body %}
+    <div class="row">
+        <div class="col-lg-12">
+            <div action="{{ path('kgc_clients_chat_show', {id:client.id}) }}" class="ajax_load"></form>
+        </div>
+    </div>
+{% endblock %}
+
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript">
+    (function($){
+        $(document).ready(function(){
+
+            $(document).on('click', '.js-history-show', function(ev){
+                ev.preventDefault();
+                ev.stopPropagation();
+                var href = $(this).data('room-href');
+                var target$ = $('.js-history-target');
+
+                $.ajax({
+                    url: href,
+                    type: 'POST',
+                    beforeSend: function(){
+                        target$.html($('#loading').html());
+                    },
+                    success: function(data){
+                        target$.html(data);
+                    }
+               });
+            });
+        });
+    })(jQuery);
+    </script>
+{% endblock %}

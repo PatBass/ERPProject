@@ -1,0 +1,49 @@
+{% extends not app.request.isXmlHttpRequest() ? '::layout.html.twig' : '::emptylayout.html.twig' %}
+
+{% block body %}
+    {% embed '::modallayout.html.twig' %}
+        {% block modal_header %}
+            {% if list.nbSent > 0 %}
+                <div class="alert" style="background-color: #87b87f">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <strong><i class="icon-warning-sign"></i> Succès</strong>
+                </div>
+            {% else %}
+                <div class="alert" style="background-color: #f2dede">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <strong class=" text-danger"><i class="icon-warning-sign"></i> Erreur</strong>
+                </div>
+            {% endif %}
+        {% endblock %}
+        {% block modal_body %}
+            {% if list.nbSent > 0 %}
+                <div class="row">
+                    <div class="col-lg-12 text-success">
+                        {{ list.nbSent }} SMS envoyés
+                    </div>
+                </div>
+            {% endif %}
+            {% if list.nbError > 0 %}
+                <div class="row">
+                    <div class="col-lg-12 text-danger">
+                        {{ list.nbError }} SMS non envoyés
+                    </div>
+                </div>
+                <ul>
+                {% for array in list.errors %}
+                    <li class="text-danger">
+                        {{ array.fullname }} ({{ array.phone }})
+                    </li>
+                {% endfor %}
+                </ul>
+            {% endif %}
+        {% endblock modal_body %}
+        {% block modal_footer %}
+            <div class="modal-footer">
+                <a class="btn btn-sm btn-danger pull-right" title="Fermer" data-dismiss="modal">
+                    <i class="icon-remove"></i> Fermer
+                </a>
+            </div>
+        {% endblock modal_footer %}
+    {% endembed %}
+{% endblock %}

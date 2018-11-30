@@ -1,0 +1,57 @@
+{# src/KGC/RdvBundle/Resources/views/Consultation/fiche.modal.html.twig #}
+
+{% extends not app.request.isXmlHttpRequest() and not forceEmpty ? '::layout.html.twig' : '::emptylayout.html.twig' %}
+
+{% block body %}
+    {% embed '::modallayout.html.twig' %}
+        {% import 'KGCUserBundle:Prospect:blocsficheProspect.html.twig' as fiche %}
+
+        {% block modal_header %}
+            {{ fiche.rdv_form_header(prospect, true) }}
+        {% endblock %}
+
+        {% block modal_main %}
+            {% if form %}
+                <form id="form_fiche_prospect" method="post" action="{{ consultation?path('kgc_landinguser_consultation_fiche',{'id':prospect.id}):path('kgc_landinguser_fiche', {'id':prospect.id}) }}" {{ form_enctype(form) }}
+                        class="{{ app.request.isXmlHttpRequest() ? 'ajax_modal_form' }} form-horizontal" {{ close ? 'data-close="1"' }}>
+                    {% set modal_body_class = 'fiche' %}
+                    {{ parent() }}
+                    {{ form_widget(form._token) }}
+                    {{ form_edit ? form_widget(form_edit._token) }}
+                </form>
+                {# les flashbags sont générés dans le layout général (empty ou html) #}
+            {% else %}
+                {{ parent() }}
+            {% endif %}
+        {% endblock modal_main %}
+
+        {% block modal_body %}
+            {% if form %}
+                {% if not form.vars.valid %}
+                    <p class="alert alert-danger">{{ form_errors(form) }}</p>
+                {% endif %}
+                {% set options_prospect = { 'prospect':prospect, 'form':form, 'form_edit':form_edit,'linkEntities':linkEntities } %}
+                <div class="row">
+                    <div class="col-lg-7">
+                        {{ fiche.prospect(options_prospect) }}
+                    </div>
+                    <div class="col-lg-5">
+                        {{ fiche.tracking(options_prospect) }}
+                        {{ fiche.consultation(options_prospect) }}
+                    </div>
+                </div>
+            {% else %}
+                <p class="alert alert-danger">La fiche demandée nʼa pas été trouvée. Il s'agit sûrement dʼun lien erroné.</p>
+            {% endif %}
+        {% endblock modal_body %}
+
+        {% block modal_footer %}
+            {% if not form %}
+                {{ parent() }}
+            {% else %}
+                {{ fiche.rdv_form_footer({'form':form,'no_close':dont_close|default(false),'options':options,'cochefermeture':true}) }}
+            {% endif %}
+        {% endblock %}
+
+    {% endembed %}
+{% endblock %}

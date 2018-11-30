@@ -1,0 +1,431 @@
+{# src/KGC/DashboardBundle/Ressources/views/Dashboard/version.html.twig #}
+
+{% extends "::modallayout.html.twig" %}
+
+{% block modal_title %}Notes de version{% endblock %}
+
+{% block modal_footer %}
+    <div class="modal-footer">
+        <button type="button" class="btn btn-sm btn-danger pull-right" data-dismiss="modal"><i class="icon-remove"></i> Fermer</button>
+        <ul class="pagination pull-left no-margin">
+            <li class="active"><a href="#version-page1" data-toggle="tab">1</a></li>
+            <li><a href="#version-page2" data-toggle="tab">2</a></li>
+            <li><a href="#version-page3" data-toggle="tab">3</a></li>
+            <li><a href="#version-page4" data-toggle="tab">4</a></li>
+            <li><a href="#version-page5" data-toggle="tab">5</a></li>
+            <li><a href="#version-page6" data-toggle="tab">6</a></li>
+        </ul>
+    </div>
+{% endblock modal_footer %}
+
+{% set modal_body_class = "tab-content no-border" %}
+{% block modal_body %}
+    <div id="version-page1" class="tab-pane no-padding active">
+        <table class="table table-striped versionning">
+            <tr>
+                <th>11/06/15</th>
+                <td>
+                    <ul class="ajout">
+                        <li>Interface Qualité :
+                            <ul>
+                                <li>Ajout de blocs filtrables par voyant et par intervalle de date
+                                    <ul>
+                                        <li>Liste des consultations de la veille</li>
+                                        <li>Liste des suivis du jour</li>
+                                    </ul>
+                                </li>
+                                <li>Ajout des données de « Suivi Qualité » (Bilan, Notes, Avis du client, État du suivi).</li>
+                                <li>Lorsque le rappel est « Accepté » ou « Non confirmé », on est redirigé ver le formulaire de Duplication afin de créer la fiche du suivi.</li>
+                            </ul>
+                        </li>
+                        <li>Ajout de la Page de « Recherche Avancée » intégrant elasticsearch.
+                            <ul>
+                                <li>Les résultats peuvent être exportés en csv par un administrateur.</li>
+                            </ul>
+                        </li>
+                        <li>La page « Tracking » permet dʼaccéder à une liste de consultations pour lesquelles lʼidastro nʼest pas renseigné ou est faux.</li>
+                        <li>La validité du numéro de carte bancaire est vérifiée au remplissage du champs, mais nʼempêche pas lʼenregistrement de la fiche.</li>
+                    </ul>
+                    <ul class="modification">
+                        <li>Les consultations qui ont duré plus de 30 minutes doivent forcément avoir une date de rappel programmée.</li>
+                        <li>Améliorations ergonomiques du formulaire dʼajout de consultation.</li>
+                        <li>Les listes dʼutilisateurs ne proposent plus que les utilisateurs actifs.</li>
+                    </ul>
+                </td>
+            </tr>
+            <tr>
+                <th>25/05/15</th>
+                <td>
+                    <ul class="ajout">
+                        <li>Interface Voyant :
+                            <ul>
+                                <li>Ajout de la prise de notes détaillée.</li>
+                                <li>Possibilité dʼouvrir ses fiches consultations et dʼen modifier la prise de notes.</li>
+                                <li>Accès à lʼhistorique des prises de notes du client.</li>
+                            </ul>
+                        </li>
+                        <li>Ajout dʼun second numéro de téléphone.</li>
+                        <li>Calcul de lʼage et du signe astrologique du client.</li>
+                        <li>Possibilité de définir le « Moyen de Paiement » et le TPE par encaissement.</li>
+                    </ul>
+                    <ul class="modification">
+                        <li>Les données de consultations (bloc haut droit de la fiche) sont éditables.</li>
+                        <li>Le code tarification se présente sous forme de liste de choix prédéfinis.</li>
+                        <li>Les voyants nʼont plus accès aux étiquettes.</li>
+                    </ul>
+                </td>
+            </tr>
+            <tr>
+                <th>30/04/15</th>
+                <td>
+                    <ul class="ajout">
+                        <li>Annulation :
+                            <ul>
+                                <li>Les voyants peuvent annuler et reporter les consultations depuis lʼinterface de prise en charge.</li>
+                                <li>Ajout dʼun bloc standard listant les dernières consultations annulées.</li>
+                                <li>À lʼannulation, les fiches doivent être classées selon les raisons dʼannulation.</li>
+                            </ul>
+                        </li>
+                        <li>Possibilité pour les voyants, de mettre en pause une consultation commencée afin de la terminer plus tard</li>
+                        <li>Possibilité au standard de réactiver une fiche annulée de moins de 5 jours (client NRP qui rappelle de lui même, ...).</li>
+                        <li>Les voyants ont deux nouveaux modules permettant de rechercher parmis les fiches quʼils ont traitées.</li>
+                        <li>Un encaissement « Fait » peut être passé en « Oppo ». La consultation est alors déclôturée et déplacée dans le dossier « Oppositions » du tiroir « IMPAYES ».</li>
+                    </ul>
+                    <ul class="modification">
+                        <li>À la mise en relation, le standard définit le compte voyant physique pouvant prendre en charge la consultation.</li>
+                        <li>Les voyants nʼont dans leur planning que les consultations qui leur ont été affectées par le standard.</li>
+                    </ul>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div id="version-page2" class="tab-pane no-padding">
+        <table class="table table-striped versionning">
+            <tr>
+                <th>26/02/15</th>
+                <td>
+                    <ul class="ajout">
+                        <li>Le site web dʼorigine de la consultation doit être indiqué dans la fiche. Les clients ont désormais un idastro par site.</li>
+                    </ul>
+                    <ul class="correction">
+                        <li>On peut modifier désormais les données du client et son idAstro depuis tous les formulaires où les champs sont disponibles.</li>
+                    </ul>
+                </td>
+            </tr>
+            <tr>
+                <th>30/01/15</th>
+                <td>
+                    <ul class="ajout">
+                        <li>Le bloc « Dernières consultations effectuées » sur le tableau de bord du standard répertorie les huit dernières consultations prises en charge par un voyant.</li>
+                    </ul>
+                    <ul class="modification">
+                        <li>Amélioration du formulaire de Classement des fiches.</li>
+                        <li>Conversion de la contrainte de validation « La somme des encaissements ne correspond pas au montant de la consultation » en avertissement. Le message apparait désormais au dessus de la fiche mais nʼempêche aucune modification ou fermeture de fiche.</li>
+                        <li>Lʼoption de fermeture automatique est disponible pour le formulaire dʼencaissement. Elle ferme la fiche et actualise les blocs du tableau de bord potentiellemnt impactés si lʼencaissement est validé. Sinon, il y a toujours une redirection vers la fiche.</li>
+                    </ul>
+                </td>
+            </tr>
+            <tr>
+                <th>22/01/15</th>
+                <td>
+                    <ul class="attention">
+                        <li>Le tiroir « FNA » à été renommé en « IMPAYE » et un dossier « FNA » à été créé dans ce tiroir.</li>
+                    </ul>
+                    <ul class="ajout">
+                        <li>Affichage de la date de la dernière action enregistrée sur la fiche ainsi que son commentaire dans lʼinterface « Impayés ».</li>
+                    </ul>
+                    <ul class="modification">
+                        <li>La liste des encaissements en impayé du jour est triée par ordre alphabétique sur le nom du client.</li>
+                        <li>Une fois validée par le voyant, les fiches sont automatiquement déplacées dans le tiroir « IMPAYES ».</li>
+                    </ul>
+                    <ul class="correction">
+                        <li>Interface « Impayés ».
+                            <ul>
+                                <li>Date du prochain encaissement planifié désignait le dernier encaissement.</li>
+                                <li>Tri sur les champs de date.</li>
+                            </ul>
+                        </li>
+                    </ul>
+                </td>
+            </tr>
+            <tr>
+                <th>19/01/15</th>
+                <td>
+                    <ul class="ajout">
+                        <li>Page « Impayés » permettant de rechercher, visualiser toutes les fiches du tiroir « FNA » ainsi que des dossiers sous-jacents.</li>
+                    </ul>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div id="version-page3" class="tab-pane no-padding">
+        <table class="table table-striped versionning">
+            <tr>
+                <th>19/12/14</th>
+                <td>
+                    <ul class="correction">
+                        <li>Formulaire « Dupliquer ».</li>
+                        <li>Modification de la Tarification.</li>
+                        <li>Il est possible de modifier les encaissements dʼune fiche en « Impayé à vie » (état Litige).</li>
+                        <li>La mise à jour de lʼIdmyastro est répercutée par client sur toutes ses consultations, y compris dans la synchronisation avec Myastro.</li>
+                    </ul>
+                </td>
+            </tr>
+            <tr>
+                <th width="70px">17/12/14</th>
+                <td>
+                    <ul class="ajout">
+                        <li>Il est possible de désactiver des supports afin quʼils nʼapparaissent plus dans la liste.</li>
+                        <li>La mise à jour de lʼIdmyastro ou du montant de la consultation est désormais propagée sur Myastro afin synchroniser les données et fournir des statistiques plus justes.</li>
+                    </ul>
+                    <ul class="modification">
+                        <li>Le code promo est indépendant du support « Mailing ». Quel que soit le support, on pourra enregistrer un code promo.</li>
+                        <li>Les Idastros des mini-sites sont correctement enregistrés.</li>
+                    </ul>
+                    <ul class="correction">
+                        <li>On peut classer une fiche même si les encaissements ne sont pas à jour.</li>
+                    </ul>
+                </td>
+            </tr>
+            <tr>
+                <th width="70px">09/12/14</th>
+                <td>
+                    <ul class="ajout">
+                        <li>Bloc « Rechercher » :
+                            <ul>
+                                <li>Recherche par adresse mail lorsquʼun « @ » est détecté.</li>
+                                <li>Les résultats sont désormais triés par ordre alphabétique dʼaprès le nom et le prénom puis de la consultation la plus récente à la plus ancienne.</li>
+                            </ul>
+                        </li>
+                        <li>Interface :
+                            <ul>
+                                <li>Le menu crayon du bloc « Consultation » de la fiche est supprimé. Les liens disponibles sont placés à droite de la fiche.</li>
+                                <li>Dans le visuel des encaissements dʼune consultation, un bouton permettant dʼaccéder au formulaire de traitement de lʼencaissement à été rajouté aux encaissements prévus.</li>
+                            </ul>
+                        </li>
+                        <li>Classement des fiches :
+                            <ul>
+                                <li>Toutes les fiches sont automatiquement rangées dans un tiroir (EN COURS - FNA - ARCH). Cʼest lʼapplication qui gère le passage dʼun tiroir à lʼautre.</li>
+                                <li>Depuis ce tiroir, les fiches peuvent être classées dans un dossier afin dʼaffiner le classement.</li>
+                                <li>Lʼaction « Classer » du menu de la fiche permet de modifier le dossier.</li>
+                                <li>Enfin, les étiquettes permettent dʼajouter des informations liées au traitement de la fiche. À la manière des commentaires, elles peuvent $etre ajoutées, enlevées à tout moment et par tous les intervenants depuis la fiche. Seulement, toutes les étiquettes ne sont pas disponibles à tous les profils.</li>
+                            </ul>
+                        </li>
+                        <li>Impayé à vie : Depuis le formulaire « Classer », il est possible de marquer la fiche comme « Impayé à vie » : elle passe à lʼétat « Litige » et lʼicone « Encaissement » devient rouge.</li>
+                    </ul>
+                    <ul class="modification">
+                        <li>Lʼidmyastro est désormais rattaché au client. Ainsi, lorsquʼun idmyastro est retrouvé et modifié dans la fiche dʼune consultation, il est modifié pour toutes les autres consultations du même client.</li>
+                        <li>Les voyants ont de nouveau accès au numéro de téléphone du client.</li>
+                    </ul>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div id="version-page4" class="tab-pane no-padding">
+        <table class="table table-striped versionning">
+            <tr>
+                <th width="70px">09/10/14</th>
+                <td>
+                    <ul class="correction">
+                        <li>Bloc « Rechercher » :
+                            <ul>
+                                <li>il est de nouveau possible de rechercher par nom, prénom ou numéro de carte bancaire (quand il nʼy a que des chiffres et des tirets).</li>
+                            </ul>
+                        </li>
+                    </ul>
+                </td>
+            </tr>
+            <tr>
+                <th width="70px">03/10/14</th>
+                <td>
+                    <ul class="correction">
+                        <li>Au phoning, le propriétaire de la consultation nʼétait parfois pas enregistré correctement.</li>
+                    </ul>
+                </td>
+            </tr>
+            <tr>
+                <th width="70px">01/10/14</th>
+                <td>
+                    <ul class="attention">
+                        <li>Les voyants ne voient plus le numéro de téléphone du client, cʼest au standard de transférer les appels.</li>
+                    </ul>
+                    <ul class="ajout">
+                        <li>Dans lʼimport, on peut choisir de passer une fiche : elle sera définitivement supprimée plus du tout rechargée dans lʼinterface.</li>
+                        <li>La progression dans lʼimport des fiches du dossier est affichée en haut à droite.</li>
+                        <li>Le code de campagne mail peut être enregistré sur support « Mailing ».</li>
+                    </ul>
+                </td>
+            </tr>
+            <tr>
+                <th width="70px">19/09/14</th>
+                <td>
+                    <ul class="attention">
+                        <li>Les consultations de Suivi Client obtenues par les voyants peuvent être ajoutées par le standard ; il faut renseigner « Suivi Client » en support et attribuer la consultation au voyant concerné (champs « propriétaire »).</li>
+                    </ul>
+                    <ul class="ajout">
+                        <li>Lʼicone « encaissements » de lʼaperçu de lʼétat de la fiche apparait en gris pour les consultations gratuites.</li>
+                        <li>La duplication de fiche arrive dans le menu crayon du bloc « consultation ». Elle permet dʼajouter une nouvelle consultation en conservant toutes les coordonnées du client (dont les cartes bancaires). Il faudra alors choisir une date, un support et le propriétaire de la consultation.<br>Cette nouvelle consultation redémarre un cycle de vie normal et indépendant de la consultation dʼorigine.</li>
+                    </ul>
+                    <ul class="modification">
+                        <li>Au standard, lors de lʼajout dʼune consultation, il est possible de définir qui en est propriétaire.</li>
+                        <li>Les notifications restent affichées, le bouton violet de la barre de titre permet de toutes les effacer dʼun clic.</li>
+                    </ul>
+                    <ul class="correction">
+                        <li>Affiliation des clients aux consultations lors de modifications des données clients (nom, prénom ou date de naissance).</li>
+                    </ul>
+                </td>
+            </tr>
+            <tr>
+                <th width="70px">09/09/14</th>
+                <td>
+                    <ul class="modification">
+                        <li>Refonte de la gestion des utilisateurs (formulaires dʼajout et de modification).</li>
+                    </ul>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div id="version-page5" class="tab-pane no-padding">
+        <table class="table table-striped versionning">
+            <tr>
+                <th width="70px">08/09/14</th>
+                <td>
+                    <ul class="attention">
+                        <li>Il nʼest pas possible de supprimer directement depuis la fiche un encaissement enregistré (le bouton « supprimer » à droite est désactivé). Pour simuler ce comportement vous devez modifier son montant par zéro.</li>
+                    </ul>
+                    <ul class="ajout">
+                        <li>Lʼétat de lʼencaissement est symbolisé par la couleur de fond de la ligne dʼencaissement lors de la modification.</li>
+                    </ul>
+                    <ul class="modification">
+                        <li>Les noms, prénoms et adresses mails sont formatés automatiquement en majuscules/minuscules.</li>
+                    </ul>
+                    <ul class="correction">
+                        <li>Traitement des encaissements : il était parfois impossible dʼajouter de nouveaux encaissements.</li>
+                        <li>Le montant et la date des encaissements prévus est modifiable.</li>
+                    </ul>
+                </td>
+            </tr>
+            <tr>
+                <th width="70px">03/09/14</th>
+                <td>
+                    <ul class="correction">
+                        <li>Affichage du calendrier de sélection de date pour tous les champs et Chrome.</li>
+                        <li>Sous certaines conditions, la modification des encaissements était bloquée car ceux ci apparaissaient en double dans la fiche.</li>
+                        <li>il nʼest plus possible dʼouvrir le formulaire de traitement dʼun encaissement déjà traité.</li>
+                    </ul>
+                </td>
+            </tr>
+            <tr>
+                <th width="70px">28/08/14</th>
+                <td>
+                    <ul class="ajout">
+                        <li>Import des anciennes fiches Excel.</li>
+                    </ul>
+                    <ul class="modification">
+                        <li>Les encaissements à 0 ne sont pas enregistrés.</li>
+                        <li>Fonctionnalités dʼinterface :
+                            <ul>
+                                <li>Mode compact pour le bloc « Encaissements » du tableau de bord standard : cache les impayés.</li>
+                            </ul>
+                        </li>
+                    </ul>
+                    <ul class="correction">
+                        <li>Apparence du formulaire de changement de la date dans la page Planning.</li>
+                        <li>Bug des modules se rechargeant à lʼinfini lorsque la connexion est perdue :
+                            <ul><li>une fenêtre invitant à se reconnecter est désormais affichée.</li></ul>
+                        </li>
+                        <li>Affichage du bloc facturation lorsquʼil nʼy a pas dʼencaissements.</li>
+                    </ul>
+                </td>
+            </tr>
+            <tr>
+                <th width="70px">29/07/14</th>
+                <td>
+                    <ul class="modification">
+                        <li>Fonctionnalités dʼinterface :
+                            <ul>
+                                <li>Les blocs « sécurisations », « encaissements » et « dernières consultations clôturées » du tableau de bord standard peuvent être rétractés.</li>
+                                <li>Amélioration du champs « support ».</li>
+                                <li>Mode compact pour le bloc « Sécurisations » du tableau de bord standard : nʼaffiche que les sécurisations du jour.</li>
+                                <li>Mode compact pour le cadre « Historique » des fiches client : nʼaffiche que les principales actions dʼévolution de la fiche.</li>
+                                <li>Calendrier disponible pour la modification des dates dʼencaissements dans la fiche consultation. (ne fonctionne pas sous Chrome)</li>
+                            </ul>
+                        </li>
+                        <li>La clôture de la fiche créé une entrée dans lʼhistorique.</li>
+                    </ul>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div id="version-page6" class="tab-pane no-padding">
+        <table class="table table-striped versionning">
+            <tr>
+                <th width="70px">24/07/14</th>
+                <td>
+                    <ul class="ajout">
+                        <li>Fiche notes de version afin de suivre lʼévolution de lʼapplication.</li>
+                        <li>Les montants gèrent les centimes.</li>
+                        <li>Le voyant à accès aux modifications sur le cadre « client ».</li>
+                        <li>Fonctionnalité de fermeture automatique de la fiche après modification sans erreur.</li>
+                        <li>La facture peut être générée puis téléchargée via le menu crayon du bloc consultation depuis la fiche concernée.</li>
+                    </ul>
+                    <ul class="modification">
+                        <li>Les fiches à 0€ se cloturent automatiquement. Les voyants ne doivent pas ajouter dʼencaissement mais simplement valider la fiche en mettant 0 dans la case montant.</li>
+                    </ul>
+                    <ul class="correction">
+                        <li>La redirection vers la fiche lors dʼun encaissement refusé provoquait une erreur.</li>
+                    </ul>
+                </td>
+            </tr>
+            <tr>
+                <th width="70px">11/07/14</th>
+                <td>
+                    <ul class="modification">
+                        <li>Zone dʼalerte du planning :
+                            <ul>
+                                <li>Les voyants voient et peuvent prendre en charge une consultation dont lʼheure est passée depuis la zone dʼalerte.</li>
+                                <li>Les consultations en cours (pas encore validées par le voyant) sʼaffichent dans la zone dʼalerte.</li>
+                            </ul>
+                        </li>
+                    </ul>
+                    <ul class="correction">
+                        <li>Affichage du prénom qui avait disparu de la fiche.</li>
+                        <li>Redirection vers la fiche et message de régularisation sʼactivant même lorsque lʼencaissement était validé.</li>
+                        <li>Retour de la modification des encaissements (bloc facturation).</li>
+                    </ul>
+                </td>
+            </tr>
+            <tr>
+                <th>10/07/14</th>
+                <td>
+                    <ul class="ajout">
+                        <li>Possibilité de modification de lʼIDmyastro (à tout moment sauf en cours) et de la tarification (consultation effectuée).</li>
+                        <li>Lorsquʼun encaissement est refusé, lʼutilisateur est redirigé vers la fiche concernée où il est invité à régulariser la situation en planifiant un nouvel encaissement.</li>
+                        <li>Lʼengrenage du cadre consultation permet de voir des données de debug à transmettre au développeur en cas de requête. </li>
+                    </ul>
+                    <ul class="modification">
+                        <li>Contraintes sur le planning de sélection dʼhoraire de consultation :
+                            <ul>
+                                <li>Sur un planning à jour, les plages contenant 6 rendez-vous confirmés ne sont pas sélectionnables.</li>
+                                <li>Même si planning non mis à jour, si la plage est pleine, il est demandé un autre horaire suite à la validation du formulaire.</li>
+                            </ul>
+                        </li>
+                        <li>Lʼannulation dʼune fiche avant sécurisation est maintenant prise en compte.</li>
+                        <li>Aperçu de lʼétat de la fiche :
+                            <ul>
+                                <li>Pour une consultation annulée avant même la sécurisation : tous les icones sont gris.</li>
+                                <li>Pour une consultation annulée suite à la sécurisation : seul lʼicone de la sécurisation est rouge.</li>
+                            </ul>
+                        </li>
+                        <li>Visuels :
+                            <ul>
+                                <li>Commentaires plus visibles.</li>
+                                <li>Montant de la consultation mis en valeur.</li>
+                            </ul>
+                        </li>
+                    </ul>
+                </td>
+            </tr>
+        </table>
+</div>
+{% endblock modal_body %}

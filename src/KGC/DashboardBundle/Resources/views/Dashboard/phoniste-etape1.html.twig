@@ -1,0 +1,167 @@
+{# src/KGC/DashboardBundle/Ressources/views/Dashboard/phoniste-etape1.html.twig #}
+
+{% extends "KGCDashboardBundle::layout.html.twig" %}
+
+{% block ariane %}
+    {% set fil = ['Tableau de bord'] %}
+    {{ parent() }}
+{% endblock %}
+
+{% block page_header %}
+    {% set reload = { 'url':'#rdv-add, #phoniste_legend, #phoniste_objective, #phoniste_bonuses' } %}
+    {{ parent() }}
+{% endblock %}
+
+{% block dashboard_body %}
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="widget-box">
+                <div class="widget-header">
+                    <h5>
+                        <a href="#" data-action="collapse">
+                            <i class="icon-chevron-up"></i>
+                            Rechercher un prospect<b></b>
+                        </a>
+                    </h5>
+                </div>
+                <div class="widget-body search-advanced elastic_search">
+                    <div class="widget-main">
+                        <div class="widget-box ">
+                            <div class="widget-header header-color-blue2">
+                                <h5>
+                                    <b> {{ paginator.totalItemsCount }} résultats</b>
+
+                                </h5>
+                                <div class="widget-toolbar no-border">
+                                </div>
+                            </div>
+                            <div class="widget-body  search-advanced">
+                                <div class="widget-main no-padding ">
+                                    <form method="post" action="{{ path('kgc_dashboard_phoning1') }}">
+                                        <div class="row">
+                                            <div class="col-lg-6 col-md-6">
+                                                {{ form_row(form.idastro) }}
+                                            </div>
+                                            <div class="col-lg-6 col-md-6">
+                                                {{ form_row(form.dateBegin) }}
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-lg-6 col-md-6">
+                                                {{ form_row(form.name) }}
+                                            </div>
+                                            <div class="col-lg-6 col-md-6">
+                                                {{ form_row(form.birthdate) }}
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-lg-6 col-md-6">
+                                                {{ form_row(form.mail) }}
+                                            </div>
+                                            <div class="col-lg-6 col-md-6">
+                                                {{ form_row(form.phones) }}
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-lg-6 col-md-6">
+                                                <button type="submit" class="save btn btn-success btn-block">Rechercher</button>
+                                            </div>
+                                            <div class="col-lg-6 col-md-6">
+                                                <button type="button" class="btn btn-info btn-block js-reset-empty">Effacer le formulaire</button>
+                                                <div style="display:none;">{{ form_rest(form) }}</div>
+                                            </div>
+                                        </div>
+                                    </form>
+                                    <div class="space-6"></div>
+                                    {% if paginator %}
+                                        {% set fiches = paginator.elements %}
+                                        {% if fiches|length > 0 %}
+                                            <table class="table table-striped table-hover valign-middle" id="table-0">
+                                                <thead>
+                                                    <tr>
+                                                        <th class="center">ID astro</th>
+                                                        <th class="center">Date d'inscription</th>
+                                                        <th class="center">Prénom</th>
+                                                        <th class="center">Date de naissance</th>
+                                                        <th class="center">Email</th>
+                                                        <th class="center">Site</th>
+                                                        <th class="center">Source</th>
+                                                        <th class="center">URL</th>
+                                                        <th></th>
+                                                    <tr>
+                                                </thead>
+                                                <tbody>
+                                                    {% for prospect in fiches %}
+                                                        <tr>
+                                                            <td class="center">{{ prospect.myastroId }}</td>
+                                                            <td class="center">{{ prospect.createdAt|date("d/m/Y") }}</td>
+                                                            <td class="center">{{ prospect.firstname }}</td>
+                                                            <td class="center">{{ prospect.birthday|date("d/m/Y") }}</td>
+                                                            <td class="center">{{ prospect.email }}</td>
+                                                            <td class="center">{{ prospect.myastroWebsite }}</td>
+                                                            <td class="center">{{ prospect.myastroSource }}</td>
+                                                            <td class="center">{{ prospect.myastroUrl }}</td>
+                                                            <td class="center">
+                                                                <a href="{{ path('kgc_dashboard_phoning2',{'id':prospect.id}) }}" class="btn btn-xs btn-grey tooltip-grey" role="button" title="" data-rel="tooltip" data-placement="right" data-original-title="voir la fiche prospect">
+                                                                    <i class="icon-file"></i>
+                                                                </a>
+                                                            </td>
+                                                        </tr>
+                                                    {% else %}
+                                                        <tr>
+                                                            <td colspan="4">Aucun résultat</td>
+                                                        </tr>
+                                                    {% endfor %}
+                                                </tbody>
+                                            </table>
+                                            <div class="space-6"></div>
+                                            {% if paginator.totalPagesCount %}
+                                                <div class="row align-center">
+                                                    <div class="col-lg-12">
+                                                        <strong>{{ paginator.totalItemsCount }}</strong> résultats.
+                                                        Page <strong>{{ paginator.currentPage }}</strong> sur <strong>{{ paginator.totalPagesCount }}</strong>.
+                                                        <br/>
+                                                        {% if paginator.totalPagesCount > 1 %}
+                                                            <ul class="pagination no-margin">
+                                                                <li><a href="#" class="js-page-target" data-page-target="1">&lt;&lt;</a></li>
+                                                                <li><a href="javascript:void(0);">...</a></li>
+                                                                {% for page in paginator.showPages %}
+                                                                    <li class="{{ page == paginator.currentPage ? 'active' : '' }}">
+                                                                        <a href="#" class="js-page-target" data-page-target="{{ page }}">{{ page }}</a>
+                                                                    </li>
+                                                                {% endfor %}
+                                                                <li><a href="javascript:void(0);">...</a></li>
+                                                                <li><a href="#" class="js-page-target" data-page-target="{{ paginator.totalPagesCount }}">&gt;&gt;</a></li>
+                                                            </ul>
+                                                        {% endif %}
+                                                    </div>
+                                                </div>
+                                                <div class="space-6"></div>
+                                            {% endif %}
+                                        {% endif %}
+                                    {% endif %}
+                                    <div class="row">
+                                        <div class="col-lg-12 col-md-12">
+                                            <div class="pull-right">
+                                                <a class="btn btn-block btn-primary" href="{{ path('kgc_dashboard_phoning3') }}" role="button" title="APPEL ENTRANT NON PROSPECT">
+                                                    APPEL ENTRANT NON PROSPECT
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <form method="post" action="{{ path('kgc_stat_phoniste_objective') }}" class="ajax_load form-horizontal" id="phoniste_objective"></form>
+            <div class="space-6"></div>
+            <form method="post" action="{{ path('kgc_stat_phoniste_bonuses') }}" class="ajax_load form-horizontal" id="phoniste_bonuses"></form>
+            <div class="space-6"></div>
+            <form method="post" action="{{ path('kgc_stat_phoniste_legend') }}" class="ajax_load form-horizontal" id="phoniste_legend"></form>
+        </div>
+    </div>
+{% endblock %}

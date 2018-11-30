@@ -1,0 +1,47 @@
+#chatExitRoomModal {
+    color: grey;
+    font-weight: bold;
+    text-align: center;
+}
+
+#chatExitRoomModal .modal-dialog {
+    width: 600px;
+}
+
+#chatExitRoomModal .clear {
+    clear:both;
+    width: 100%;
+    height: 0px;
+}
+
+#chatExitRoomModal .modal-content {
+    border: 2px solid grey;
+    border-radius: 10px;
+}
+
+#chatExitRoomModal .ask {
+    margin-bottom: 20px;
+}
+
+#chatExitRoomModal .action button {
+    border-radius: 10px;
+    border: 0px;
+    color: white !important;
+    font-weight: bold;
+    width: 80px;
+}
+
+#chatExitRoomModal .action button.yes {
+    background-color: green !important;
+    margin-right:20px;
+}
+
+#chatExitRoomModal .action button.no {
+    background-color: red !important;
+    margin-left:20px;
+}
+
+.vertical-center {
+    display: table-cell !important;
+    vertical-align: middle !important;
+}

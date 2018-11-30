@@ -1,0 +1,23 @@
+{# src/KGC/DashboardBundle/Resources/views/Consultations/index.html.twig #}
+
+{% extends "KGCDashboardBundle::layout.html.twig" %}
+
+{% block ariane %}
+    {% set fil = ['Consultations'] %}
+    {{ parent() }}
+{% endblock %}
+
+{% block page_header %}
+    {% set infos = { 'titre':'Consultations','desc':'Gestion des consultations de voyance'} %}
+    {{ parent()}}
+{% endblock %}
+
+{% block dashboard_body %}
+<div class="well center text-muted">
+    <h1><i class="icon-wrench"></i> En construction</h1>
+</div>
+{% endblock %}
+
+{% block javascripts %}
+
+{% endblock %}

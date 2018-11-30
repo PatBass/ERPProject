@@ -1,0 +1,48 @@
+
+{% extends not app.request.isXmlHttpRequest() ? '::layout.html.twig' : '::emptylayout.html.twig' %}
+
+{% block body %}
+
+<div class="widget-box">
+    <div class="widget-header">
+        <h5>
+            <a href="#" data-action="collapse">
+                <i class="icon-chevron-up"></i>
+                Chiffres généraux (Complets)<b></b>
+            </a>
+        </h5>
+        <div class="widget-toolbar">
+            <a class="ajax_reload" href="#admin_stats_general_full" title="Recharger">
+                <i class="icon-refresh"></i>
+            </a>
+        </div>
+    </div>
+    <div class="widget-body stat-admin-general">
+        <div class="widget-main no-padding">
+
+            <table class="table table-striped table-condensed">
+                <tr>
+                    <td>CA Réalisé</td>
+                    <td>{{ general_full['billing'] | number_format(2, ',', ' ') }} &euro;</td>
+                </tr>
+                <tr>
+                    <td>CA Encaissé</td>
+                    <td>{{ general_full['paid'] | number_format(2, ',', ' ') }} &euro;</td>
+                </tr>
+                <tr>
+                    <td>dont Récup</td>
+                    <td>{{ general_full['recup'] | number_format(2, ',', ' ') }} &euro;</td>
+                </tr>
+                <tr>
+                    <td>Sécu 1&euro;</td>
+                    <td>{{ general_full['secu'] | number_format(2, ',', ' ') }} &euro;</td>
+                </tr>
+                <tr>
+                    <td>Total</td>
+                    <td>{{ general_full['total'] | number_format(2, ',', ' ') }} &euro;</td>
+                </tr>
+            </table>
+
+        </div>
+    </div>
+{% endblock body %}

@@ -1,0 +1,65 @@
+parameters:
+
+services:
+
+    kgc.elastic.populate.listener:
+        class: KGC\RdvBundle\Listener\PopulateListener
+        arguments:
+            - @fos_elastica.index_manager
+        tags:
+            - { name: kernel.event_listener, event: elastica.index.index_pre_populate, method: preIndexPopulate,  connection: default }
+            - { name: kernel.event_listener, event: elastica.index.index_post_populate, method: postIndexPopulate,  connection: default }
+
+    kgc.elastic.rdv.transformer:
+        class: KGC\RdvBundle\Elastic\Transformer\RdvElasticaToModelTransformer
+        arguments:
+            - @doctrine
+            - 'KGCRdvBundle:RDV'
+            - {}
+        calls:
+            - [ setPropertyAccessor, [@fos_elastica.property_accessor ] ]
+        tags:
+            - { name: fos_elastica.elastica_to_model_transformer, type: rdv, index: kgestion_idx }
+
+    kgc.elastic.rdv.nested.listener:
+        class: KGC\RdvBundle\Elastic\Listener\NestedListener
+        public: true
+        arguments:
+            - @fos_elastica.object_persister.kgestion_idx.rdv
+            - @fos_elastica.indexable
+            - ['postPersist', 'postUpdate', 'preRemove']
+        calls:
+            - [ setContainer, [@service_container ] ]
+        tags:
+            - { name: doctrine.event_subscriber, connection: default }
+
+    kgc.elastic.rdv.refresh.listener:
+        class: KGC\RdvBundle\Elastic\Listener\RdvRefreshListener
+        public: true
+        arguments:
+            - @fos_elastica.object_persister.kgestion_idx.rdv
+            - @fos_elastica.indexable
+            - ['refresh']
+        calls:
+            - [ setContainer, [@service_container ] ]
+        tags:
+            - { name: kernel.event_subscriber, connection: default }
+
+    KGC_rdv.dateconsultation_validator:
+        class: KGC\RdvBundle\Validator\DateConsultationValidator
+        arguments: [@request, @doctrine.orm.entity_manager]
+        scope: request
+        tags:
+            - { name: validator.constraint_validator, alias: kgcrdv_dateconsultation_validator }
+
+    KGC.myastrobridge.logger:
+        class: KGC\RdvBundle\Lib\Logging
+        arguments: ["@logger"]
+        tags:
+            - { name: monolog.logger, channel: myastrobridge }
+
+    KGC_rdv.statistiques:
+        class: KGC\RdvBundle\Statistiques\Statistiques
+        arguments:
+            em: @doctrine.orm.entity_manager
+            sc: @security.context

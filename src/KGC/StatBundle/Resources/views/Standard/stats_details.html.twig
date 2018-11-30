@@ -1,0 +1,49 @@
+{% extends '::emptylayout.html.twig' %}
+
+{% block body %}
+    {% set total = 0 %}
+    {% embed '::modallayout.html.twig' %}
+
+        {% block modal_title %}
+            Détails
+            {% set request_args = app.request.get('_route_params') | merge(app.request.query.all) | merge({ 'export': 1 }) %}
+            <a title="Export Excel (.csv)" href="{{ path(app.request.get('_route'), request_args) }}">
+                <i class="icon-download-alt"></i>
+            </a>
+        {% endblock modal_title %}
+
+        {% block modal_body %}
+            <table class="table table-striped valign-middle">
+                <thead>
+                    <tr>
+                        {% if type != 'turnover_fna' %}
+                        <th>Date</th>
+                        {% endif %}
+                        <th>Client</th>
+                        <th>Montant</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tboby>
+                {% for elem in list %}
+                    <tr>
+                        {% if elem.date is defined %}
+                            <td>{{ elem.date|date('d/m/Y H:i') }}</td>
+                        {% endif %}
+                        <td>{{ elem.consultation.client.prenom ~ ' ' ~ elem.consultation.client.nom }}</td>
+                        {% if elem.montant is defined %}
+                            <td>{{ elem.montant|number_format(2, ',', ' ') }} &euro; par {{ elem.moyenPaiement.libelle }}</td>
+                            {% set total = total + elem.montant %}
+                        {% else %}
+                        <td>{{ elem.montantImpaye|number_format(2, ',', ' ') }} &euro;</td>
+                        {% endif %}
+                        <td class="line-actions">
+                            <a data-original-title="Fiche client" href="{{ path('kgc_rdv_fiche', {'id': elem.consultation.id}) }}" target="_blank" class="btn btn-xs btn-primary tooltip-primary modal-load" role="button" title="" data-rel="tooltip" data-placement="left"><i class="icon-file"></i></a>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        {% endblock modal_body %}
+    {% endembed %}
+{% endblock body %}

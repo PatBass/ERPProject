@@ -1,0 +1,59 @@
+{# src/KGC/DashboardBundle/Resources/views/Config/products.list.html.twig #}
+
+{% extends not app.request.isXmlHttpRequest() ? '::layout.html.twig' : '::emptylayout.html.twig' %}
+
+{% block body %}
+    {% embed '::widgetlayout.html.twig' %}
+        {% set widget_options = {
+            'titre' : 'Produits',
+            'refresh' : '#config_products',
+            'no_padding' : true
+        } %}
+
+        {% block widget_main %}
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>Code</th>
+                        <th>Libellé</th>
+                        <th>Actif</th>
+                        <th>Inactif depuis</th>
+                        <th>Prix</th>
+                        <th>&nbsp;</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for o in objects %}
+                    <tr>
+                        <td>{{ o.id }}</td>
+                        <td>{{ o.code }}</td>
+                        <td>{{ o.label }}</td>
+                        <td>
+                            {% if o.enabled %}
+                                <span class="label label-success ">Oui</span>
+                            {% else %}
+                                <span class="label label-danger ">Non</span>
+                            {% endif %}
+                        </td>
+                        <td>{{ o.disabledDate != null ? o.disabledDate | date('d/m/Y') }}</td>
+                        <td>{{ o.dataAttr != null ? o.dataAttr ~ ' €' }}</td>
+                        <td class="line-actions">
+                            <a href="{{ path('kgc_config_products_edit', {'id': o.id}) }}" class="btn btn-xs btn-primary tooltip-primary modal-load"
+                               role="button" title="Éditer" data-rel="tooltip" data-placement="left">
+                                <i class="icon-pencil"></i>
+                            </a>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        {% endblock widget_main %}
+        
+        {% block widget_body_after %}
+            <a href="{{ path('kgc_config_products_edit') }}" class="btn btn-block modal-load" role="button" title="Ajouter un produit">
+                <i class="icon-plus"></i> Ajouter un produit
+            </a
+        {% endblock %}
+    {% endembed %}   
+{% endblock body %}

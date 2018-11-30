@@ -1,0 +1,78 @@
+{# src/KGC/DashboardBundle/Resources/views/Config/campagne.edit.list.html.twig #}
+
+{% extends not app.request.isXmlHttpRequest() ? '::layout.html.twig' : '::emptylayout.html.twig' %}
+
+{% block body %}
+    {% embed '::modallayout.html.twig' %}
+        {% block modal_header %}
+            {% set link = {
+                'txt' : (upd ? 'Édition' : 'Ajout') ~ ' de modèle de campagne',
+                'url' : path('kgc_config_campagne_edit',{'id':campagne.id}),
+                'icon' : upd ? 'pencil' : 'plus'
+            } %}
+            {{ parent() }}
+        {% endblock %}
+
+        {% block modal_content %}
+            <form id="campagne_template_modal" method="post" action="{{ path('kgc_config_campagne_edit', {'id': campagne.id}) }}" {{ form_enctype(form) }} data-close="1" data-refresh="#config_campagne" class="ajax_modal_form form-horizontal">
+                {{ parent() }}
+                {{ form_widget(form._token) }}
+            </form>
+        {% endblock modal_content %}
+
+        {% block modal_body %}
+            <div class="row">
+                <div class="col-md-12">
+                    <strong>Remplacements :</strong><br />
+                    [PRENOM], [NOM]
+                    <br /><br />
+                </div>
+
+                <div class="col-md-6">
+                    <strong>Nom :</strong><br />
+                    {{ form_widget(form.name) }}
+                </div>
+                <div class="col-md-6">
+                    <strong>Expéditeur :</strong><br />
+                    {{ form_widget(form.sender) }}
+                </div>
+
+                <div class="col-md-12">
+                    <strong>Liste de contact :</strong><br />
+                    {{ form_widget(form.list) }}
+                </div>
+                <div class="space-6"></div>
+                <div class="col-md-12">
+                    <strong>Message :</strong><br />
+                    <div style="border: 1px solid #D5D5D5">
+                        {{ form_widget(form.text) }}
+                    </div>
+                </div>
+                <div class="space-6"></div>
+                <div class="col-md-12">
+                    <strong>Archivage :</strong><br />
+                    <div style="border: 1px solid #D5D5D5">
+                        {{ form_widget(form.archivage) }}
+                        {{ form_rest(form) }}
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <div id="showNbCount" class="pull-right"></div>
+                </div>
+            </div>
+        {% endblock modal_body %}
+
+        {% block modal_footer %}
+            <div class="modal-footer">
+                <div class="pull-left">
+                    <button type="button" class="btn btn-sm btn-danger" data-dismiss="modal"><i class="icon-remove"></i> Fermer</button>
+                </div>
+                <div class="pull-right">
+                    <button type="submit" class="btn btn-success btn-block btn-sm js-wysiwyg-btn">
+                        <i class="icon-arrow-right"></i> Enregistrer
+                    </button>
+                </div>
+            </div>
+        {% endblock modal_footer %}
+    {% endembed %}
+{% endblock body %}

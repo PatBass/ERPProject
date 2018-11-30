@@ -1,0 +1,76 @@
+{# src/KGC/DashboardBundle/Ressources/views/Dashboard/phoniste.html.twig #}
+
+{% extends "KGCDashboardBundle::layout.html.twig" %}
+
+{% block ariane %}
+    {% set fil = ['Tableau de bord'] %}
+    {{ parent() }}
+{% endblock %}
+
+{% block page_header %}
+    {% set reload = { 'url':'#rdv-add, #phoniste_legend, #phoniste_objective, #phoniste_bonuses' } %}
+    {{ parent() }}
+{% endblock %}
+
+{% block dashboard_body %}
+    {% import 'KGCUserBundle:Prospect:blocsficheProspect.html.twig' as fiche %}
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="widget-box">
+                <div class="widget-header">
+                    <h5>
+                        <a href="#" data-action="collapse">
+                            <i class="icon-chevron-up"></i>
+                            Fiche n°{{ prospect.id }}<b></b>
+                        </a>
+                    </h5>
+                </div>
+                <div class="widget-body search-advanced">
+                    <div class="widget-main">
+                        {% if form %}
+                            <form id="form_fiche_prospect" method="post" action="{{ path('kgc_dashboard_phoning2',{'id':prospect.id}) }}" {{ form_enctype(form) }}
+                                    class="form-horizontal">
+                                {{ form_widget(form._token) }}
+                                {{ form_edit ? form_widget(form_edit._token) }}
+                                {% if form %}
+                                    {% if not form.vars.valid %}
+                                        <p class="alert alert-danger">{{ form_errors(form) }}</p>
+                                    {% endif %}
+                                    {% set options_prospect = { 'prospect':prospect, 'form':form, 'form_edit':form_edit,'linkEntities':linkEntities } %}
+                                    <div class="row">
+                                        <div class="col-lg-7">
+                                            {{ fiche.prospect(options_prospect) }}
+                                        </div>
+                                        <div class="col-lg-5">
+                                            {{ fiche.tracking(options_prospect) }}
+                                            {{ fiche.consultation(options_prospect) }}
+                                        </div>
+                                    </div>
+                                {% else %}
+                                    <p class="alert alert-danger">La fiche demandée nʼa pas été trouvée. Il s'agit sûrement dʼun lien erroné.</p>
+                                {% endif %}
+                                <div class="row">
+                                    <div class="col-lg-12">
+                                        <div class="pull-right">
+                                            <button type="submit" class="btn btn-sm btn-success" style="display:inline-block">
+                                                Créer un RDV à partir de ce prospect
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                            {# les flashbags sont générés dans le layout général (empty ou html) #}
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <form method="post" action="{{ path('kgc_stat_phoniste_objective') }}" class="ajax_load form-horizontal" id="phoniste_objective"></form>
+            <div class="space-6"></div>
+            <form method="post" action="{{ path('kgc_stat_phoniste_bonuses') }}" class="ajax_load form-horizontal" id="phoniste_bonuses"></form>
+            <div class="space-6"></div>
+            <form method="post" action="{{ path('kgc_stat_phoniste_legend') }}" class="ajax_load form-horizontal" id="phoniste_legend"></form>
+        </div>
+    </div>
+{% endblock %}

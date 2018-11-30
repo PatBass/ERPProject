@@ -1,0 +1,65 @@
+{# src/KGC/DashboardBundle/Resources/views/Config/mails.list.html.twig #}
+
+{% extends not app.request.isXmlHttpRequest() ? '::layout.html.twig' : '::emptylayout.html.twig' %}
+
+{% block body %}
+    {% embed '::widgetlayout.html.twig' %}
+        {% set widget_options = {
+            'titre' : 'Templates de mail',
+            'refresh' : '#config_mails',
+            'no_padding' : true
+        } %}
+
+        {% block widget_main %}
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Code</th>
+                        <th>Object</th>
+                        <th>Message</th>
+                        <th>Actif</th>
+                        <th>Inactif depuis</th>
+                        <th>Créé le</th>
+                        <th>Modifié le</th>
+                        <th>&nbsp;</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for m in mails %}
+                    {% set state = m.enabled %}
+                    <tr>
+                        <td>{{ m.code }}</td>
+                        <td>{{ m.subject }}</td>
+                        <td>{{ m.html | truncate(500) | striptags }}</td>
+                        <td>
+                            {% if state %}
+                                <span class="label label-success">Oui</span>
+                            {% else %}
+                                <span class="label label-danger">Non</span>
+                            {% endif %}
+                        </td>
+                        <td>{{ m.disabledDate != null ? m.disabledDate | date('d/m/Y') }}</td>
+                        <td>{{ m.createdAt | date('d/m/Y H:i') }}</td>
+                        <td>{{ m.updatedAt | date('d/m/Y H:i') }}</td>
+                        <td class="line-actions">
+                            <a href="{{ path('kgc_config_mail_edit', {'id': m.id}) }}" class="btn btn-xs btn-primary tooltip-primary modal-load" role="button" title="" data-rel="tooltip" data-placement="left" data-original-title="Éditer le mail">
+                                <i class="icon-pencil"></i>
+                            </a>
+                            <a href="{{ path('kgc_config_mail_state', {'id': m.id}) }}" class="btn btn-xs {{ state ? 'btn-purple tooltip-purple' : 'btn-info tooltip-info' }} gritter-load" data-refresh="#config_mails"
+                               role="button" title="{{ state ? 'Désactiver' : 'Activer' }}" data-rel="tooltip" data-placement="left">
+                                <i class="icon-{{ state ? 'ban-circle' : 'circle-blank' }}"></i>
+                            </a>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        {% endblock widget_main %}
+        
+        {% block widget_body_after %}
+        <a href="{{ path('kgc_config_mail_edit') }}" class="btn btn-block modal-load" role="button" title="Ajouter un template de mail">
+            <i class="icon-plus"></i> Ajouter un template de mail
+        </a>
+        {% endblock %}
+    {% endembed %}   
+{% endblock body %}

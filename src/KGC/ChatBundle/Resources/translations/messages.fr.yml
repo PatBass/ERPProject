@@ -1,0 +1,91 @@
+chat:
+    chat_type_question: 'À la question'
+    chat_type_minute: 'À la minute'
+    you_are_temporaly_disconnected: 'Vous êtes déconnecté du chat (la connexion devrait s''établir d''ici quelques secondes).'
+    you_are_unavailable: 'Vous êtes indisponible pour le chat'
+    you_are_available: 'Vous êtes disponible pour le chat'
+    reconnect_now: 'Se connecter maintenant'
+    decrement: Décréditer
+    content_typing_placeholder: 'Écrire ici ...'
+    psychic_name: 'Voyant'
+    remaining_question: 'Question(s) restante(s)'
+    message_from_server: 'Message du serveur'
+    this_room_is_paused: 'Cette conversation est en pause'
+    this_room_is_closed: 'Cette conversation est fermée'
+    need_to_recredit_his_account: 'doit recréditer son compte'
+    user_left_conversation: 'L''utilisateur a quitté la conversation'
+    user_has_connection_troubles: 'L''utilisateur semble avoir des problèmes de connexion'
+    unexpected_server_error: 'Une erreur est survenue sur le serveur'
+    unauthorized: 'Cela fait longtemps que vous êtes connecté. Par mesure de sécurité, vous devez vous déconnecter puis vous reconnecter pour pouvoir continuer à chater.'
+    you_cant_be_unavailable_if_you_are_in_conversation: 'Vous ne pouvez pas être indisponible si vous êtes encore dans une conversation.'
+    new_message: 'Nouveau message'
+    are_you_sure_you_want_to_exit_this_room: 'Souhaitez vous mettre fin à cette conversation ?'
+    action_is_writing: 'est en train d''écrire ...'
+    yes: Oui
+    no: Non
+    payment:
+        state:
+            done: 'Fait'
+            error: 'Refusé'
+            opposed: 'Opposition'
+            refunded: 'Remboursé'
+
+email:
+    payment:
+        success:
+            subject: Votre commande a bien été acceptée
+            body_text: |
+                Bonjour %firstName%,
+
+                Nous avons le plaisir de vous confirmer que votre commande a bien été enregistrée. Vous pouvez dès maintenant profiter pleinement de tous nos services.
+
+                Rejoindre %siteLabel% : %redirectUrl%
+
+                A très vite,
+
+                L’équipe %siteLabel%
+            title: Paiement accepté
+            freeTitle: Commande acceptée
+            description: Nous avons le plaisir de vous confirmer que votre commande a bien été enregistrée. Vous pouvez dès maintenant profiter pleinement de tous nos services.
+            buttonText: Rejoindre %siteLabel%
+            seeYouSoon: A très vite,
+
+    subscription:
+        paymentSuccess:
+            subject: Abonnement %siteLabel%
+            body_text: |
+                Bonjour %firstName%,
+
+                Dans le cadre de votre abonnement, nous vous informations que le prélèvement de %amount%€ a bien été effectué.
+
+                Nous vous invitons à profiter pleinement de nos services en allant sur l'url suivante :
+
+                %redirectUrl%
+
+                A très vite,
+                L'équipe de %siteLabel%
+            title: Abonnement
+            hello: Bonjour %firstName%
+            description: Dans le cadre de votre abonnement, nous vous informations que le prélèvement de %amount%€ a bien été effectué.
+            redirectPhrase: Nous vous invitons à profiter pleinement de nos services en cliquant sur le bouton ci-dessus
+            buttonText: Rejoindre le tchat
+            seeYouSoon: A très vite,
+
+        cancelSuccess:
+            subject: Désabonnement
+            body_text: |
+                Bonjour %firstName%,
+
+                Nous vous confirmons la prise en compte de votre désabonnement.
+                Celui-ci sera effectif dès la fin de votre engagement, effective le %endDate%.
+
+                Pour accéder à votre compte : %redirectUrl%
+
+                En espérant vous revoir bientôt,
+                L'équipe de %siteLabel%
+            title: Abonnement
+            hello: Bonjour %firstName%
+            explanation: Nous vons confirmons la prise en compte de votre désabonnement.
+            details: Celui-ci sera effectif dès la fin de votre engagement, effective le %endDate%.
+            buttonText: Accéder à mon compte
+            seeYouSoon: En espérant vous revoir bientot,

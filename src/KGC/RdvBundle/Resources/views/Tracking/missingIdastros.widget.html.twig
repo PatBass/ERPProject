@@ -1,0 +1,22 @@
+{# src/KGC/RdvBundle/Resources/views/Tracking/missingIdastros.widget.html.twig #}
+
+{% extends not app.request.isXmlHttpRequest() ? '::layout.html.twig' : '::emptylayout.html.twig' %}
+
+{% block body %}
+    {% embed '::widgetlayout.html.twig' %}
+        
+        {% use 'KGCRdvBundle::listefichesRDV.html.twig' %}
+        
+        {% set widget_options = {
+            'titre' : 'Idastros manquants ou erronés depuis le 01/01/2015 - <b>' ~ fiches | length ~ ' résultat(s)</b>',
+            'header_class' : 'header-color-blue2',
+            'refresh' : '#missing-idastros',
+            'collapse' : true,
+            'no_padding' : true,
+        } %}
+
+        {% block widget_main %}
+            {{ fiches|length > 0 ? block('tableau_fiches') : '<table class="table"><tr><td>Aucun résultat</td></tr><table>' }}
+        {% endblock %}
+    {% endembed %}
+{% endblock %}

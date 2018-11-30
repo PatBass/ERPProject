@@ -1,0 +1,65 @@
+{# src/KGC/RdvBundle/Ressources/views/Qualite/suivis.liste.html.twig #}
+
+{% extends not app.request.isXmlHttpRequest() ? '::layout.html.twig' : '::emptylayout.html.twig' %}
+
+{% block body %}
+    {% embed '::widgetlayout.html.twig' %}
+        {% use 'KGCRdvBundle::listefichesRDV.html.twig' %}
+        
+        {% set titre %}
+            Suivis
+            {{ begin is not null
+                ? 'du ' ~ begin|date('d/m/Y') ~ ' au ' ~ end|date('d/m/Y')
+                : 'du jour' }}
+            - <b>{{ nresults }} résultats</b>
+        {% endset %}
+        {% set widget_options = {
+            'titre' : titre,
+            'header_class' : 'header-color-blue2',
+            'collapse' : true,
+            'refresh' : '#qa_reminders_list',
+            'no_padding' : true,
+            'exportable' : true,
+        } %}
+
+        {% block widget_body %}
+            <div class="widget-toolbox">
+                <div class="toolbar form-inline">
+                    <h5>Période :</h5>
+                    {{ form_widget(form.period.begin) }}
+                    {{ form_widget(form.period.end) }}
+                    {{ form_widget(form._token) }}
+                    <button type="submit" class="btn btn-success btn-xs">
+                        <i class="icon-arrow-right"></i> Appliquer
+                    </button>
+                </div>
+            </div>                
+            {{ parent() }}
+        {% endblock %}
+        
+        {% block widget_main %}
+            {% set quality_info = true %}
+
+            {% set actions = new_actions | default({
+                1 : {
+                    'route_action' : 'kgc_rdv_fiche',
+                    'load' : 'modal-load',
+                    'color' : 'primary',
+                    'icon' : 'file',
+                    'disabled' : false,
+                    'title' : "Fiche standard",
+                    'placement': 'left'
+                },
+                2 : {
+                    'route_action' : 'kgc_qa_fiche',
+                    'load' : 'nothing',
+                    'title' : "Fiche voyant",
+                    'color' : 'warning',
+                    'placement': 'left'
+                }
+            }) %}
+
+            {{ fiches_list|length > 0 ? block('tableau_horaire_fiches') : '<table class="table"><tr><td>Aucun résultat</td></tr><table>' }}
+        {% endblock %}
+    {% endembed %}
+{% endblock body %}

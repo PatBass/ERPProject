@@ -1,0 +1,46 @@
+{# src/KGC/RdvBundle/Resources/views/Tracking/gclid.widget.html.twig #}
+
+{% extends not app.request.isXmlHttpRequest() ? '::layout.html.twig' : '::emptylayout.html.twig' %}
+
+{% block body %}
+    {% embed '::widgetlayout.html.twig' %}
+        
+        {% use 'KGCRdvBundle::listefichesRDV.html.twig' %}
+        
+        {% set widget_options = {
+            'titre' : 'Export GCLID - ' ~ items | length ~ ' élements',
+            'header_class' : 'header-color-blue2',
+            'refresh' : '#gclid-export',
+            'collapse' : true,
+            'no_padding' : true,
+        } %}
+
+        {% block widget_body %}
+            <div class="widget-toolbox">
+                <div class="toolbar form-inline">
+                    <h5>Période :</h5>
+                    {{ form_widget(form.period.begin) }}
+                    {{ form_widget(form.period.end) }}
+                    {{ form_widget(form._token) }}
+                    <button type="submit" class="btn btn-success btn-xs">
+                        <i class="icon-arrow-right"></i> Appliquer
+                    </button>
+                    {#{% if items | length %}#}
+                    <a role="button" href="{{ path('kgc_gclid_export', {type:'csv'}) }}" target="_blank" style="line-height:23px;" class="btn btn-inverse btn-xs">
+                        <i class="icon-save bigger-120"></i> CSV
+                    </a>
+                    <a role="button" href="{{ path('kgc_gclid_export', {type:'excel'}) }}" target="_blank" style="line-height:23px;" class="btn btn-inverse btn-xs">
+                        <i class="icon-save bigger-120"></i> EXCEL
+                    </a>
+                    {#{% endif %}#}
+                </div>
+            </div>
+            
+            {{ parent() }}
+        {% endblock %}
+        
+        {% block widget_main %}
+            {{ block('tableau_fiches_gclid') }}
+        {% endblock %}
+    {% endembed %}
+{% endblock body %}

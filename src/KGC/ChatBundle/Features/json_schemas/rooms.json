@@ -1,0 +1,8 @@
+{
+    "id": "rooms.json",
+    "title": "Rooms schema",
+    "type": "array",
+    "items": {
+        "$ref": "room.json"
+    }
+}

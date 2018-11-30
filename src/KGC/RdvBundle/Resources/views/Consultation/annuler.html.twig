@@ -1,0 +1,38 @@
+{# src/KGC/RdvBundle/Resources/views/Consultation/annuler.html.twig #}
+
+{% extends not app.request.isXmlHttpRequest() ? '::layout.html.twig' : '::emptylayout.html.twig' %}
+
+{% block body %}
+    {% embed '::modallayout.html.twig' %}
+        {% import 'KGCRdvBundle::blocsficheRDV.html.twig' as fiche %}
+
+        {% block modal_title %}Annuler la consultation de {{ rdv.client.fullName }}{% endblock modal_title %}
+
+        {% block modal_content %}
+        <form id="annuler_rdv_modal" method="post" action="{{ path('kgc_rdv_annuler',{'id':rdv.id}) }}" {{ form_enctype(form) }} class="ajax_modal_form form-horizontal" {{ form.vars.valid and comportement==1 ? 'data-close="1" data-refresh="prise_en_charge"' }}>
+            {{ parent() }}
+            {{ form_widget(form.mainaction) }}
+            {{ form_widget(form._token) }}
+        </form>
+        {% endblock modal_content %}
+
+        {% block modal_body %}
+            <div class="row">
+                <label class="col-sm-9 col-sm-offset-2">
+                    Êtes-vous sûr de vouloir annuler la consultation de &laquo; {{ rdv.client.fullName }} &raquo;<br />
+                    prévue le {{ rdv.dateConsultation|date('d/m/Y') ~ " à " ~ rdv.dateConsultation|date('H:i') }}&nbsp;?
+                </label>
+            </div>
+            {{ form_row(form.dossier_annulation, {'label':'Choisir le motif','label_attr':{'class':'col-lg-4 col-xs-5'},'controls_size':'col-lg-7'}) }}
+        {% endblock modal_body %}
+
+        {% block modal_footer %}
+            {% if not form %}
+                {{ parent() }}
+            {% else %}
+                {% set retour = app.user.isVoyant ? false : true %}
+                {{ fiche.rdv_form_footer({'form':form,'rdv':rdv,'retour': retour, 'target':'_cancel_rdv'}) }}
+            {% endif %}
+        {% endblock modal_footer %}
+    {% endembed %}
+{% endblock body %}

@@ -1,0 +1,48 @@
+{# src/KGC/DashboardBundle/Resources/views/Config/forfait.tarifications.list.html.twig #}
+
+{% extends not app.request.isXmlHttpRequest() ? '::layout.html.twig' : '::emptylayout.html.twig' %}
+
+{% block body %}
+    {% embed '::widgetlayout.html.twig' %}
+        {% set widget_options = {
+            'titre' : 'Tarification par forfait',
+            'refresh' : '#config_forfait_tarification',
+            'collapse' : true,
+            'no_padding' : true
+        } %}
+
+        {% block widget_main %}
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Forfait</th>
+                        <th>Tarification minute</th>
+                        <th>Tarification forfait</th>
+                        <th>&nbsp;</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for o in objects %}
+                    <tr>
+                        <td>{{ o.forfait.label }}</td>
+                        <td>{{ o.codeTarification.libelle }}</td>
+                        <td>{{ o.price | number_format(2, ',', ' ') }} €</td>
+                        <td class="line-actions">
+                            <a href="{{ path('kgc_config_forfait_tarification_edit', {'id': o.id}) }}" class="btn btn-xs btn-primary tooltip-primary modal-load"
+                               role="button" title="Éditer" data-rel="tooltip" data-placement="left">
+                                <i class="icon-pencil"></i>
+                            </a>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        {% endblock widget_main %}
+        
+        {% block widget_body_after %}
+            <a href="{{ path('kgc_config_forfait_tarification_edit') }}" class="btn btn-block modal-load" role="button" title="Ajouter une tarification">
+                <i class="icon-plus"></i> Ajouter une tarification
+            </a>
+        {% endblock %}
+    {% endembed %}   
+{% endblock body %}

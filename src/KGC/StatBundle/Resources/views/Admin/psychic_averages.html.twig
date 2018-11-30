@@ -1,0 +1,40 @@
+{# src/KGC/StatBundle/Ressources/views/Admin/psychic_averages.html.twig #}
+
+{% extends not app.request.isXmlHttpRequest() ? '::layout.html.twig' : '::emptylayout.html.twig' %}
+
+{% block body %}
+    {% embed '::widgetlayout.html.twig' %}
+        {% set widget_options = {
+            'titre' : 'MOYENNES',
+            'refresh' : '#psychic_Averages'
+        } %}
+
+        {% block widget_body %}
+        <table class="table table-striped" style="margin-bottom: 0px;">
+            <tbody>
+                <tr>
+                    <td>MOYENNE RÉALISÉE</td>
+                    <td>{{ averages.real | number_format(2, ',', ' ') }} €</td>
+                </tr>
+                <tr>
+                    <td>MOYENNE PAIE</td>
+                    <td class="{{ averages.paie_bonus.color | default('') }}">
+                        {{ averages.paie | number_format(2, ',', ' ') }} €
+                    {% if averages.paie_percent|default(false) %}
+                        <span class="text-muted">({{ averages.paie_percent | number_format(2, ',', ' ') }} %)</span>
+                    {% endif %}
+                    </td>
+                </tr>
+                <tr>
+                    <td>MOYENNE RAPPEL</td>
+                    <td>{{ averages.follow | number_format(2, ',', ' ') }} €</td>
+                </tr>
+                <tr>
+                    <td>MOYENNE RÉALISÉE + RAPPEL</td>
+                    <td>{{ averages.real_follow | number_format(2, ',', ' ') }} €</td>
+                </tr>
+            </tbody>
+        </table>
+        {% endblock %}
+    {% endembed %}
+{% endblock body %}

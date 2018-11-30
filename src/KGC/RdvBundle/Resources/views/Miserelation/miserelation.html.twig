@@ -1,0 +1,69 @@
+{# src/KGC/RdvBundle/Resources/views/Miserelation/miserelation.html.twig #}
+
+{% extends not app.request.isXmlHttpRequest() ? '::layout.html.twig' : '::emptylayout.html.twig' %}
+
+{% block body %}
+    {% embed '::modallayout.html.twig' %}
+        {% import 'KGCRdvBundle::blocsficheRDV.html.twig' as fiche %}
+
+        {% block modal_dialog_head %}
+            {% if not form.vars.valid %}
+                <p class="alert alert-block alert-danger">
+                    La mise en relation n&#039;a pu être enregistrée. Attention au motif d&#039;annulation.
+                </p>
+            {% endif %}
+        {% endblock %}
+
+        {% block modal_header %}
+            {% set small = true %}
+            {% set link = {
+                'txt' : 'Mise en relation',
+                'url' : path('kgc_miserel',{'id':rdv.id}),
+                'icon' : 'exchange'
+            } %}
+            {{ parent() }}
+        {% endblock %}
+
+        {% block modal_body %}
+            {% if form %}
+            <div class="row">
+                <div class="col-lg-6">
+                    {{ fiche.client({'form':form, 'form_edit':form_edit, 'rdv':rdv}, true) }}
+                    {{ fiche.historique(rdv) }}
+                </div>
+                <div class="col-lg-6">
+                    {{ fiche.consultation({'rdv':rdv,'form':form, 'form_edit':form_edit}) }}
+                    {{ fiche.coordonneesbancaires({'form':form}) }}
+                    {{ fiche.securisation({'rdv': rdv, 'form':form}) }}
+                    {{ fiche.miserelation({'form':form}) }}
+                </div>
+            </div>
+            {% else %}
+                <p class="alert alert-danger">La fiche demandée nʼa pas été trouvée. Il s'agit sûrement dʼun lien erroné.</p>
+            {% endif %}
+        {% endblock modal_body %}
+
+        {% block modal_content %}
+            {% if form %}
+                <form id="form_miserelation_modal" method="post" action="{{ path('kgc_miserel', {'id':rdv.id}) }}" {{ form_enctype(form) }} class="ajax_modal_form form-horizontal" {{ form.vars.valid ? 'data-refresh="#rdv_planning,#rdv_annulees" data-close="1"':'' }}>
+                {% set modal_body_class = 'fiche' %}
+                {{ parent() }}
+                {{ form_widget(form._token) }}
+                {{ form_widget(form_edit._token) }}
+                {{ form_widget(form.mainaction) }}
+                </form>
+            {% else %}
+                {{ parent() }}
+            {% endif %}
+        {% endblock modal_content %}
+
+        {% block modal_footer %}
+            {% if not form %}
+                {{ parent() }}
+            {% else %}
+                {{ fiche.rdv_form_footer({'form':form, 'rdv':rdv,'retour': true}) }}
+            {% endif %}
+        {% endblock %}
+
+    {% endembed %}
+{% endblock body %}

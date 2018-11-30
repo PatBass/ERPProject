@@ -1,0 +1,16 @@
+{% extends "KGCDashboardBundle::layout.html.twig" %}
+
+{% block ariane %}
+    {% set fil = ['Administration'] %}
+    {{ parent() }}
+{% endblock %}
+
+{% block page_header %}
+    {% set infos = { 'titre':'Statistiques Phonistes','desc':''} %}
+    {% set reload = { 'url':'#admin_stats_phoning' } %}
+    {{ parent()}}
+{% endblock %}
+
+{% block dashboard_body %}
+    <form method="post" action="{{ path('kgc_stat_admin_phoning') }}" class="ajax_load" id="admin_stats_phoning"></form>
+{% endblock %}

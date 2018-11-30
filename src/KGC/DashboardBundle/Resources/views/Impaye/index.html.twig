@@ -1,0 +1,89 @@
+{# src/KGC/DashboardBundle/Resources/views/Impaye/index.html.twig #}
+
+{% extends "KGCDashboardBundle::layout.html.twig" %}
+
+{% block ariane %}
+    {% set fil = ['Impayés'] %}
+    {{ parent() }}
+{% endblock %}
+
+{% block page_header %}
+    {% set misc %}
+    <form class="form-inline data-form-ajax" id="impaye_period_form">
+        <h5>Période :</h5>
+        {{ form_widget(form.period.begin) }}
+        {{ form_widget(form.period.end) }}
+        <button type="submit" class="btn btn-success btn-xs">
+            <i class="icon-arrow-right"></i> Appliquer
+        </button>
+    </form>
+    {% endset %}
+    {% set infos = { 'titre':'Impayés','desc':'Gestion des fiches classées en FNA','misc': misc} %}
+    {% set reload = { 'url':'#rdv_encaissements_done, #rdv_encaissements_denied, #rdv_encaissements_cbi' } %}
+    {{ parent()}}
+{% endblock %}
+
+{% block dashboard_body %}
+<div class="row">
+    <div class="col-md-4">
+        <form method="post" action="{{ path('kgc_encaissements_done', {type: 'done'}) }}" class="ajax_load" data-ajax-form-from="impaye_period_form" id="rdv_encaissements_done"></form>
+
+        {% if not is_granted('ROLE_UNPAID_SERVICE') %}
+        <div class="btn-group btn-block">
+            <button data-toggle="dropdown" class="btn btn-inverse dropdown-toggle btn-block {{ compact|default(false) ? 'btn-sm'}}">
+                Exporter
+                <span class="icon-caret-down icon-on-right"></span>
+            </button>
+            <ul class="dropdown-menu dropdown-inverse">
+                <li><a role="button" href="{{ path('kgc_encaissements_export', {type: 'done', format: 'rdv-crm'}) }}" target="_blank">CRM</a></li>
+                <li><a  role="button" href="{{ path('kgc_encaissements_export', {type: 'done', format: 'rdv-global'}) }}" target="_blank">Fiches</a></li>
+            </ul>
+        </div>
+        {% endif %}
+    </div>
+    <div class="col-md-4">
+        <form method="post" action="{{ path('kgc_encaissements_done', {type: 'denied'}) }}" class="ajax_load" data-ajax-form-from="impaye_period_form" id="rdv_encaissements_denied"></form>
+
+        {% if not is_granted('ROLE_UNPAID_SERVICE') %}
+        <div class="btn-group btn-block">
+            <button data-toggle="dropdown" class="btn btn-inverse dropdown-toggle btn-block {{ compact|default(false) ? 'btn-sm'}}">
+                Exporter
+                <span class="icon-caret-down icon-on-right"></span>
+            </button>
+            <ul class="dropdown-menu dropdown-inverse">
+                <li><a role="button" href="{{ path('kgc_encaissements_export', {type: 'denied', format:'rdv-crm' }) }}" target="_blank">CRM</a></li>
+                <li><a  role="button" href="{{ path('kgc_encaissements_export', {type: 'denied', format:'rdv-global'}) }}" target="_blank">Fiches</a></li>
+            </ul>
+        </div>
+        {% endif %}
+    </div>
+    <div class="col-md-4">
+        <form method="post" action="{{ path('kgc_encaissements_done', {type: 'cbi'}) }}" class="ajax_load" data-ajax-form-from="impaye_period_form" id="rdv_encaissements_cbi"></form>
+
+        {% if not is_granted('ROLE_UNPAID_SERVICE') %}
+        <div class="btn-group btn-block">
+            <button data-toggle="dropdown" class="btn btn-inverse dropdown-toggle btn-block {{ compact|default(false) ? 'btn-sm'}}">
+                Exporter
+                <span class="icon-caret-down icon-on-right"></span>
+            </button>
+            <ul class="dropdown-menu dropdown-inverse">
+                <li><a role="button" href="{{ path('kgc_encaissements_export', {type: 'cbi', format: 'rdv-crm'}) }}" target="_blank">CRM</a></li>
+                <li><a  role="button" href="{{ path('kgc_encaissements_export', {type: 'cbi', format: 'rdv-global'}) }}" target="_blank">Fiches</a></li>
+            </ul>
+        </div>
+        {% endif %}
+    </div>
+</div>
+<div class="space-6"></div>
+<div class="row">
+    <div class="col-md-12">
+        <form method="post" action="{{ path('kgc_fna_stat_widget_list') }}" class="form-search form-search-ajax ajax_load" id="fna_stat_list"></form>
+    </div>
+</div>
+<div class="space-6"></div>
+<div class="row">
+    <div class="col-md-12">
+        <div action="{{ path('kgc_fna_widget_list') }}" class="ajax_load" id="fna_list"></div>
+    </div>
+</div>
+{% endblock %}

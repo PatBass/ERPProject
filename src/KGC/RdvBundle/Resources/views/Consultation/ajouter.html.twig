@@ -1,0 +1,142 @@
+{# src/KGC/RdvBundle/Resources/views/Consultation/ajouter.html.twig #}
+
+{% extends not app.request.isXmlHttpRequest() ? '::layout.html.twig' : '::emptylayout.html.twig' %}
+
+{% block body %}
+    {% embed '::modallayout.html.twig' %}
+        {% import 'KGCRdvBundle::blocsficheRDV.html.twig' as fiche %}
+
+        {% block modal_content %}
+            {% if vue == 'modal' %}
+
+                <form id="ajouter_rdv_modal" method="post" action="{% if toComplete is defined and toComplete is not empty %}{{ path('kgc_rdv_add_by_prospect',{'vue':'modal','id':prospectId}) }}{% else %}{{ path('kgc_rdv_add',{'vue':'modal'}) }}{% endif %}" {{ form_enctype(form) }} class="{{ app.request.isXmlHttpRequest() ? 'ajax_modal_form' }} form-horizontal" {{ form.vars.valid ? 'data-close="1" data-refresh="#rdv_securisation,#rdv_planning"':'' }}>
+                    {{ block('modal_header') }}
+                    {{ block('modal_main') }}
+                </form>
+            {% else %}
+                {{ parent() }}
+            {% endif %}
+        {% endblock modal_content %}
+
+        {% block modal_header %}
+            {% if vue == 'modal' %}
+                {% set link = {
+                'txt' : 'Ajouter une consultation',
+                'url' : path('kgc_rdv_add',{'vue':'modal'})
+                } %}
+                {% set resetForm = 1 %}
+            {% elseif vue == 'widget' %}
+                {% set title = 'Ajouter une consultation' %}
+                {% set refresh = '#rdv-add' %}
+            {% endif %}
+            {{ parent() }}
+        {% endblock %}
+
+        {% block modal_footer %}
+            {% if vue == 'modal' %}
+                {{ fiche.rdv_form_footer({'form':form, 'no_tags':true, 'submit_color':'success', 'submit_txt':'Enregistrer'}) }}
+            {% elseif vue == 'widget' %}
+                {{ fiche.rdv_form_footer({'form':form, 'no_close':true, 'no_tags':true, 'submit_color':'success', 'submit_txt':'Enregistrer'}) }}
+            {% endif %}
+            <div class="hidden">
+                {{ form_rest(form) }}
+            </div>
+        {% endblock %}
+
+        {% block modal_body %}
+            <div class="row fiche">
+                <div class="col-lg-5">
+                    {{ fiche.clientProspect({'form':form}, false) }}
+                    {{ fiche.coordonneesbancaires({'form':form, 'simple':true}) }}
+                    {{ form_row(form._token) }}
+                </div>
+                <div class="col-lg-7">
+                    {% if not form.vars.valid %}
+                        <p class="alert alert-block alert-danger">
+                            La consultation n&#039;a pu être enregistrée.
+                            {{ form_errors(form) }}
+                        </p>
+                    {% endif %}
+                    {{ fiche.ajouter_consultation_info({'form':form}) }}
+                    {{ fiche.date_consultation({'form':form}) }}
+                    {{ fiche.questions({'form':form}) }}
+                </div>
+            </div>
+            {{ render(controller('KGCUserBundle:Elastic:similarity', { })) }}
+        {% endblock %}
+
+    {% endembed %}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        function updateFormAction(prospect) {
+            $('#ajouter_rdv_modal').attr('action', '/rdv/ajouter/modal/' + prospect);
+            $('#rdv-add').attr('action', '/rdv/ajouter/modal/' + prospect);
+        }
+
+        function resetForm() {
+            var aInput = [
+                    'idAstro_valeur',
+                    'client_prenom',
+                    'client_nom',
+                    'client_genre',
+                    'client_dateNaissance',
+                    'numtel1',
+                    'numtel2',
+                    'client_mail',
+                    'adresse_voie',
+                    'adresse_complement',
+                    'adresse_codepostal',
+                    'adresse_ville',
+                    'adresse_pays',
+                    'questionSubject',
+                    'questionText',
+                    'questionContent',
+                    'spouseName',
+                    'spouseBirthday',
+                    'spouseSign',
+                    'website',
+                    'source',
+                    'gclid',
+                    'voyant',
+                    'cartebancaires___name___expiration',
+                    'cartebancaires___name___numero',
+                    'cartebancaires___name___cryptogramme',
+                    'new_card_send_choice_0'
+                ],
+                aChoosen = [
+                    'support',
+                    'codepromo',
+                    'formurl'
+                ];
+            $.each(aInput, function( index, value ) {
+                $('#kgc_RdvBundle_rdv_' + value).val('');
+            });
+            $.each(aChoosen, function( index, value ) {
+                $('#kgc_RdvBundle_rdv_' + value).val('');
+                $("#kgc_RdvBundle_rdv_" + value).trigger('chosen:updated');
+            });
+        }
+
+        $(document).on('click', '.prospect-similary', function (ev) {
+            updateFormAction($(this).closest("tr").data("id"));
+        });
+
+        $(document).on('click', '.ajax_reset_form', function (ev) {
+            resetForm();
+        });
+
+        jQuery(function () {
+            {% autoescape 'js' %}
+            {% if toComplete is defined and toComplete is not empty %}
+            {% for name,value in toComplete %}
+            $("#kgc_RdvBundle_rdv_{{ name }}").val('{{ value }}');
+            {% endfor %}
+            {% endif %}
+            {% endautoescape %}
+        })
+        ;
+    </script>
+{% endblock %}

@@ -1,0 +1,57 @@
+{# src/KGC/RdvBundle/Resources/views/Consultation/effectuer.html.twig #}
+
+{% extends not app.request.isXmlHttpRequest() ? '::layout.html.twig' : '::emptylayout.html.twig' %}
+
+{% block body %}
+    {% import 'KGCRdvBundle::blocsficheRDV.html.twig' as fiche %}
+
+    {% set edit = rdv.consultation is null and rdv.priseencharge %}
+
+    <div class="row voyant">
+        <div class="col-lg-4 fiche">
+            {% if form %}
+                {% if not form.vars.valid %}
+                    <p class="alert alert-danger">{{ form_errors(form) }}</p>
+                {% endif %}
+                {{ fiche.consultation({'rdv':rdv,'form':form, 'hide_stateline': true}) }}
+                {{ fiche.allumage({ 'rdv':rdv,'form':form }) }}
+                {{ fiche.client({'form':form, 'form_edit':form_edit, 'rdv':rdv}, true) }}
+                {{ form_widget(form._token) }}
+                {{ form_widget(form.mainaction) }}
+            {% else %}
+                <p class="alert alert-danger">Consultation introuvable.</p>
+            {% endif %}
+        </div>
+        <div class="col-lg-4 historique">
+            {{ fiche.notes_voyant({'rdv':rdv,'form':form}) }}
+        </div>
+        <div class="col-lg-4 fiche">
+            {{ fiche.notes({'form':form}) }}
+            {{ fiche.tarification({'form':form, 'edit':edit}) }}
+            {{ fiche.encaissements({'form':form, 'edit':edit}) }}
+
+            <div class="space-6"></div>
+
+            {% if rdv.priseencharge and not rdv.consultation %}
+                <a title="Annuler" role="button" class="btn btn-sm btn-danger btn-block modal-load" href="{{ path('kgc_rdv_annuler',{'id':rdv.id,'comportement':1}) }}">
+                    <i class="icon-remove"></i> Annuler
+                </a>
+                <a role="button" title="Reporter" class="btn btn-sm btn-info btn-block modal-load blue tooltip-info" href="{{ path('kgc_rdv_reporter',{'id':rdv.id}) }}">
+                    <i class="icon-reply bigger-120"></i> &nbsp;{{ 'consultation.menu.postpone' | trans }}
+                </a>
+            {% else %}
+                <a role="button" title="Retour" class="btn btn-sm btn-danger btn-block" href="{{ path('kgc_dashboard') }}">
+                    <i class="icon-reply bigger-120"></i> &nbsp;Retour
+                </a>
+            {% endif %}
+
+        </div>
+    </div>
+    <div class="space-12"></div>
+    <div class="row">
+        {% if edit %}
+            {{ fiche.rdv_form_footer({'form':form,'no_close':true, 'rdv': rdv}) }}
+        {% endif %}
+    </div>
+
+{% endblock body %}

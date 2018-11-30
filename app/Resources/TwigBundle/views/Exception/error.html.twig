@@ -1,0 +1,45 @@
+{# /app/Ressources/TwigBundle/views/Exception/error.html.twig #}
+
+{#% if  app.environment == 'dev' %}
+    {% render 'TwigBundle:Exception:show' with{'exception':exception, 'logger':logger, 'format':format} %}
+{% else %}
+    {# Template perso #}
+
+    {% extends not app.request.isXmlHttpRequest() ? '::layout.html.twig' : '::emptylayout.html.twig' %}
+
+    {% block body %}
+        <div class="error-container">
+            <div class="well">
+                <h1 class="grey lighter smaller">
+                    <span class="red bigger-125">
+                    <i class="icon-warning-sign"></i>
+                    Oups !
+                    </span>
+                    Une erreur est survenue
+                </h1>
+                <hr>
+                <h3 class="lighter smaller">
+                    <i class="icon-wrench icon-animated-wrench bigger-125"></i>
+                    Nous y travaillons
+                </h3>
+                <div class="space"></div>
+                <hr>
+                <div class="space"></div>
+                <div class="center">
+                    <a class="btn btn-danger" title="Fermer" data-dismiss="modal">
+                        <i class="icon-remove"></i>
+                        Fermer
+                    </a>
+                    <a class="btn btn-grey" href="#" onclick="javascript:history.back()" >
+                        <i class="icon-arrow-left"></i>
+                        Précédent
+                    </a>
+                    <a class="btn btn-primary" href="{{ path('kgc_dashboard') }}">
+                        <i class="icon-dashboard"></i>
+                        Retour au tableau de bord
+                    </a>
+                </div>
+            </div>
+        </div>
+    {% endblock %}
+{#% endif %#}

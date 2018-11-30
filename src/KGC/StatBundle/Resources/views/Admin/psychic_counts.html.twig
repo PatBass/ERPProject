@@ -1,0 +1,100 @@
+{# src/KGC/StatBundle/Ressources/views/Admin/psychic_counts.html.twig #}
+
+{% extends not app.request.isXmlHttpRequest() ? '::layout.html.twig' : '::emptylayout.html.twig' %}
+
+{% block body %}
+    {% embed '::widgetlayout.html.twig' %}
+        {% set widget_options = {
+            'titre' : 'CONSULTATIONS',
+            'refresh' : '#psychic_Counts'
+        } %}
+
+        {% block widget_body %}
+        <table class="table table-striped" style="margin-bottom: 0px;">
+            <thead>
+                <tr>
+                    <th></th>
+                    <th>Consultations</th>
+                    <th>Suivis</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>TRAITÉES</td>
+                    <td>
+                        <a class="modal-load" href="{{ path('kgc_stat_admin_psychicCounts', app.request.get('_route_params') | merge({ details : 'count_rdv_taken' })) }}">
+                            {{ counts.rdv.taken }}
+                        </a>
+                    </td>
+                    <td>
+                        <a class="modal-load" href="{{ path('kgc_stat_admin_psychicCounts', app.request.get('_route_params') | merge({ details : 'count_follow_taken' })) }}">
+                            {{ counts.follow.taken }}
+                        </a>
+                    </td>
+                </tr>
+                <tr>
+                    <td>ANNULÉES</td>
+                    <td>
+                        <a class="modal-load" href="{{ path('kgc_stat_admin_psychicCounts', app.request.get('_route_params') | merge({ details : 'count_rdv_cancelled' })) }}">
+                            {{ counts.rdv.cancelled }}
+                        </a>
+                    </td>
+                    <td>
+                        <a class="modal-load" href="{{ path('kgc_stat_admin_psychicCounts', app.request.get('_route_params') | merge({ details : 'count_follow_cancelled' })) }}">
+                            {{ counts.follow.cancelled }}
+                        </a>
+                    </td>
+                </tr>
+                <tr>
+                    <td>NB 10MIN</td>
+                    <td>
+                        <a class="modal-load" href="{{ path('kgc_stat_admin_psychicCounts', app.request.get('_route_params') | merge({ details : 'count_rdv_tenmin' })) }}">
+                            {{ counts.rdv.tenmin }}
+                        </a>
+                        <span class="{{ counts.rdv.tenmin_bonus.color | default('') }}">
+                            ({{ counts.rdv.tenmin_percent | number_format(2, ',', ' ') }} %)
+                        </span>
+                    </td>
+                    <td>
+                        <a class="modal-load" href="{{ path('kgc_stat_admin_psychicCounts', app.request.get('_route_params') | merge({ details : 'count_follow_tenmin' })) }}">
+                            {{ counts.follow.tenmin }}
+                        </a>
+                        <span class="text-muted">({{ counts.follow.tenmin_percent | number_format(2, ',', ' ') }} %)</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td>EN COURS</td>
+                    <td>
+                        <a class="modal-load" href="{{ path('kgc_stat_admin_psychicCounts', app.request.get('_route_params') | merge({ details : 'count_rdv_processing' })) }}">
+                            {{ counts.rdv.processing }}
+                        </a>
+                    </td>
+                    <td>
+                        <a class="modal-load" href="{{ path('kgc_stat_admin_psychicCounts', app.request.get('_route_params') | merge({ details : 'count_follow_processing' })) }}">
+                            {{ counts.follow.processing }}
+                        </a>
+                    </td>
+                </tr>
+                <tr>
+                    <td>VALIDÉES</td>
+                    <td>
+                        <a class="modal-load" href="{{ path('kgc_stat_admin_psychicCounts', app.request.get('_route_params') | merge({ details : 'count_rdv_done' })) }}">
+                            {{ counts.rdv.done }}
+                        </a>
+                    </td>
+                    <td>
+                        <a class="modal-load" href="{{ path('kgc_stat_admin_psychicCounts', app.request.get('_route_params') | merge({ details : 'count_follow_done' })) }}">
+                            {{ counts.follow.done }}
+                        </a>
+                    </td>
+                </tr>
+                <tr>
+                    <td>BONUS/MALUS</td>
+                    <td>{{ counts.tenmin_bonus > 0 ? '+'}}{{ counts.tenmin_bonus | number_format(1, ',', ' ')  }} %</td>
+                    <td></td>
+                </tr>
+            </tbody>
+        </table>
+        {% endblock %}
+    {% endembed %}
+{% endblock body %}

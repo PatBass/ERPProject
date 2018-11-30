@@ -1,0 +1,5 @@
+kgc_payment_notify:
+    pattern:  /notify/{gateway}
+    defaults: { _controller: KGCPaymentBundle:Payment:notify }
+    requirements:
+        gateway: "(be2bill|klikandpay|hipay)"

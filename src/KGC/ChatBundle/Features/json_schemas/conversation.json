@@ -1,0 +1,38 @@
+{
+    "id": "room.json",
+    "title": "Room schema",
+    "type": "object",
+    "properties": {
+        "id": {
+            "type": "integer"
+        },
+        "entitled": {
+            "type": "string"
+        },
+        "status": {
+            "type": "integer"
+        },
+        "date_created": {
+            "type": "integer"
+        },
+        "start_date": {
+            "type": "integer"
+        },
+        "end_date": {
+            "type": ["integer", "null"]
+        },
+        "users": {
+            "type": "array",
+            "items": {
+                "$ref": "user.json"
+            }
+        },
+        "messages": {
+            "type": "array",
+            "items": {
+                "$ref": "message.json"
+            }
+        },
+    },
+    "required": ["id", "entitled", "status", "date_created", "users", "messages", "start_date", "end_date"]
+}

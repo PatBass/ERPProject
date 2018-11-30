@@ -1,0 +1,57 @@
+{# src/KGC/StatBundle/Ressources/views/Admin/psychic_ca.html.twig #}
+
+{% extends not app.request.isXmlHttpRequest() ? '::layout.html.twig' : '::emptylayout.html.twig' %}
+
+{% block body %}
+    {% embed '::widgetlayout.html.twig' %}
+        {% set widget_options = {
+            'titre' : 'CHIFFRE DʼAFFAIRE',
+            'refresh' : '#psychic_CA'
+        } %}
+
+        {% block widget_body %}
+        <table class="table table-striped" style="margin-bottom: 0px;">
+            <thead>
+                <tr>
+                    <th></th>
+                    <th>Consultations</th>
+                    <th>Suivis</th>
+                    <th>TOTAL</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>TOTAL CA RÉALISÉ</td>
+                    <td>{{ ca_stats.rdv.real | number_format(2, ',', ' ') }} &euro;</td>
+                    <td>{{ ca_stats.follow.real | number_format(2, ',', ' ') }} &euro;</td>
+                    <td>{{ ca_stats.total.real | number_format(2, ',', ' ') }} &euro;</td>
+                </tr>
+                <tr>
+                    <td>TOTAL CA ENCAISSÉ</td>
+                    <td>{{ ca_stats.rdv.enc | number_format(2, ',', ' ') }} &euro;</td>
+                    <td>{{ ca_stats.follow.enc | number_format(2, ',', ' ') }} &euro;</td>
+                    <td>{{ ca_stats.total.enc | number_format(2, ',', ' ') }} &euro;</td>
+                </tr>
+                <tr>
+                    <td>TOTAL OPPOSITIONS</td>
+                    <td>{{ ca_stats.rdv.oppo | number_format(2, ',', ' ') }} &euro;</td>
+                    <td>{{ ca_stats.follow.oppo | number_format(2, ',', ' ') }} &euro;</td>
+                    <td>{{ ca_stats.total.oppo | number_format(2, ',', ' ') }} &euro;</td>
+                </tr>
+                <tr>
+                    <td>TOTAL REMBOURSEMENTS</td>
+                    <td>{{ ca_stats.rdv.refund | number_format(2, ',', ' ') }} &euro;</td>
+                    <td>{{ ca_stats.follow.refund | number_format(2, ',', ' ') }} &euro;</td>
+                    <td>{{ ca_stats.total.refund | number_format(2, ',', ' ') }} &euro;</td>
+                </tr>
+                <tr>
+                    <th>TOTAL NET</th>
+                    <td>{{ ca_stats.rdv.net | number_format(2, ',', ' ') }} &euro;</td>
+                    <td>{{ ca_stats.follow.net | number_format(2, ',', ' ') }} &euro;</td>
+                    <td>{{ ca_stats.total.net | number_format(2, ',', ' ') }} &euro;</td>
+                </tr>
+            </tbody>
+        </table>
+        {% endblock %}
+    {% endembed %}
+{% endblock body %}

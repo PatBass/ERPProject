@@ -1,0 +1,21 @@
+{# src/KGC/ClientBundle/Resources/views/historique/extension.html.twig #}
+
+{% macro render_history_as_label(h, f) %}
+
+    {% set display = { 'lib': f | historique_type_label, 'color':'light', 'title':''} %}
+    {% if h is not null %}
+        {% if h.backendType == constant('BACKEND_TYPE_BOOL', h) %}
+            {% if h.value %}
+                {% set display =  display|merge({'color':'success', 'title':'OUI'}) %}
+            {% else %}
+                {% set display =  display|merge({'color':'danger', 'title':'NON'}) %}
+            {% endif %}
+        {% elseif h.backendType == constant('BACKEND_TYPE_OPTION', h) and h.value %}
+                {% set display =  display|merge({'color':h.value.color|default('grey'), 'lib':h.value.label}) %}
+        {% endif %}
+    {% endif %}
+
+    <span class="label label-{{ display.color }} tooltip-{{ display.color }}" title="{{ display.title|default('') }}" data-rel="tooltip" data-placement="top">
+        {{ display.lib }}
+    </span>
+{% endmacro render_history_as_label %}

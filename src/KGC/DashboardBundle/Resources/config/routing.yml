@@ -1,0 +1,751 @@
+# src/KGC/DashboardBundle/Resources/config/routing.yml
+
+kgc_dashboard:
+    pattern: /
+    defaults: {_controller: KGCDashboardBundle:Dashboard:index }
+
+kgc_dashboard_construction:
+    pattern: /construction
+    defaults:
+        _controller: FrameworkBundle:Template:template
+        template: 'KGCDashboardBundle:Dashboard:in-construction.html.twig'
+
+kgc_dashboard_phoning1:
+    pattern: /step1
+    defaults: {_controller: KGCDashboardBundle:Dashboard:step1 }
+
+kgc_dashboard_phoning2:
+    pattern: /step2/{id}
+    defaults: {_controller: KGCDashboardBundle:Dashboard:step2 }
+
+kgc_dashboard_phoning22:
+    pattern: /step2-2/{id}
+    defaults: {_controller: KGCDashboardBundle:Dashboard:step22 }
+
+kgc_dashboard_phoning3:
+    pattern: /step3/
+    defaults: {_controller: KGCDashboardBundle:Dashboard:step3 }
+
+kgc_dashboard_switch:
+    pattern: /switch
+    defaults: {_controller: KGCDashboardBundle:Dashboard:switch }
+
+kgc_utilisateurs_page:
+    pattern: /utilisateurs
+    defaults: {_controller: KGCDashboardBundle:Utilisateurs:index }
+
+kgc_leads_page:
+    pattern: /leads
+    defaults: {_controller: KGCDashboardBundle:Prospects:leads }
+
+kgc_consultations_page:
+    pattern: /consultations
+    defaults: {_controller: KGCDashboardBundle:Consultations:index }
+
+kgc_consultations_fichevoyant:
+    pattern: /consultations/fiche-voyant/{id}
+    defaults: {_controller: KGCDashboardBundle:Consultations:ficheVoyant }
+    requirements:
+        id: \d+
+
+kgc_planning_page:
+    pattern: /planning
+    defaults: {_controller: KGCDashboardBundle:Planning:index }
+
+kgc_tchatplanning_page:
+    pattern: /tchat/planning
+    defaults: {_controller: KGCDashboardBundle:Planning:chat }
+
+kgc_version:
+    pattern: /version
+    defaults: {_controller: KGCDashboardBundle:Dashboard:version }
+
+kgc_impaye_page:
+    pattern: /impaye
+    defaults: {_controller: KGCDashboardBundle:Impaye:index }
+
+kgc_tracking_page:
+    pattern: /tracking
+    defaults: {_controller: KGCDashboardBundle:Tracking:index }
+
+kgc_qualite_page:
+    pattern: /qualite
+    defaults: {_controller: KGCDashboardBundle:Qualite:index }
+
+kgc_products_page:
+    pattern: /suivi-produits/{page}
+    defaults: {_controller: KGCRdvBundle:EnvoiProduit:index, page : 1 }
+
+kgc_clients_show:
+    pattern: /clients/{id}
+    defaults: {_controller: KGCClientBundle:Client:show}
+    requirements:
+        id: \d+
+
+kgc_clients_page:
+    pattern: /clients
+    defaults:
+        _controller: FrameworkBundle:Template:template
+        template: 'KGCDashboardBundle:Client:index.html.twig'
+
+kgc_dri_page:
+    pattern: /dri
+    defaults:
+        _controller: FrameworkBundle:Template:template
+        template: 'KGCUserBundle:DRI:dri.html.twig'
+
+kgc_search_page:
+    pattern: /search
+    defaults:
+        _controller: KGCDashboardBundle:Dashboard:search
+
+kgc_search_phoniste_page:
+    pattern: /search/phoniste
+    defaults:
+        _controller: KGCDashboardBundle:Dashboard:searchPhoniste
+
+kgc_search_client_page:
+    pattern: /search/client
+    defaults:
+        _controller: KGCDashboardBundle:Dashboard:searchClient
+
+kgc_search_prospect_page:
+    pattern: /search/prospect
+    defaults:
+        _controller: KGCDashboardBundle:Dashboard:searchProspect
+
+kgc_search_rdv_page:
+    pattern: /search/rdv
+    defaults:
+        _controller: KGCDashboardBundle:Dashboard:searchRdv
+
+kgc_admin_general:
+    pattern: /admin/general
+    defaults: {_controller: KGCDashboardBundle:Stat:general }
+
+kgc_admin_specific:
+    pattern: /admin/specific
+    defaults: {_controller: KGCDashboardBundle:Stat:specific }
+
+kgc_admin_psychic:
+    pattern: /admin/psychic
+    defaults:
+        _controller: KGCDashboardBundle:Stat:psychic
+
+kgc_admin_phoning:
+    pattern: /admin/phoning
+    defaults:
+        _controller: FrameworkBundle:Template:template
+        template: 'KGCDashboardBundle:Admin:phoning.stats.html.twig'
+
+kgc_admin_roi:
+    pattern: /admin/roi
+    defaults:
+        _controller: FrameworkBundle:Template:template
+        template: 'KGCDashboardBundle:Admin:roi.stats.html.twig'
+
+kgc_admin_unpaid:
+    pattern: /admin/unpaid
+    defaults:
+        _controller: FrameworkBundle:Template:template
+        template: 'KGCDashboardBundle:Admin:unpaid.stats.html.twig'
+
+kgc_admin_customers:
+    pattern: /admin/customers
+    defaults:
+        _controller: FrameworkBundle:Template:template
+        template: 'KGCDashboardBundle:Admin:customers.stats.html.twig'
+
+kgc_admin_ca:
+    pattern: /admin/ca
+    defaults:
+        _controller: FrameworkBundle:Template:template
+        template: 'KGCDashboardBundle:Admin:ca.stats.html.twig'
+
+kgc_admin_telecollecte:
+    pattern: /admin/telecollecte
+    defaults:
+        _controller: FrameworkBundle:Template:template
+        template: 'KGCDashboardBundle:Admin:telecollectes.html.twig'
+
+kgc_admin_specific_tchat:
+    pattern: /admin/specific-tchat
+    defaults: {_controller: KGCDashboardBundle:Stat:specificTchat }
+
+kgc_admin_abo_tchat:
+    pattern: /admin/abo-tchat
+    defaults:
+        _controller: FrameworkBundle:Template:template
+        template: 'KGCDashboardBundle:Admin:abo-tchat.stats.html.twig'
+
+kgc_admin_abo_tchat_widget:
+    pattern: /admin/abo-tchat-widget
+    defaults:
+        _controller: KGCDashboardBundle:Stat:aboTchat
+
+kgc_config_mail:
+    pattern: /params/mail
+    defaults:
+        _controller: FrameworkBundle:Template:template
+        template: 'KGCDashboardBundle:Config:mails.html.twig'
+
+kgc_config_mail_list:
+    pattern: /params/mail-list
+    defaults:
+        _controller: KGCDashboardBundle:Config:mailList
+
+kgc_config_mail_edit:
+    pattern: /params/mail-edit/{id}
+    defaults:
+        _controller: KGCDashboardBundle:Config:mailEdit
+        id: null
+    requirements:
+        id: \d+
+
+kgc_config_mail_state:
+    pattern: /params/mail-state/{id}
+    defaults:
+        _controller: KGCDashboardBundle:Config:mailState
+        id: null
+    requirements:
+        id: \d+
+
+kgc_config_poste:
+    pattern: /params/poste
+    defaults:
+        _controller: FrameworkBundle:Template:template
+        template: 'KGCDashboardBundle:Config:postes.html.twig'
+
+kgc_config_poste_list:
+    pattern: /params/poste-list
+    defaults:
+        _controller: KGCDashboardBundle:Config:posteList
+
+kgc_config_poste_edit:
+    pattern: /params/poste-edit/{id}
+    defaults:
+        _controller: KGCDashboardBundle:Config:posteEdit
+        id: null
+    requirements:
+        id: \d+
+
+
+kgc_config_sms:
+    pattern: /params/sms
+    defaults:
+        _controller: FrameworkBundle:Template:template
+        template: 'KGCDashboardBundle:Config:sms.html.twig'
+
+kgc_config_sms_list:
+    pattern: /params/sms-list
+    defaults:
+        _controller: KGCDashboardBundle:Config:smsList
+
+kgc_config_sms_edit:
+    pattern: /params/sms-edit/{id}
+    defaults:
+        _controller: KGCDashboardBundle:Config:smsEdit
+        id: null
+    requirements:
+        id: \d+
+
+kgc_config_campagne:
+    pattern: /params/campagne
+    defaults:
+        _controller: FrameworkBundle:Template:template
+        template: 'KGCDashboardBundle:Config:campagne.html.twig'
+
+kgc_config_campagne_list:
+    pattern: /params/campagne-list
+    defaults:
+        _controller: KGCDashboardBundle:Config:campagneList
+
+kgc_config_campagne_edit:
+    pattern: /params/campagne-edit/{id}
+    defaults:
+        _controller: KGCDashboardBundle:Config:campagneEdit
+        id: null
+    requirements:
+        id: \d+
+
+kgc_config_campagne_send:
+    pattern: /params/campagne-send/{id}
+    defaults:
+        _controller: KGCDashboardBundle:Config:campagneSend
+    requirements:
+        id: \d+
+
+kgc_config_campagne_listcontact:
+    pattern: /params/listecontact
+    defaults:
+        _controller: FrameworkBundle:Template:template
+        template: 'KGCDashboardBundle:Config:campagne.list-contact.html.twig'
+
+kgc_config_campagne_list_contact:
+    pattern: /params/campagne-listcontact-llist
+    defaults:
+        _controller: KGCDashboardBundle:Config:campagneListContactList
+
+kgc_config_campagne_list_contact_edit:
+    pattern: /params/campagne-listcontact-edit/{id}
+    defaults:
+        _controller: KGCDashboardBundle:Config:campagneListContactEdit
+        id: null
+    requirements:
+        id: \d+
+
+kgc_config_campagne_list_contact_delete:
+    pattern: /params/campagne-listcontact/del/{id}
+    defaults: {_controller: KGCDashboardBundle:Config:campagneListContactSupprimer}
+
+kgc_config_campagne_contact_list:
+    pattern: /params/campagne-contact-list/{id}
+    defaults:
+        _controller: KGCDashboardBundle:Config:campagneListContact
+        id: null
+    requirements:
+        id: \d+
+
+kgc_config_campagne_contact_edit:
+    pattern: /params/campagne-contact-edit/{list}/{id}
+    defaults:
+        _controller: KGCDashboardBundle:Config:campagneContactEdit
+        id: null
+    requirements:
+        list: \d+
+        id: \d+
+
+kgc_config_campagne_contact_delete:
+    pattern: /params/campagne-contact/del/{id}
+    defaults: {_controller: KGCDashboardBundle:Config:campagneContactSupprimer}
+
+kgc_config_payment:
+    pattern: /params/payment
+    defaults:
+        _controller: FrameworkBundle:Template:template
+        template: 'KGCDashboardBundle:Config:payments.html.twig'
+
+kgc_config_payment_list:
+    pattern: /params/payment-list
+    defaults:
+        _controller: KGCDashboardBundle:Config:paymentList
+
+kgc_config_payment_edit:
+    pattern: /params/payment-edit/{id}
+    defaults:
+        _controller: KGCDashboardBundle:Config:paymentEdit
+        id: null
+    requirements:
+        id: \d+
+
+kgc_config_tpe_list:
+    pattern: /params/tpe-list
+    defaults:
+        _controller: KGCDashboardBundle:Config:tpeList
+
+kgc_config_tpe_edit:
+    pattern: /params/tpe-edit/{id}
+    defaults:
+        _controller: KGCDashboardBundle:Config:tpeEdit
+        id: null
+    requirements:
+        id: \d+
+
+kgc_config_formule:
+    pattern: /params/formules
+    defaults:
+        _controller: FrameworkBundle:Template:template
+        template: 'KGCDashboardBundle:Config:formules.html.twig'
+
+kgc_config_voyant:
+    pattern: /params/voyants
+    defaults:
+        _controller: FrameworkBundle:Template:template
+        template: 'KGCDashboardBundle:Config:voyants.html.twig'
+
+kgc_config_tarification:
+    pattern: /params/tarification
+    defaults:
+        _controller: FrameworkBundle:Template:template
+        template: 'KGCDashboardBundle:Config:tarifications.html.twig'
+
+kgc_config_tarification_list:
+    pattern: /params/tarification-list
+    defaults:
+        _controller: KGCDashboardBundle:Config:tarificationList
+
+kgc_config_tarification_edit:
+    pattern: /params/tarification-edit/{id}
+    defaults:
+        _controller: KGCDashboardBundle:Config:tarificationEdit
+        id: null
+    requirements:
+        id: \d+
+
+kgc_config_forfait_tarification_list:
+    pattern: /params/forfait-tarification-list
+    defaults:
+        _controller: KGCDashboardBundle:Config:forfaitTarificationList
+
+kgc_config_forfait_tarification_edit:
+    pattern: /params/forfait-tarification-edit/{id}
+    defaults:
+        _controller: KGCDashboardBundle:Config:forfaitTarificationEdit
+        id: null
+    requirements:
+        id: \d+
+
+
+kgc_config_website:
+    pattern: /params/website
+    defaults:
+        _controller: FrameworkBundle:Template:template
+        template: 'KGCDashboardBundle:Config:websites.html.twig'
+
+kgc_config_website_list:
+    pattern: /params/website-list
+    defaults:
+        _controller: KGCDashboardBundle:Config:websiteList
+
+kgc_config_website_edit:
+    pattern: /params/website-edit/{id}
+    defaults:
+        _controller: KGCDashboardBundle:Config:websiteEdit
+        id: null
+    requirements:
+        id: \d+
+
+
+kgc_config_support:
+    pattern: /params/support
+    defaults:
+        _controller: FrameworkBundle:Template:template
+        template: 'KGCDashboardBundle:Config:supports.html.twig'
+
+kgc_config_support_list:
+    pattern: /params/support-list
+    defaults:
+        _controller: KGCDashboardBundle:Config:supportList
+
+kgc_config_support_edit:
+    pattern: /params/support-edit/{id}
+    defaults:
+        _controller: KGCDashboardBundle:Config:supportEdit
+        id: null
+    requirements:
+        id: \d+
+
+kgc_config_support_state:
+    pattern: /params/support-state/{id}
+    defaults:
+        _controller: KGCDashboardBundle:Config:supportState
+        id: null
+    requirements:
+        id: \d+
+
+kgc_config_statistic:
+    pattern: /params/statistic
+    defaults:
+        _controller: FrameworkBundle:Template:template
+        template: 'KGCDashboardBundle:Config:statistics.html.twig'
+
+kgc_config_statistic_rendering_rule_list:
+    pattern: /params/statistic-rendering-rule-list
+    defaults:
+        _controller: KGCDashboardBundle:Config:statisticRenderingRuleList
+
+kgc_config_statistic_rendering_rule_edit:
+    pattern: /params/statistic-rendering-rule-edit/{id}
+    defaults:
+        _controller: KGCDashboardBundle:Config:statisticRenderingRuleEdit
+        id: null
+    requirements:
+        id: \d+
+kgc_config_statistic_rendering_rule_delete:
+    pattern: /params/statistic-rendering-rule-delete/{id}
+    defaults:
+        _controller: KGCDashboardBundle:Config:statisticRenderingRuleDelete
+        id: null
+    requirements:
+        id: \d+
+
+kgc_config_codepromo:
+    pattern: /params/codepromo
+    defaults:
+        _controller: FrameworkBundle:Template:template
+        template: 'KGCDashboardBundle:Config:codepromos.html.twig'
+
+kgc_config_codepromo_list:
+    pattern: /params/codepromo-list
+    defaults:
+        _controller: KGCDashboardBundle:Config:codepromoList
+
+kgc_config_codepromo_edit:
+    pattern: /params/codepromo-edit/{id}
+    defaults:
+        _controller: KGCDashboardBundle:Config:codepromoEdit
+        id: null
+    requirements:
+        id: \d+
+
+kgc_config_codepromo_state:
+    pattern: /params/codepromo-state/{id}
+    defaults:
+        _controller: KGCDashboardBundle:Config:codepromoState
+        id: null
+    requirements:
+        id: \d+
+
+
+kgc_config_tarification_simple_list:
+    pattern: /params/tarification-simple-list
+    defaults:
+        _controller: KGCDashboardBundle:Config:tarificationSimpleList
+
+kgc_config_tarification_simple_edit:
+    pattern: /params/tarification-simple-list-edit/{id}
+    defaults:
+        _controller: KGCDashboardBundle:Config:tarificationSimpleEdit
+        id: null
+    requirements:
+        id: \d+
+
+kgc_config_forfait_list:
+    pattern: /params/forfait-list
+    defaults:
+        _controller: KGCDashboardBundle:Config:forfaitList
+
+kgc_config_forfait_edit:
+    pattern: /params/forfait-edit/{id}
+    defaults:
+        _controller: KGCDashboardBundle:Config:forfaitEdit
+        id: null
+    requirements:
+        id: \d+
+
+kgc_config_salary:
+    pattern: /params/salary
+    defaults:
+        _controller: FrameworkBundle:Template:template
+        template: 'KGCDashboardBundle:Config:salary.html.twig'
+
+kgc_config_salary_list:
+    pattern: /params/salary-list
+    defaults:
+        _controller: KGCDashboardBundle:Config:salaryList
+
+kgc_config_salary_edit:
+    pattern: /params/salary-edit/{id}
+    defaults:
+        _controller: KGCDashboardBundle:Config:salaryEdit
+        id: null
+    requirements:
+        id: \d+
+
+kgc_config_phoniste_bonus_hebdo:
+    pattern: /params/phoniste-bonus-hebdo
+    defaults:
+        _controller: KGCDashboardBundle:Config:phonisteBonusHebdo
+
+kgc_config_phoniste_bonus_hebdo_edit:
+    pattern: /params/phoniste-bonus-hebdo-edit/{id}
+    defaults:
+        _controller: KGCDashboardBundle:Config:phonisteBonusHebdoEdit
+        id: null
+    requirements:
+        id: \d+
+
+kgc_config_phoniste_bonus_challenge:
+    pattern: /params/phoniste-bonus-challenge
+    defaults:
+        _controller: KGCDashboardBundle:Config:phonisteBonusChallenge
+
+kgc_config_phoniste_bonus_challenge_edit:
+    pattern: /params/phoniste-bonus-challenge-edit/{id}
+    defaults:
+        _controller: KGCDashboardBundle:Config:phonisteBonusChallengeEdit
+        id: null
+    requirements:
+        id: \d+
+
+kgc_config_phoniste_penalty:
+    pattern: /params/phoniste-penalty
+    defaults:
+        _controller: KGCDashboardBundle:Config:phonistePenalty
+
+kgc_config_phoniste_penalty_edit:
+    pattern: /params/phoniste_penalty-edit/{id}
+    defaults:
+        _controller: KGCDashboardBundle:Config:phonistePenaltyEdit
+        id: null
+    requirements:
+        id: \d+
+
+kgc_config_psychic_penalty:
+    pattern: /params/psychic-penalty
+    defaults:
+        _controller: KGCDashboardBundle:Config:psychicPenalty
+
+kgc_config_psychic_penalty_edit:
+    pattern: /params/psychic_penalty-edit/{id}
+    defaults:
+        _controller: KGCDashboardBundle:Config:psychicPenaltyEdit
+        id: null
+    requirements:
+        id: \d+
+
+kgc_config_psychic_bonus_hebdo:
+    pattern: /params/voyant-bonus-hebdo
+    defaults:
+        _controller: KGCDashboardBundle:Config:psychicBonusHebdo
+
+kgc_config_psychic_bonus_hebdo_edit:
+    pattern: /params/voyant-bonus-hebdo-edit/{id}
+    defaults:
+        _controller: KGCDashboardBundle:Config:psychicBonusHebdoEdit
+        id: null
+    requirements:
+        id: \d+
+
+kgc_config_products:
+    pattern: /params/products
+    defaults:
+        _controller: FrameworkBundle:Template:template
+        template: 'KGCDashboardBundle:Config:products.html.twig'
+
+kgc_config_products_list:
+    pattern: /params/products-list
+    defaults:
+        _controller: KGCDashboardBundle:Config:productsList
+
+kgc_config_products_edit:
+    pattern: /params/products-edit/{id}
+    defaults:
+        _controller: KGCDashboardBundle:Config:productsEdit
+        id: null
+    requirements:
+        id: \d+
+
+kgc_service_j1:
+    pattern: /service/j1
+    defaults: {_controller: KGCDashboardBundle:J1:index }
+
+kgc_service_validation:
+    pattern: /validation
+    defaults:
+        _controller: FrameworkBundle:Template:template
+        template: 'KGCDashboardBundle:Dashboard:validation.html.twig'
+
+
+kgc_config_tracking:
+    pattern: /params/tracking
+    defaults:
+        _controller: FrameworkBundle:Template:template
+        template: 'KGCDashboardBundle:Config:tracking.html.twig'
+
+kgc_config_source_list:
+    pattern: /params/source-list
+    defaults:
+        _controller: KGCDashboardBundle:Config:sourceList
+
+kgc_config_source_edit:
+    pattern: /params/source-edit/{id}
+    defaults:
+        _controller: KGCDashboardBundle:Config:sourceEdit
+        id: null
+    requirements:
+        id: \d+
+
+kgc_config_source_state:
+    pattern: /params/source-state/{id}
+    defaults:
+        _controller: KGCDashboardBundle:Config:sourceState
+        id: null
+    requirements:
+        id: \d+
+
+kgc_config_source_ved_list:
+    pattern: /params/source-ved-list
+    defaults:
+        _controller: KGCDashboardBundle:Config:sourceVEDList
+
+kgc_config_source_ved_edit:
+    pattern: /params/source-ved-edit/{id}
+    defaults:
+        _controller: KGCDashboardBundle:Config:sourceVEDEdit
+        id: null
+    requirements:
+        id: \d+
+
+kgc_config_formurl_list:
+    pattern: /params/formurl-list
+    defaults:
+        _controller: KGCDashboardBundle:Config:formurlList
+
+kgc_config_formurl_edit:
+    pattern: /params/formurl-edit/{id}
+    defaults:
+        _controller: KGCDashboardBundle:Config:formurlEdit
+        id: null
+    requirements:
+        id: \d+
+
+
+kgc_config_etiquette:
+    pattern: /params/etiquettes
+    defaults:
+        _controller: FrameworkBundle:Template:template
+        template: 'KGCDashboardBundle:Config:etiquettes.html.twig'
+
+kgc_config_etiquette_list:
+    pattern: /params/etiquettes-list
+    defaults:
+        _controller: KGCDashboardBundle:Config:etiquettesList
+
+kgc_config_etiquette_edit:
+    pattern: /params/etiquettes-edit/{id}
+    defaults:
+        _controller: KGCDashboardBundle:Config:etiquettesEdit
+        id: null
+    requirements:
+        id: \d+
+
+kgc_config_etiquette_disable:
+    pattern: /params/etiquettes/delete/{id}
+    defaults:
+        _controller: KGCDashboardBundle:Config:etiquettesDelete
+        id: null
+    requirements:
+        id: \d+
+
+kgc_config_etiquette_enable:
+    pattern: /params/etiquettes/reactivate/{id}
+    defaults:
+        _controller: KGCDashboardBundle:Config:etiquettesReactivate
+        id: null
+    requirements:
+        id: \d+
+
+kgc_sms_general:
+    pattern: /campagne/general
+    defaults: {_controller: KGCDashboardBundle:Sms:general }
+
+kgc_sms_add:
+    pattern: /campagne/add
+    defaults: {_controller: KGCDashboardBundle:Sms:add }
+
+kgc_sms_model:
+    pattern: /campagne/model
+    defaults:
+        _controller: FrameworkBundle:Template:template
+        template: 'KGCDashboardBundle:Config:campagne.html.twig'
+
+kgc_sms_list_model:
+    pattern: /campagne/list/model
+    defaults:
+        _controller: FrameworkBundle:Template:template
+        template: 'KGCDashboardBundle:Config:campagne.list-contact.html.twig'
+
+kgc_api_client_londres:
+    pattern: /api/londres
+    defaults: {_controller: KGCClientBundle:Api:clicktocall }

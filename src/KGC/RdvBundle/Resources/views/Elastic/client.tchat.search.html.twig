@@ -1,0 +1,56 @@
+{# src/KGC/RdvBundle/Resources/views/Elastic/standard.html.twig #}
+
+{% extends 'KGCClientBundle:elastic:list.html.twig' %}
+
+{% set show_quality_info = 0 %}
+{% set compact = false %}
+{% set header_color ='header-color-blue2' %}
+{% set button_color ='btn-success' %}
+{% set title = 'Recherche par client' %}
+{% set export = true %}
+
+{% block search_form %}
+    <div class="row">
+        <div class="col-lg-3 col-md-3">
+            {{ form_row(form.name) }}
+        </div>
+        <div class="col-lg-3 col-md-3">
+            {{ form_row(form.mail) }}
+        </div>
+        <div class="col-lg-2 col-md-2">
+            {{ form_row(form.birthdate) }}
+        </div>
+        <div class="col-lg-2 col-md-2">
+            {{ form_row(form.origin) }}
+        </div>
+        <div class="col-lg-2 col-md-2">
+            {{ form_row(form.source) }}
+        </div>
+    </div>
+    <div class="row form-horizontal">
+        <div class="col-lg-3 col-md-3">
+            {{ form_row(form.dateCreationBegin) }}
+        </div>
+        <div class="col-lg-3 col-md-3">
+            {{ form_row(form.dateCreationEnd) }}
+        </div>
+        <div class="col-lg-3 col-md-3">
+            {{ form_row(form.psychic) }}
+        </div>
+        <div class="col-lg-3 col-md-3">
+            {{ form_row(form.formula) }}
+        </div>
+    </div>
+    <div class="row form-horizontal">
+        <div class="col-lg-4 col-md-4">
+            {{ form_row(form.orderBy) }}
+        </div>
+        <div class="col-lg-4 col-md-4">
+            {{ form_row(form.sortDirection) }}
+        </div>
+        <div class="col-lg-4 col-md-4">
+            {{ form_row(form.pageRange) }}
+        </div>
+    </div>
+    <div class="space-6"></div>
+{% endblock search_form %}

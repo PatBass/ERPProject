@@ -1,0 +1,25 @@
+{# src/KGC/DashboardBundle/Resources/views/Config/tarifications.html.twig #}
+
+{% extends "KGCDashboardBundle::layout.html.twig" %}
+
+{% block ariane %}
+    {% set fil = ['Réglages'] %}
+    {{ parent() }}
+{% endblock %}
+
+{% block page_header %}
+    {% set infos = { 'titre':'Réglages','desc':'Formules'} %}
+    {% set reload = { 'url':'#config_formula, #config_formula_promo' } %}
+    {{ parent()}}
+{% endblock %}
+
+{% block dashboard_body %}
+    <div class="row">
+        <div class="col-md-6">
+            <form method="post" action="{{ path('kgc_chat_formulas_list') }}" class="ajax_load" id="config_formula"></form>
+        </div>
+        <div class="col-md-6">
+            <form method="post" action="{{ path('kgc_chat_formulas_promo_list') }}" class="ajax_load" id="config_formula_promo"></form>
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,258 @@
+{# src/KGC/RdvBundle/Ressources/views/listefichesRDV.html.twig #}
+
+{% block tableau_fiches_gclid %}
+    <table class="table table-striped table-hover {{ class|default('') }}">
+        {% for item in items %}
+            <tr>
+                <td style="vertical-align: middle; width: 50%"><b>{{ item.gclid }}</b></td>
+                <td style="vertical-align: middle">vente</td>
+                <td style="vertical-align: middle">{{ item.dateConsultation | date('m/d/Y H:i:s') }}</td>
+                <td style="vertical-align: middle">{{ item.tarification.montantTotal }} EURO</td>
+                <td style="vertical-align: middle">-</td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="4">Aucun résultat</td>
+            </tr>
+        {% endfor %}
+    </table>
+{% endblock tableau_fiches_gclid %}
+
+{% block tableau_fiches %}
+    <table class="table table-striped table-hover valign-middle {{ class|default('') }} {{ datatable|default(false) ? 'dataTable' }}" id="table-{{ fiches|length }}">
+        {{ datatable|default(false) ? block('thead_fiches') }}
+        <tbody>
+            {% for rdv in fiches %}
+                <tr>{{ block('ligne_rdv') }}</tr>
+            {% else %}
+                <tr>
+                    <td colspan="4">Aucun résultat</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock tableau_fiches %}
+
+{% block tableau_fiches_client %}
+    <table class="table table-striped table-hover valign-middle {{ class|default('') }} {{ datatable|default(false) ? 'dataTable' }}" id="table-{{ fiches|length }}">
+        {{ datatable|default(false) ? block('thead_fiches') }}
+        <tbody>
+            {% for rdv in fiches %}
+                <tr>{{ block('ligne_client') }}</tr>
+            {% else %}
+                <tr>
+                    <td colspan="4">Aucun résultat</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock tableau_fiches_client %}
+
+{% block tableau_horaire_fiches %}
+<table class="table table-striped valign-middle">
+    {% for jour, fiches in fiches_list %}
+        <thead>
+            <tr>
+                <th colspan="10" class="center">{{ jour }}</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for horaire, tranche in fiches %}
+            <tr>
+                <th rowspan="{{ tranche|length }}">{{ horaire }}</th>
+                {% for rdv in tranche %}
+                {% if rdv is not null %}
+                {% set date = false %}
+                {{ block('ligne_rdv') }}
+                {% else %}
+                <td colspan="4" class="text-muted">libre
+                    {% endif %}
+                </td>
+            </tr>
+            {% if not loop.last %}
+            <tr>
+                {% endif %}
+                {% endfor %}
+                {% endfor %}
+        </tbody>
+    {% endfor %}
+    {% endblock tableau_horaire_fiches %}
+
+
+    {% block thead_fiches %}
+        <thead>
+            <tr>
+                <th data-orderable="false"></th>
+                <th><span>Client</span></th>
+                {% if similarity is defined ? similarity : false %}
+                    <th class="js-details"></th>{% endif %}
+                {% set date = date is defined ? date : true %}
+                {% if date %}
+                    <th><span>Date consultation</span></th>
+                {% endif %}
+                {% if not no_stateline|default(false) %}
+                    <th data-orderable="false"></th>
+                {% endif %}
+                {% if quality_info|default(false) %}
+                    <th data-orderable="false"></th>
+                    <th data-orderable="false"></th>
+                    <th data-orderable="false"></th>
+                    <th></th>
+                {% endif %}
+                <th data-orderable="false"></th>
+            <tr>
+        </thead>
+    {% endblock thead_fiches %}
+
+    {% block ligne_rdv %}
+        {% import 'KGCRdvBundle::interfacedata.html.twig' as interface %}
+        {% set hatched = rdv.support.idcode == constant('SUIVI_CLIENT', rdv.support) %}
+        <td {{ hatched ? 'class="hatched"' }}>
+            {% if rdv.client.availablePlans %}
+                <span class="label label-pink tooltip-pink" data-rel="tooltip" title="Un forfait est disponible."><b>F</b></span>
+            {% endif %}
+        </td>
+        <td {{ hatched ? 'class="hatched"' }}><b>{{ rdv.client.nom }}</b> {{ rdv.client.prenom }}</td>
+
+        {% set similarity = similarity is defined ? similarity : false %}
+        {% if similarity %}
+            <td class="js-details">
+                <span class="js-similarity-field" data-field="client_dateNaissance">{{ rdv.client.dateNaissance | date('d/m/Y') }}</span>,
+                <span class="js-similarity-field" data-field="client_mail">{{ rdv.client.mail }}</span>,
+                <span class="js-similarity-field" data-field="numtel1">{{ rdv.numtel1 }}</span>
+
+                <span class="hidden js-similarity-field" data-field="numtel2">{{ rdv.numtel2 }}</span>
+                <span class="hidden js-similarity-field" data-field="client_prenom">{{ rdv.client.prenom }}</span>
+                <span class="hidden js-similarity-field" data-field="client_nom">{{ rdv.client.nom }}</span>
+                <span class="hidden js-similarity-field" data-field="client_genre">{{ rdv.client.genre }}</span>
+                <span class="hidden js-similarity-field" data-field="adresse_voie">{{ rdv.adresse.voie }}</span>
+                <span class="hidden js-similarity-field" data-field="adresse_complement">{{ rdv.adresse.complement }}</span>
+                <span class="hidden js-similarity-field" data-field="adresse_codepostal">{{ rdv.adresse.codepostal }}</span>
+                <span class="hidden js-similarity-field" data-field="adresse_ville">{{ rdv.adresse.ville }}</span>
+                {% if rdv.cartebancaires|length %}
+                    <span class="hidden js-similarity-field" data-field="cartebancaires___name___numero">{{ rdv.cartebancaires[0].numero }}</span>
+                    <span class="hidden js-similarity-field" data-field="cartebancaires___name___expiration">{{ rdv.cartebancaires[0].expiration }}</span>
+                    <span class="hidden js-similarity-field" data-field="cartebancaires___name___cryptogramme">{{ rdv.cartebancaires[0].cryptogramme }}</span>
+                {% endif %}
+            </td>
+        {% endif %}
+
+        {% set date = date is defined ? date : true %}
+        {% if date %}
+            <td {{ hatched ? 'class="hatched"' }}>{{ rdv.dateConsultation|date('d/m/Y H:i') }}</td>
+        {% endif %}
+        {% if not no_stateline|default(false) %}
+            <td class="align-center {{ hatched ? 'hatched' }}" style="white-space: nowrap; vertical-align: middle;">
+                {{ interface.stateline(rdv) }}
+            </td>
+        {% endif %}
+        <td class="{{ hatched ? 'hatched' }} align-center no-padding">
+            {% if rdv.consultant and not app.user.isVoyant %}
+                <span class="badge badge-darkgrey tooltip-darkgrey" data-rel="tooltip" data-placement="right" title="{{ rdv.consultant.username }}">
+                    {{ rdv.consultant.username|slice(0,3) }}
+                </span>
+            {% endif %}
+        </td>
+        {% if quality_info|default(false) %}
+            {{ block('rdv_quality_info') }}
+        {% endif %}
+        <td class="line-actions {{ hatched ? 'hatched' }}">
+            {% for btn in actions|default({1:1}) %}
+                {{ block('btn_action') }}
+            {% endfor %}
+        </td>
+    {% endblock ligne_rdv %}
+
+    {% block ligne_client %}
+        {% import 'KGCRdvBundle::interfacedata.html.twig' as interface %}
+        {% set hatched = rdv.support.idcode == constant('SUIVI_CLIENT', rdv.support) %}
+        <td {{ hatched ? 'class="hatched"' }}>
+            {% if rdv.client.availablePlans %}
+                <span class="label label-pink tooltip-pink" data-rel="tooltip" title="Un forfait est disponible."><b>F</b></span>
+            {% endif %}
+        </td>
+        <td {{ hatched ? 'class="hatched"' }}><b>{{ rdv.client.nom }}</b> {{ rdv.client.prenom }}</td>
+
+        {% set similarity = similarity is defined ? similarity : false %}
+        {% if similarity %}
+            <td class="js-details">
+                <span class="js-similarity-field" data-field="client_dateNaissance">{{ rdv.client.dateNaissance | date('d/m/Y') }}</span>,
+                <span class="js-similarity-field" data-field="client_mail">{{ rdv.client.mail }}</span>,
+                <span class="js-similarity-field" data-field="numtel1">{{ rdv.numtel1 }}</span>
+
+                <span class="hidden js-similarity-field" data-field="numtel2">{{ rdv.numtel2 }}</span>
+                <span class="hidden js-similarity-field" data-field="client_prenom">{{ rdv.client.prenom }}</span>
+                <span class="hidden js-similarity-field" data-field="client_nom">{{ rdv.client.nom }}</span>
+                <span class="hidden js-similarity-field" data-field="client_genre">{{ rdv.client.genre }}</span>
+                <span class="hidden js-similarity-field" data-field="adresse_voie">{{ rdv.adresse.voie }}</span>
+                <span class="hidden js-similarity-field" data-field="adresse_complement">{{ rdv.adresse.complement }}</span>
+                <span class="hidden js-similarity-field" data-field="adresse_codepostal">{{ rdv.adresse.codepostal }}</span>
+                <span class="hidden js-similarity-field" data-field="adresse_ville">{{ rdv.adresse.ville }}</span>
+                <span class="hidden js-similarity-field" data-field="cartebancaires___name___numero">{{ rdv.cartebancaires[0].numero }}</span>
+                <span class="hidden js-similarity-field" data-field="cartebancaires___name___expiration">{{ rdv.cartebancaires[0].expiration }}</span>
+                <span class="hidden js-similarity-field" data-field="cartebancaires___name___cryptogramme">{{ rdv.cartebancaires[0].cryptogramme }}</span>
+            </td>
+        {% endif %}
+        <td {{ hatched ? 'class="hatched"' }}>{{ rdv.client.email }}</td>
+        {% set date = date is defined ? date : true %}
+        {% if date %}
+            <td {{ hatched ? 'class="hatched"' }}>{{ rdv.dateConsultation|date('d/m/Y H:i') }}</td>
+        {% endif %}
+        <td {{ hatched ? 'class="hatched"' }}>{{ rdv.numtel1 }}</td>
+        {% if not no_stateline|default(false) %}
+            <td class="align-center {{ hatched ? 'hatched' }}" style="white-space: nowrap; vertical-align: middle;">
+                {{ interface.stateline(rdv) }}
+            </td>
+        {% endif %}
+        <td class="{{ hatched ? 'hatched' }} align-center no-padding">
+            {% if rdv.consultant and not app.user.isVoyant %}
+                <span class="badge badge-darkgrey tooltip-darkgrey" data-rel="tooltip" data-placement="right" title="{{ rdv.consultant.username }}">
+                    {{ rdv.consultant.username|slice(0,3) }}
+                </span>
+            {% endif %}
+        </td>
+        {% if quality_info|default(false) %}
+            {{ block('rdv_quality_info') }}
+        {% endif %}
+
+        <td class="line-actions {{ hatched ? 'hatched' }}">
+            <a href="{{ path('kgc_rdv_fiche', {'id':rdv.id}) }}" class="btn btn-xs btn-primary tooltip-primary modal-load" role="button" title="Ouvrir la fiche de consultation" data-rel="tooltip">
+                <i class="icon-file"></i>
+            </a>
+            <a href="{{ path('kgc_client_fiche',{'id':rdv.client.id}) }}" class="btn btn-xs btn-success tooltip-success" role="button" title="Fiche client" data-rel="tooltip">
+                <i class="icon-file"></i>
+            </a>
+            {% if rdv.prospect is defined and rdv.prospect is not empty %}
+                <a href="{{ path('kgc_landinguser_fiche', {'id':rdv.prospect.id}) }}" class="btn btn-xs btn-grey tooltip-grey modal-load" role="button" title="voir la fiche prospect" data-rel="tooltip">
+                    <i class="icon-file"></i>
+                </a>
+            {% endif %}
+        </td>
+
+    {% endblock ligne_client %}
+
+    {% block btn_action %}
+        {% set route_action = btn.route_action|default('kgc_rdv_fiche') %}
+        {% set btn_color = btn.color|default('primary') %}
+        {% set load = btn.load|default('modal-load') %}
+        {% set icon = btn.icon|default('file') %}
+        {% set btn_disabled = btn.disabled|default(false) %}
+        {% set title = btn.title|default('Ouvrir la fiche') %}
+        {% set refresh = btn.refresh|default(false) %}
+        <a href="{{ route_action != 'none' ? path(route_action, {'id':rdv.id}) : 'javascript:void(0);' }}" class="btn btn-xs btn-{{ btn_color }} tooltip-{{ btn_color }} {{ load }}" {{ refresh ? 'data-refresh='~refresh }} role="button" {{ btn_disabled ? 'disabled':'' }} title="{{ title|default('') }}" data-rel="tooltip" data-placement="{{ btn.placement|default('right') }}">
+            <i class="icon-{{ icon }}"></i>
+        </a>
+    {% endblock btn_action %}
+
+    {% block rdv_quality_info %}
+        {% import 'KGCClientBundle:historique:extension.html.twig' as historique %}
+        {% set currentSection = constant('KGC\\ClientBundle\\Service\\HistoriqueManager::HISTORY_SECTION_QUALITY') %}
+        {% for f in fields_by_section(currentSection) %}
+            {% if f and quality_info_options is defined and quality_info_options[f] or not quality_info_options is defined %}
+                <td {{ hatched ? 'class="hatched"' }}>
+                    {% set h = rdv.notesVoyantByType(f) %}
+                    {{ historique.render_history_as_label(h, f) }}
+                </td>
+            {% endif %}
+        {% endfor %}
+    {% endblock rdv_quality_info %}

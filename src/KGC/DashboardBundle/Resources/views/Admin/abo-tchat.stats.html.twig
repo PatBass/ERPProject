@@ -1,0 +1,31 @@
+{# src/KGC/DashboardBundle/Ressources/views/Admin/general.stats.html.twig #}
+
+{% extends "KGCDashboardBundle::layout.html.twig" %}
+
+{% block ariane %}
+    {% set fil = ['Administration'] %}
+    {{ parent() }}
+{% endblock %}
+
+{% block page_header %}
+    <div class="page-header">
+        <div class="pull-right">
+            <a class="ajax_reload close" href="#stats_abo_tchat" title="Recharger">
+                <i class="icon-refresh"></i>
+            </a>
+        </div>
+        <h1>
+            Statistiques Abonnements
+        </h1>
+    </div>
+{% endblock %}
+
+{% block dashboard_body %}
+
+    <div class="row">
+        <div class="col-md-12">
+            <form method="post" action="{{ path('kgc_admin_abo_tchat_widget') }}" class="form-search form-search-ajax ajax_load" id="stats_abo_tchat"></form>
+        </div>
+    </div>
+
+{% endblock %}

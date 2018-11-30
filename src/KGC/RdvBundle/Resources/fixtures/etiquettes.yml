@@ -1,0 +1,100 @@
+KGC\RdvBundle\Entity\Etiquette:
+    etiquette_1:
+        idcode: NVP
+        libelle: NVP
+        desc: Ne veut plus
+        profils: [@profil_4, @profil_5, @profil_7]
+    etiquette_2:
+        idcode: NRP
+        libelle: NRP
+        desc: Ne répond pas
+        profils: [@profil_4, @profil_5, @profil_7]
+    etiquette_3:
+        idcode: CBI
+        libelle: CBI
+        desc: CB Interdite
+        profils: [@profil_4, @profil_5, @profil_7]
+    etiquette_4:
+        idcode: OPPO
+        libelle: OPPO
+        desc: Opposition
+        profils: [@profil_4, @profil_5, @profil_7]
+    etiquette_5:
+        idcode: MSG_VOC
+        libelle: Message vocal
+        desc: Appel non abouti
+        profils: [@profil_4, @profil_5, @profil_7]
+    etiquette_6:
+        idcode: FX_NUM
+        libelle: FX
+        desc: Numéro plus attribué
+        profils: [@profil_4, @profil_5, @profil_7]
+    etiquette_7:
+        idcode: FX_ADDR
+        libelle: NPAI
+        desc: Fausse adresse
+        profils: [@profil_4, @profil_5, @profil_7]
+    etiquette_8:
+        idcode: GEERIM
+        libelle: Geerim
+        desc: Procédure de recouvrement
+        profils: [@profil_4, @profil_5, @profil_7]
+    etiquette_9:
+        idcode: MR_1
+        libelle: M1
+        desc: Mail de relance impayé 1
+        profils: [@profil_4, @profil_5, @profil_7]
+    etiquette_10:
+        idcode: MR_2
+        libelle: M2
+        desc: Mail de relance impayé 2
+        profils: [@profil_4, @profil_5, @profil_7]
+    etiquette_11:
+        idcode: MR_3
+        libelle: M3
+        desc: Mail de relance impayé 3
+        profils: [@profil_4, @profil_5, @profil_7]
+    etiquette_12:
+        idcode: MR_4
+        libelle: M4
+        desc: Mail de relance impayé 4
+        profils: [@profil_4, @profil_5, @profil_7]
+    etiquette_13:
+        idcode: CANCEL
+        libelle: '#ANNULE'
+        desc: Consultation à annuler
+        profils: [@profil_4, @profil_5, @profil_7]
+    etiquette_14:
+        idcode: POSTPONE
+        libelle: '#REPORTE'
+        desc: Consultation à reporter
+        profils: [@profil_4, @profil_5, @profil_7]
+    etiquette_15:
+        idcode: SECURE_DENIED
+        libelle: Refus 2€
+        desc: Sécurisation refusée
+        profils: [@profil_4, @profil_5, @profil_7]
+    etiquette_16:
+        idcode: CB_BELG
+        libelle: CB BELGE
+        desc: Carte Bancaire Belge
+        profils: [@profil_4, @profil_5, @profil_7]
+    etiquette_17:
+        idcode: EN_FNA
+        libelle: EN FNA
+        desc: Client déjà en situation de paiement irrégulière
+        profils: [@profil_4, @profil_5, @profil_7]
+    etiquette_18:
+        idcode: DELETE
+        libelle: '#ASUPPR'
+        desc: Fiches à supprimer (synchro idTransaction)
+    etiquette_19:
+        idcode: MR_5
+        libelle: M5
+        desc: Mail de relance impayé 5
+        profils: [@profil_4, @profil_5, @profil_7]
+    etiquette_20:
+        idcode: CB_EXPIRED
+        libelle: CB Périmée
+        desc: Date d'expiration passée
+        profils: [@profil_4, @profil_5, @profil_7]

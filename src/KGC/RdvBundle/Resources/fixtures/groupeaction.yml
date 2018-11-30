@@ -1,0 +1,35 @@
+## src/KGC/RdvBundle/DataFixtures/ORM/groupeaction.yml
+
+KGC\RdvBundle\Entity\GroupeAction:
+    groupeaction1:
+        idcode: UPDATE
+        libelle: Modification
+        icon: pencil
+    groupeaction2:
+        idcode: POSTPONE
+        libelle: Report
+        icon: time
+    groupeaction3:
+        idcode: CANCEL
+        libelle: Annuler
+        icon: remove
+    groupeaction4:
+        idcode: ADD
+        libelle: Ajout
+        icon: plus
+    groupeaction5:
+        idcode: SECURE
+        libelle: Sécurisation
+        icon: shield
+    groupeaction6:
+        idcode: BILLING
+        libelle: Facturation
+        icon: euro
+    groupeaction7:
+        idcode: CLOSE
+        libelle: Clôture
+        icon: ok
+    groupeaction8:
+        idcode: IMPORT
+        libelle: Import
+        icon: download-alt

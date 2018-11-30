@@ -1,0 +1,59 @@
+{# src/KGC/RdvBundle/Resources/views/Qualite/fiche.html.twig #}
+
+{% extends "KGCDashboardBundle::layout.html.twig" %}
+
+{% block ariane %}
+    {% set fil = ['Qualité'] %}
+    {{ parent() }}
+{% endblock %}
+
+{% block page_header %}
+    {% set infos = { 'titre':'Service Qualité', 'desc':'Voir la fiche',} %}
+    {% set reload = { 'no_ajax':true, 'url':path('kgc_qa_fiche',{'id':rdv.id}) } %}
+    {{ parent()}}
+{% endblock %}
+
+{% block dashboard_body %}
+
+    {% import 'KGCRdvBundle::blocsficheRDV.html.twig' as fiche %}
+
+    {% set redirectRoute = url_close|default('') %}
+    <form id="form_fiche_qualite" method="post" action="{{ path('kgc_qa_fiche', {'id':rdv.id, 'redirect-route':redirectRoute}) }}" {{ form_enctype(form) }} class="form-horizontal">
+
+        <div class="row voyant">
+            <div class="col-lg-4 fiche">
+                {% if form %}
+                    {% if not form.vars.valid %}
+                        <p class="alert alert-danger">{{ form_errors(form) }}</p>
+                    {% endif %}
+                    {{ fiche.consultation({'rdv':rdv,'form':form}) }}
+                    {{ fiche.client({'form':form, 'form_edit':form_edit, 'rdv':rdv}, true) }}
+                    {{ form_widget(form._token) }}
+                    {{ form_widget(form.mainaction) }}
+                {% else %}
+                    <p class="alert alert-danger">Consultation introuvable.</p>
+                {% endif %}
+            </div>
+            <div class="col-lg-4 historique">
+                {{ fiche.notes_voyant({'rdv':rdv,'form':form, 'edit_reminder': true}) }}
+            </div>
+            <div class="col-lg-4 fiche">
+
+                {{ fiche.notes({'form':form, 'edit': false}) }}
+                {{ fiche.tarification({'form':form}) }}
+                {{ fiche.encaissements({'rdv':rdv, 'no_standard_options':true}) }}
+                {{ fiche.envoi_produits({'form':form, 'form_edit':form_edit}) }}
+                {{ fiche.qualite({'form':form}) }}
+            </div>
+        </div>
+        <div class="space-12"></div>
+        <div class="row">
+            {% set urlClose = url_close|default('kgc_qualite_page') %}
+            {{ fiche.rdv_form_footer({'no_modal':true, 'url_close':path(urlClose), 'form':form, 'cochefermeture':true}) }}
+        </div>
+
+        {{ form_widget(form._token) }}
+
+    </form>
+
+{% endblock dashboard_body %}

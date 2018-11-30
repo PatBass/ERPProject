@@ -1,0 +1,92 @@
+{# app/Ressources/views/layout.html.twig #}
+
+{% extends "::htmllayout.html.twig" %}
+
+{% block navbar_right %}
+    <div class="navbar-header pull-right" role="navigation">
+        <ul class="nav ace-nav">
+            {% if is_granted('ROLE_ADMIN') %}
+            <li class="purple">
+                <a href="{{ path('kgc_dashboard_switch')}}">
+                    <i class="icon-exchange"></i>
+                    <span class="user-info"><small>Switch</small>Dashboard</span>
+                </a>
+            </li>
+            {% endif %}
+            <li class="dark-opaque">
+                <a href="{{ path('kgc_version')}}" class="modal-load"><!-- obligatoire pour le rendu de la couleur de fond -->
+                    <i class="icon-info"></i>
+                    <span class="user-info"><small>Notes de </small>version</span>
+                </a>
+            </li>
+            <li class="light-blue">
+                <a><!-- obligatoire pour le rendu de la couleur de fond -->
+                    <img class="nav-user-photo" src="{{ asset('avatars/base.png')}}" alt="Avatar {{ app.user.username }}" />
+                    <span class="user-info">
+                        <small>Bienvenue,</small>
+                        {{ app.user.username }}
+                    </span>
+                </a>
+            </li>
+            <li class="dark">
+                <a href="{{ path('logout') }}">
+                    <i class="icon-off"></i>
+                    Déconnexion
+                </a>
+            </li>
+        </ul>
+    </div>
+    {% if app.user.isAllowedToMakeCall()  %}
+        <div class="navbar-header pull-right" role="navigation">
+            <form method="get" action="{{ path('kgc_user_poste_widget') }}" data-close="1" class="ajax_load" data-ajax-beforeload="0" id="poste_control">
+                <ul class="nav ace-nav">
+                    <li class="red" style="border-right: 1px solid #DDD">
+                        <a>
+                            <i class="icon-spinner icon-spin"></i>
+                            Chargement
+                        </a>
+                    </li>
+                </ul>
+            </form>
+        </div>
+    {% endif %}
+{% endblock %}
+
+{% block body %}
+    <a class="menu-toggler" id="menu-toggler" href="#">
+        <span class="menu-text"></span>
+    </a>
+    <nav id="sidebar" class="sidebar">
+        {{ render(controller("KGCDashboardBundle:Dashboard:menu", {'routeName':app.request.get('_route')})) }}
+    </nav>
+    <section class="main-content">
+        {% block ariane %}
+            {% set fil = fil|default() %}
+        <nav class="breadcrumbs breadcrumbs-fixed" id="breadcrumbs">
+            <ul class="breadcrumb">
+                <li>
+                    <i class="icon-home home-icon"></i>
+                    <a href="{{ path('kgc_homepage') }}">Accueil</a>
+                </li>
+            {% for chemin in fil | reverse %}
+                {% if loop.last %}
+                    <li class="active">{{ chemin }}</li>
+                {% else %}
+                    <li>{{ chemin }}</li>
+                {% endif %}
+            {% endfor %}
+            </ul><!-- .breadcrumb -->
+        </nav>
+        {% endblock %}
+
+        <article class="page-content">
+            <div class="row">
+                <div class="col-xs-12">
+                    <!-- PAGE CONTENT BEGINS -->
+                    {% block contenu %}{% endblock %}
+                    <!-- PAGE CONTENT ENDS -->
+                </div><!-- /.col -->
+            </div><!-- /.row -->
+        </article><!-- /.page-content -->
+    </section><!-- /.main-content -->
+{% endblock %}

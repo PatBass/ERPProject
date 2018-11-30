@@ -1,0 +1,18 @@
+{# src/KGC/DashboardBundle/Ressources/views/Admin/telecollectes.html.twig #}
+
+{% extends "KGCDashboardBundle::layout.html.twig" %}
+
+{% block ariane %}
+    {% set fil = ['Administration'] %}
+    {{ parent() }}
+{% endblock %}
+
+{% block page_header %}
+    {% set infos = { 'titre':'Télécollectes','desc':'Pointage'} %}
+    {% set reload = { 'url':'#admin_telecollectes' } %}
+    {{ parent()}}
+{% endblock %}
+
+{% block dashboard_body %}
+    <form method="post" action="{{ path('kgc_telecollecte_widget') }}" class="ajax_load" id="admin_telecollectes"></form>
+{% endblock %}

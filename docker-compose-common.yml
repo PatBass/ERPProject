@@ -1,0 +1,79 @@
+web:
+    build: docker
+    working_dir: /var/www
+    hostname: kgestion
+    domainname: kgestion.dev.zol.fr
+    command: /root/start.sh
+    volumes:
+        - ".:/var/www"
+        - "./var/logs/web:/var/log/apache2"
+    environment:
+        CERT_NAME: kgestion
+        VIRTUAL_HOST: kgestion.dev.zol.fr
+        SYMFONY__CRYPT__KEY:
+        SYMFONY__APP__SECRET: Xjwr91jr~j3gV-d6w@2&oI)wFc5ZiL
+        SYMFONY__APP__APIKEY: CdF7w445KBlBUt2mjWKVggY2EkOCN4Y9
+        SYMFONY__DATABASE__HOST: db
+        SYMFONY__DATABASE__PORT: 3306
+        SYMFONY__DATABASE__NAME: kgestion
+        SYMFONY__DATABASE__USER: root
+        SYMFONY__DATABASE__PASSWORD: kgestion
+        SYMFONY__ELASTIC__HOST: search
+        SYMFONY__ELASTIC__PORT: 9200
+        SYMFONY__JWT__PRIVATE__KEY__PATH: '/var/www/app/var/jwt/private.pem'
+        SYMFONY__JWT__PUBLIC__KEY__PATH: '/var/www/app/var/jwt/public.pem'
+        SYMFONY__JWT__KEY__PASS__PHRASE: "chatcasquelion"
+        SYMFONY__JWT__TOKEN__TTL: 172800
+        SYMFONY__KLIKANDPAY__IDENTIFIER: 1445525967
+        SYMFONY__KLIKANDPAY__SECRET__KEY: 0FFB366D16B61EF77CBDF1DB3ED5DF2FB0B6E56AED7E04D7770D9C4AF79275722C44AF8E01E28823B9E2782B2338E2EECAFC
+        SYMFONY__KLIKANDPAY__SANDBOX: 1
+        SYMFONY__BE2BILL__IDENTIFIER: 'KG COM'
+        SYMFONY__BE2BILL__PASSWORD: 'pRh,KSwRLY4w(ubN'
+        SYMFONY__BE2BILL__SANDBOX: 1
+        SYMFONY__HIPAY__ACCOUNT: '71491'
+        SYMFONY__HIPAY__USERNAME: '94658084.stage-secure-gateway.hipay-tpp.com'
+        SYMFONY__HIPAY__PASSWORD: 'Test_yBSEtNk2yRWRi3IuCnKULOnn'
+        SYMFONY__HIPAY__ENV: 'stage'
+        SYMFONY__HIPAY__PASSPHRASE: 'secret'
+        SYMFONY__HIPAY_TCHAT__ACCOUNT: '71491'
+        SYMFONY__HIPAY_TCHAT__USERNAME: '94658084.stage-secure-gateway.hipay-tpp.com'
+        SYMFONY__HIPAY_TCHAT__PASSWORD: 'Test_yBSEtNk2yRWRi3IuCnKULOnn'
+        SYMFONY__HIPAY_TCHAT__ENV: 'stage'
+        SYMFONY__HIPAY_TCHAT__PASSPHRASE: 'secret'
+        SYMFONY__HIPAY_MOTO2__ACCOUNT: '71491'
+        SYMFONY__HIPAY_MOTO2__USERNAME: '94658084.stage-secure-gateway.hipay-tpp.com'
+        SYMFONY__HIPAY_MOTO2__PASSWORD: 'Test_yBSEtNk2yRWRi3IuCnKULOnn'
+        SYMFONY__HIPAY_MOTO2__ENV: 'stage'
+        SYMFONY__HIPAY_MOTO2__PASSPHRASE: 'secret'
+        SYMFONY__HIPAY_MOTO3__ACCOUNT: '71491'
+        SYMFONY__HIPAY_MOTO3__USERNAME: '94658084.stage-secure-gateway.hipay-tpp.com'
+        SYMFONY__HIPAY_MOTO3__PASSWORD: 'Test_yBSEtNk2yRWRi3IuCnKULOnn'
+        SYMFONY__HIPAY_MOTO3__ENV: 'stage'
+        SYMFONY__HIPAY_MOTO3__PASSPHRASE: 'secret'
+
+        SYMFONY__CALLR__LOGIN: 'kgcom_2'
+        SYMFONY__CALLR__PASSWORD: 'JKrwZ3i3UlVP3UQxLGne'
+
+        SYMFONY__MAILER__HOST: postfix
+        SYMFONY__MAILER__USER: kgestion
+        SYMFONY__MAILER__PASSWORD: kgestion
+        SYMFONY__MAILER__PORT: 25
+        SYMFONY__MAILER__ENCRYPTION: tls
+
+        SYMFONY__SOCKETIO__URL: https://socketio.kgcom-chat.dev.zol.fr
+
+        SYMFONY__MYASTRO__URL: https://myastro-subscription.dev.zol.fr
+        SYMFONY__MYASTRO__PREFIX:
+
+        PROJECT_ENV:
+        SYMFONY_ENV:
+
+db:
+    image: mysql:5.5
+    environment:
+        MYSQL_ROOT_PASSWORD: kgestion
+    volumes:
+        - "./data:/var/lib/mysql"
+
+search:
+    build: docker/elasticsearch

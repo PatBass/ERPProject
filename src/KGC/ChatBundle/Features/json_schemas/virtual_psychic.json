@@ -1,0 +1,23 @@
+{
+    "id": "virtual_psychic.json",
+    "title": "Virtual psychic schema",
+    "type": "object",
+    "properties": {
+        "id": {
+            "type": "integer"
+        },
+        "nom": {
+            "type": "string"
+        },
+        "sexe": {
+            "type": "integer"
+        },
+        "reference": {
+            "type": "string"
+        },
+        "is_available": {
+            "type": "boolean"
+        }
+    },
+    "required": ["id", "nom", "sexe", "reference", "is_available"]
+}

@@ -1,0 +1,102 @@
+{# src/KGC/DashboardBundle/Resources/views/Config/websites.edit.html.twig #}
+
+{% extends not app.request.isXmlHttpRequest() ? '::layout.html.twig' : '::emptylayout.html.twig' %}
+
+{% block body %}
+    {% embed '::modallayout.html.twig' %}
+        {% block modal_header %}
+            {% set link = {
+                'txt' : upd ? 'Édition du site « ' ~ object.libelle ~ ' »' : 'Ajout de site web',
+                'url' : path('kgc_config_website_edit',{'id':object.id}),
+                'icon' : upd ? 'pencil' : 'plus'
+            } %}
+            {{ parent() }}
+        {% endblock %}
+
+        {% block modal_content %}
+            <form id="tpe_config_modal" method="post" action="{{ path('kgc_config_website_edit', {'id': object.id}) }}" {{ form_enctype(form) }} data-close="1" data-refresh="#config_websites" class="ajax_modal_form form-horizontal">
+                {{ parent() }}
+                {{ form_widget(form._token) }}
+            </form>
+        {% endblock modal_content %}
+
+        {% block modal_body %}
+            {% if form.paymentGateway is defined %}
+            <div class="row">
+                <div class="col-md-6">
+                    <strong>Libellé :</strong><br />
+                    {{ form_widget(form.libelle) }}
+                </div>
+                <div class="col-md-6">
+                    <strong>Url :</strong><br />
+                    {{ form_widget(form.url) }}
+                </div>
+            </div>
+            <div class="space-4"></div>
+            <div class="row">
+                <div class="col-md-6">
+                    <strong>Téléphone :</strong><br />
+                    {{ form_widget(form.phone) }}
+                </div>
+                <div class="col-md-6">
+                    <strong>Partenaire de paiement :</strong><br />
+                    {{ form_widget(form.paymentGateway) }}
+                </div>
+            </div>
+            {% else %}
+            <div class="row">
+                <div class="col-md-4">
+                    <strong>Libellé :</strong><br />
+                    {{ form_widget(form.libelle) }}
+                </div>
+                <div class="col-md-4">
+                    <strong>Url :</strong><br />
+                    {{ form_widget(form.url) }}
+                </div>
+                <div class="col-md-4">
+                    <strong>Téléphone :</strong><br />
+                    {{ form_widget(form.phone) }}
+                </div>
+            </div>
+            {% endif %}
+            <div class="space-10"></div>
+            <div class="row">
+                <div class="col-md-2">
+                    {% if object.logo is not null %}
+                        <img src="{{ asset('/img/mails/'~object.logo) }}" width="150" alt="{{ object.logo }}"/>
+                    {%  else %}
+                        Pas encore d'image
+                    {% endif %}
+
+                </div>
+                <div class="col-md-7">
+                    <strong>Image :</strong><br />
+                    {{ form_widget(form.file) }}
+                </div>
+                <div class="col-md-1">
+                    <strong>Actif :</strong><br />
+                    <div class="space-2"></div>
+                    {{ form_widget(form.enabled) }}
+                </div>
+                <div class="col-md-2">
+                    <strong>Sources :</strong><br />
+                    <div class="space-2"></div>
+                    {{ form_widget(form.hasSource) }}
+                </div>
+            </div>
+        {% endblock modal_body %}
+
+        {% block modal_footer %}
+            <div class="modal-footer">
+                <div class="pull-left">
+                    <button type="button" class="btn btn-sm btn-danger" data-dismiss="modal"><i class="icon-remove"></i> Fermer</button>
+                </div>
+                <div class="pull-right">
+                    <button type="submit" class="btn btn-success btn-block btn-sm">
+                        <i class="icon-arrow-right"></i> Enregistrer
+                    </button>
+                </div>
+            </div>
+        {% endblock modal_footer %}
+    {% endembed %}
+{% endblock body %}

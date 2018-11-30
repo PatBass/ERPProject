@@ -1,0 +1,70 @@
+{# src/KGC/RdvBundle/Ressources/views/Qualite/veille.liste.html.twig #}
+
+{% extends not app.request.isXmlHttpRequest() ? '::layout.html.twig' : '::emptylayout.html.twig' %}
+
+{% block body %}
+    {% embed '::widgetlayout.html.twig' %}
+
+        {% set titre %}
+            Impayés
+        {% endset %}
+        {% set widget_options = {
+            'titre' : titre,
+            'header_class' : 'header-color-blue3',
+            'collapse' : true,
+            'refresh' : '#fna_stat_list',
+            'no_padding' : true,
+        } %}
+
+        {% block widget_body %}
+            <div class="row center" style="padding: 6px 0; margin:0">
+                <div class="col-md-6">
+                    {{ form_widget(form.date) }}
+                    {{ form_widget(form._token) }}
+                </div>
+                <div class="col-md-6">
+                    <button type="submit" class="btn btn-success btn-block btn-sm">
+                        <i class="icon-arrow-right"></i> Appliquer
+                    </button>
+                </div>
+            </div>
+
+            {{ parent() }}
+        {% endblock %}
+
+        {% block widget_main %}
+            <div class="stat-admin-unpaid">
+                <table class="table table-striped table-condensed table-bordered">
+                <thead>
+                    <tr>
+                        <th>&nbsp</th>
+                        {%  for headers,values in list | first %}
+                            <th colspan="2" class="center {{ headers == 'TOTAL' ? 'red': (headers == 'now'|date('m/Y') ? 'current') }}">{{ headers }}</th>
+                {% endfor %}
+                </tr>
+                <tr>
+                    <th>&nbsp</th>
+                    {%  for headers,values in list | first %}
+                        <th class="center {{  headers == 'TOTAL' ? 'red': (headers == 'now'|date('m/Y') ? 'current') }}">CA</th>
+                        <th class="center {{  headers == 'TOTAL' ? 'red': (headers == 'now'|date('m/Y') ? 'current') }}">NB</th>
+                    {% endfor %}
+                </tr>
+                </thead>
+                <tbody>
+                    {%  for type, values in list %}
+                        <tr>
+                            <td class="current {{  type == 'TOTAL' ? 'red': '' }}">{{ type }}</td>
+                            {%  for headers, arr in values %}
+                                <td class="{{  headers == 'TOTAL' ? 'red': (headers == 'now'|date('m/Y') ? 'current') }} {{  type == 'TOTAL' ? 'red': '' }}">{{ arr['CA'] | number_format(2, ',', ' ') }} </td>
+                                <td>
+                                    <a href="{{ path('kgc_fna_stat_widget_list_detail', {'date': arr['DATE'],'classement':arr['CLASSEMENT']  }) }}" class="modal-load {{  headers == 'TOTAL' ? 'red': (headers == 'now'|date('m/Y') ? 'current') }} {{  type == 'TOTAL' ? 'red': '' }}">{{ arr['NB'] }}</a>
+                                </td>
+                            {% endfor %}
+                        </tr>
+                    {% endfor %}
+                </tbody>
+                </table>
+            </div>
+        {% endblock %}
+    {% endembed %}
+{% endblock body %}

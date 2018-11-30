@@ -1,0 +1,1504 @@
+{# src/KGC/RdvBundle/Resources/views/blocsficheRDV.html.twig #}
+
+{% block formtable %}
+    <table class="table table-striped {{ table_class|default('') }}">
+        {% for data in infos %}
+            {% set form = data.form is defined ? data.form : null %}
+            {% set collection = data.collection|default(false) %}
+            {% set decrypt = data.decrypt|default(false) %}
+            {% set btnCall = data.btnCall is defined and data.btnCall|default(false) %}
+            {% set phone = data.phone is defined and data.phone|default(false) %}
+            {% if form is not null %}
+                {% set error = form.vars.errors|length > 0 ? true : false %}
+                {% set class = form.vars.required and not form.vars.disabled ? ' blue' : '' %}
+                {% set class = param.edit|default(false) and not form.vars.disabled ? ' text-orange' : class %}
+                {% set class = error ? 'danger text-danger' : class %}
+            {% endif %}
+            {% if (btnCall and form.vars.value != '') or not btnCall %}
+                <tr {{ data.trclass is defined ? 'class='~data.trclass }}  {{ data.trid is defined ? 'id='~data.trid }}>
+                    <th id="label-{{ form.vars.id|default('') }}" class="{{ class|default('') }} {{ collection ? 'collection_field' }}" {{ error|default(false) ? 'rowspan=2' }} {{ collection ? 'colspan=3 data-adrprototype=#' ~ collection.id }}>
+                        <span {{ collection ? 'style="line-height: 26px;"' }}>{{ data.lib }}</span>
+                        {% if data.lib_form is defined and data.lib_form is not null %}
+                            {{ form_widget(data.lib_form, {'attr':{'style':'float: right'} }) }}
+                        {% endif %}
+                        {% if data.lib2 is defined %}
+                            <br/>{{ data.lib2 }}
+                        {% endif %}
+                        {% if data.tooltip_badge is defined and data.tooltip_badge is not null %}
+                            <a class="debugdata tooltip-light pull-right" data-rel="tooltip" data-placement="right" title="{{ data.tooltip_badge.content }}" style="text-decoration:none">
+                                <i class="icon-{{ data.tooltip_badge.icon|default('info-sign') }}"></i>
+                            </a>
+                        {% endif %}
+                        {% if data.label is defined and data.label.content is not null %}
+                            &nbsp;<span class="{{ data.label.badge is defined ? 'badge badge' : 'label label' }}-{{ data.label.color|default('default') }}">
+                            {{ data.label.content }}
+                        </span>
+                        {% endif %}
+                        {% if collection %}
+                            <button type="button" id="{{ collection.id }}_addbutton" class="btn btn-xs btn-success pull-right collection_add" {{ form.vars.disabled or collection.disabled|default(false) ? 'disabled' }} {{ collection.not_enableable|default(false) ? 'data-enableable="0"' }}>
+                                <i class="icon-plus bigger-110"></i> Ajouter
+                            </button>
+                            <table class="table table-bordered table-striped collection_fields_container" id="{{ collection.id }}_container" data-collection-childs="tr">
+                                {{ form_widget(form) }}
+                            </table>
+                        {% endif %}
+                        {% if decrypt %}
+                            <button type="button" class="btn btn-xs btn-primary pull-right decrypt_event" >
+                                Décrypter
+                            </button>
+                        {% endif %}
+                    </th>
+                    {% if data.editable|default(false) %}
+                        {% if btnCall %}
+                            <td colspan="2" style="min-width:54%" class="text-center">
+                                <a title="" class="modal-load btn btn-xs btn-primary" href="{{ path('kgc_client_makecall',{'id':rdv.id, 'type': 'rdv', 'phone':data.lib}) }}" data-rel="tooltip" data-placement="right" data-original-title="Appeler">
+                                    <i class="icon-phone bigger-120"></i> Appeler
+                                </a>
+                            </td>
+                        {% else %}
+                            <td style="min-width:54%">
+                                {% if form is not null %}
+                                    {{ form_widget(form) }}
+                                {% else %}
+                                    {{ data.content|raw }}
+                                {% endif %}
+                            </td>
+                            <td style="width:60px">{{ data.editable|raw }}</td>
+                        {% endif %}
+                    {% elseif not collection %}
+                        {% if btnCall %}
+                            <td colspan="2" style="min-width:54%" class="text-center">
+                                <a title="" class="modal-load btn btn-xs btn-primary" href="{{ path('kgc_client_makecall',{'id':rdv.id, 'type': 'rdv', 'phone':data.lib}) }}" data-rel="tooltip" data-placement="right" data-original-title="Appeler">
+                                    <i class="icon-phone bigger-120"></i> Appeler
+                                </a>
+                            </td>
+                        {% else %}
+                            <td colspan="2" style="min-width:54%" {{ data.unified|default(false) ? 'colspan="2"' }}>
+                                {% if form is not null %}
+                                    {% if data.id is defined %}
+                                        {{ form_widget(form, { 'id': data.id}) }}
+                                    {%  else %}
+                                        {{ form_widget(form) }}
+                                    {%  endif %}
+                                {% else %}
+                                    {{ data.content|raw }}
+                                {% endif %}
+                            </td>
+                        {% endif %}
+                    {% endif %}
+                </tr>
+            {% endif %}
+            {% if error|default(false) %}
+                <tr>
+                    <td class="danger text-danger" {{ data.editable is defined ? 'colspan="2"' }}>{{ form_errors(form) }}</td>
+                </tr>
+            {% endif %}
+        {% else %}
+            <tr>
+                <td colspan="2" class="well">Aucune Donnée.</td>
+            </tr>
+        {% endfor %}
+    </table>
+{% endblock formtable %}
+
+{% block widgetbox %}
+    <div class="widget-box{{ param.collapsed|default(false) ? ' collapsed' }}{{ param.transparent|default(false) ? ' transparent' }}">
+        <div class="widget-header widget-header-small header-color-{{ param.edit|default(false) ? 'orange' : param.color_class|default('blue2') }} {{ param.error|default(false) ? 'red' }}">
+            <h5>
+                <a data-action="collapse" href="#">
+                    <i class="icon-chevron-{{ param.collapsed|default(false) ? 'down' : 'up' }}"></i>
+                    &nbsp;{{ param.titre|default('')|raw }}
+                    {{ param.error|default(false) ? '<i class="icon-warning-sign"></i>' }}
+                </a>
+            </h5>
+            {% if param.debugdata|default(null) is not null %}
+                <a class="debugdata tooltip-light" data-rel="tooltip" title="id : {{ param.debugdata }}" data-placement="right">
+                    <i class="icon-cog"></i>
+                </a>
+            {% endif %}
+            {% if param.blockedit is defined and param.blockedit is not null %}
+                <div class="widget-toolbar no-border">
+                    {{ form_widget(param.blockedit) }}
+                </div>
+            {% endif %}
+            {% if param.toolbar_links is defined and param.toolbar_links is not empty %}
+                <div class="widget-toolbar no-border">
+                    {% for link in param.toolbar_links %}
+                        <a class="modal-load"
+                                href="{{ link.path }}"
+                                data-rel="tooltip" title="{{ link.title }}">
+                            <i class="icon-{{ link.icon }}"></i>
+                        </a>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+        <div class="widget-body no-padding">
+            {% if param.infos is defined %}
+                {% set infos = param.infos %}
+                {{ block('formtable') }}
+            {% elseif param.body is defined %}
+                {% if param.padding_body|default(false) %}<div class="widget-main">{% endif %}
+                {{ param.body }}
+                {% if param.padding_body|default(false) %}</div>{% endif %}
+            {% else %}
+                <p class="center" style="margin:0;padding:10px"><i class="icon-{{ param.icon|default('time') }} bigger-240"></i></p>
+            {% endif %}
+        </div>
+    </div>
+{% endblock widgetbox %}
+{% macro clientProspect(options, btnCall) %}
+    {% set form = options.form|default(false) %}
+    {% set rdv = options.rdv|default(false) %}
+    {% set editable = options.form_edit|default(false) %}
+    {% set client = form.client.vars.value %}
+    {% set param = {
+    'titre' : options.titre|default('Coordonnées Client'),
+    'debugdata' : client.id|default(null),
+    'infos' : form ? {
+    1 : {
+    'lib': 'client.info.idProspect' | trans,
+    'form' : form.idProspect,
+    'editable' : editable ? form_widget(editable.idAstro_valeur) : false
+    },2 : {
+    'lib': 'client.info.myastro' | trans,
+    'form' : form.idAstro.valeur,
+    'editable' : editable ? form_widget(editable.idAstro_valeur) : false
+    }, 3 : {
+    'lib' : 'client.info.firstname' | trans,
+    'form' : form.client.prenom,
+    'editable' : editable ? form_widget(editable.client_prenom) : false
+    }, 4 : {
+    'lib' : 'client.info.lastname' | trans,
+    'form' : form.client.nom,
+    'editable' : editable ? form_widget(editable.client_nom) : false
+    }, 5 : {
+    'lib' : 'client.info.gender' | trans,
+    'form' : form.client.genre,
+    'editable' : editable ? form_widget(editable.client_genre) : false
+    }, 6 : {
+    'lib' : 'client.info.birthdate' | trans,
+    'lib2' : client is not null ? '(' ~ (client.dateNaissance | age) ~ ' ans - ' ~ (client.dateNaissance | astro) ~ ')',
+    'form' : form.client.dateNaissance,
+    'editable' : editable ? form_widget(editable.client_dateNaissance) : false
+    }
+    }
+    } %}
+    {%  if not is_granted('ROLE_VOYANT') and form.numtel1 is defined and form.numtel1.vars.attr.btnCall is defined %}
+        {% set param = param|merge({'infos':param.infos|merge({
+        7 : {
+        'lib' : 'client.info.phone' | trans,
+        'form' : form.numtel1,
+        'editable' : editable ? form_widget(editable.numtel1) : false,
+        'btnCall' : true
+        }, 8 : {
+        'lib' : 'client.info.phone2' | trans,
+        'form' : form.numtel2,
+        'editable' : editable ? form_widget(editable.numtel2) : false,
+        'btnCall' : true
+        }
+        }) }) %}
+    {% elseif not is_granted('ROLE_VOYANT') and form.numtel1 is defined %}
+        {% set param = param|merge({'infos':param.infos|merge({
+        6 : {
+        'lib' : 'client.info.phone' | trans,
+        'form' : form.numtel1,
+        'editable' : editable ? form_widget(editable.numtel1) : false
+        }, 7 : {
+        'lib' : 'client.info.phone2' | trans,
+        'form' : form.numtel2,
+        'editable' : editable ? form_widget(editable.numtel2) : false
+        }
+        }) }) %}
+    {% endif %}
+    {% set param = param|merge({'infos':param.infos|merge({
+    9 : {
+    'lib' : 'client.info.email' | trans,
+    'form' : form.client.mail,
+    'editable' : editable ? form_widget(editable.client_mail) : false
+    }, 10 : {
+    'lib' : 'client.info.address' | trans,
+    'form' : form.adresse,
+    'editable' : editable ? form_widget(editable.adresse) : false
+    }
+    }) }) %}
+    {{ block('widgetbox') }}
+{% endmacro clientProspect %}
+
+{% macro client(options, btnCall) %}
+    {% set form = options.form|default(false) %}
+    {% set rdv = options.rdv|default(false) %}
+    {% set editable = options.form_edit|default(false) %}
+    {% set client = form.client.vars.value %}
+    {% set param = {
+    'titre' : options.titre|default('Coordonnées Client'),
+    'debugdata' : client.id|default(null),
+    'infos' : form ? {
+    1 : {
+    'lib': 'client.info.myastro' | trans,
+    'form' : form.idAstro.valeur,
+    'editable' : editable ? form_widget(editable.idAstro_valeur) : false
+    }, 2 : {
+    'lib' : 'client.info.firstname' | trans,
+    'form' : form.client.prenom,
+    'editable' : editable ? form_widget(editable.client_prenom) : false
+    }, 3 : {
+    'lib' : 'client.info.lastname' | trans,
+    'form' : form.client.nom,
+    'editable' : editable ? form_widget(editable.client_nom) : false
+    }, 4 : {
+    'lib' : 'client.info.gender' | trans,
+    'form' : form.client.genre,
+    'editable' : editable ? form_widget(editable.client_genre) : false
+    }, 5 : {
+    'lib' : 'client.info.birthdate' | trans,
+    'lib2' : client is not null ? '(' ~ (client.dateNaissance | age) ~ ' ans - ' ~ (client.dateNaissance | astro) ~ ')',
+    'form' : form.client.dateNaissance,
+    'editable' : editable ? form_widget(editable.client_dateNaissance) : false
+    }
+    }
+    } %}
+    {%  if not is_granted('ROLE_VOYANT') and form.numtel1 is defined and form.numtel1.vars.attr.btnCall is defined %}
+        {% set param = param|merge({'infos':param.infos|merge({
+        6 : {
+        'lib' : 'client.info.phone' | trans,
+        'form' : form.numtel1,
+        'editable' : editable ? form_widget(editable.numtel1) : false,
+        'btnCall' : true
+        }, 7 : {
+        'lib' : 'client.info.phone2' | trans,
+        'form' : form.numtel2,
+        'editable' : editable ? form_widget(editable.numtel2) : false,
+        'btnCall' : true
+        }
+        }) }) %}
+    {% elseif not is_granted('ROLE_VOYANT') and form.numtel1 is defined %}
+        {% set param = param|merge({'infos':param.infos|merge({
+        6 : {
+        'lib' : 'client.info.phone' | trans,
+        'form' : form.numtel1,
+        'editable' : editable ? form_widget(editable.numtel1) : false
+        }, 7 : {
+        'lib' : 'client.info.phone2' | trans,
+        'form' : form.numtel2,
+        'editable' : editable ? form_widget(editable.numtel2) : false
+        }
+        }) }) %}
+    {% endif %}
+    {% set param = param|merge({'infos':param.infos|merge({
+    8 : {
+    'lib' : 'client.info.email' | trans,
+    'form' : form.client.mail,
+    'editable' : editable ? form_widget(editable.client_mail) : false
+    }, 9 : {
+    'lib' : 'client.info.address' | trans,
+    'form' : form.adresse,
+    'editable' : editable ? form_widget(editable.adresse) : false
+    }
+    }) }) %}
+    {{ block('widgetbox') }}
+{% endmacro client %}
+
+{% macro questions(options) %}
+    {% set form = options.form|default(false) %}
+    {% set editable = options.form_edit|default(false) %}
+    {% set consultation = form.vars.value %}
+    {% set param = {
+    'titre' : options.titre|default('Information de la consultation'),
+    'infos' : form ? {
+    1 : {
+    'lib': 'consultation.info.questionSubject' | trans,
+    'form' : form.questionSubject,
+    'editable' : editable and editable.questionSubject is defined ? form_widget(editable.questionSubject) : false
+    }, 2 : {
+    'lib' : 'consultation.info.questionText' | trans,
+    'form' : form.questionText,
+    'editable' : editable and editable.questionText is defined ? form_widget(editable.questionText) : false
+    }, 3 : {
+    'lib' : 'consultation.info.questionContent' | trans,
+    'form' : form.questionContent,
+    'editable' : editable and editable.questionContent is defined ? form_widget(editable.questionContent) : false
+    }, 4 : {
+    'lib' : 'consultation.info.spouseName' | trans,
+    'form' : form.spouseName,
+    'editable' : editable and editable.spouseName is defined ? form_widget(editable.spouseName) : false
+    },
+    5 : {
+    'lib' : 'consultation.info.spouseBirthday' | trans,
+    'form' : form.spouseBirthday,
+    'editable' : editable and editable.spouseBirthday is defined ? form_widget(editable.spouseBirthday) : false
+    },
+    6 : {
+    'lib' : 'consultation.info.spouseSign' | trans,
+    'form' : form.spouseSign,
+    'editable' : editable and editable.spouseSign is defined ? form_widget(editable.spouseSign) : false
+    },
+    }
+    } %}
+    {{ block('widgetbox') }}
+{% endmacro questions %}
+
+{% macro consultation(options) %}
+    {% import 'KGCRdvBundle::interfacedata.html.twig' as interface %}
+    {% set rdv = options.rdv %}
+    <div class="widget-box transparent {{ options.collapsed|default(false) ? 'collapsed' }}">
+        <div class="widget-header widget-header-small">
+            <h5>
+                <a data-action="collapse" href="#">
+                    <i class="icon-chevron-{{ options.collapsed|default(false) ? 'down' : 'up' }}"></i>
+                    &nbsp;Consultation&nbsp;
+                </a>
+                <a class="debugdata tooltip-light" data-rel="tooltip" title="id : {{ rdv.id|default("null") }}" data-placement="right">
+                    <i class="icon-cog"></i>
+                </a>
+                <span class="pull-right">{{ interface.consultation_etat(rdv.etat) }}</span>
+            </h5>
+        </div>
+        <div style="margin: 12px">
+            <table style="width:100%;">
+                <tr>
+                    <td class="bigger-120 align-center" style="border:1px solid orange; padding:0 5px;">
+                        {{ rdv.dateConsultation|date('d/m/Y H:i') }}
+                        {% set difference = date(rdv.dateConsultation|date('Y-m-d')).diff(date('now'|date('Y-m-d'))) %}
+                        {% set days = difference.days %}
+                        {% if days > 0 %}
+                            <span class="blink_me pull-right" style="color:red;">J+{{ days }}</span>
+                        {% endif %}
+                    </td>
+                    <td class="align-right">
+                        {% if options.hide_stateline is not defined or options.hide_stateline == false %}
+                            {{ interface.stateline(options.rdv) }}
+                        {% endif %}
+                    </td>
+                </tr>
+            </table>
+            <div class="space-6"></div>
+        </div>
+        <div class="widget-body">
+            {% set form = options.form|default(false) %}
+            {% if app.user.isStandard() or app.user.isQualite() or app.user.isAdmin() or app.user.isValidation() or app.user.isUnpaid() or app.user.isManagerTel() %}
+                <a title=" Envoyer un mail" class="modal-load btn btn-sm btn-block" href="{{ path('kgc_rdv_prepare_mail',{'id':rdv.id}) }}">
+                    <i class="icon-envelope bigger-120"></i> Envoyer un mail
+                </a>
+                <div class="space-6"></div>
+                {% if form.numtel1 is defined and form.numtel1 != "" %}
+                    <a title=" Envoyer un sms" class="modal-load btn btn-sm btn-block" href="{{ path('kgc_rdv_prepare_sms',{'id':rdv.id}) }}">
+                    <i class="icon-comments bigger-120"></i> Envoyer un sms
+                    </a>
+                    <div class="space-6"></div>
+                {% endif %}
+            {% endif %}
+
+            {% set editable = options.form_edit|default(false) %}
+            {% set infos = {
+            1 : {
+            'lib': 'consultation.info.website' | trans,
+            'form' : editable ? form.website : null,
+            'content' : '<input type="text" readonly value="'~rdv.website.libelle~'" />',
+            'editable' : editable ? form_widget(editable.website) : false
+            }, 2 : {
+            'lib': 'consultation.info.source' | trans,
+            'form' : editable ? form.source : null,
+            'content' : '<input type="text" readonly value="'~rdv.source|default('')~'" />',
+            'editable' : editable ? form_widget(editable.source) : false
+            }, 3 : {
+            'lib': 'consultation.info.gclid' | trans,
+            'form' : editable ? form.gclid : null,
+            'content' : '<input type="text" readonly value="'~rdv.gclid|default('')~'" />',
+            'editable' : editable ? form_widget(editable.gclid) : false
+            }, 4 : {
+            'lib': 'consultation.info.formurl' | trans,
+            'form' : editable ? form.formurl : null,
+            'content' : '<input type="text" readonly value="'~rdv.formurl|default('')~'" />',
+            'editable' : editable ? form_widget(editable.formurl) : false
+            }, 5 : {
+            'lib' : 'consultation.info.support' | trans,
+            'form' : editable ? form.support : null,
+            'content' : '<input type="text" readonly value="'~rdv.support.libelle~'" />',
+            'editable' : editable ? form_widget(editable.support) : false
+            }, 6 : {
+            'lib' : 'consultation.info.owner' | trans,
+            'form' : editable ? form.proprio : null,
+            'content' : '<input type="text" readonly value="'~rdv.proprio.username~'" />',
+            'editable' : editable ? form_widget(editable.proprio) : false
+            }, 7 : {
+            'lib': 'consultation.info.offer_code' | trans,
+            'form' : editable ? form.codepromo : null,
+            'content' : '<input type="text" readonly value="'~rdv.codepromo.code|default('')~'" />',
+            'editable' : editable ? form_widget(editable.codepromo) : false
+            }
+            } %}
+            {% if options.rdv.miserelation %}
+                {% set infos = infos | merge({
+                8 : {
+                'lib' : 'consultation.info.psychic' | trans,
+                'form' : editable ? form.voyant : null,
+                'content' : '<input type="text" readonly value="'~ (rdv.voyant ? rdv.voyant.nom : '') ~'" />',
+                'editable' : editable ? form_widget(editable.voyant) : false
+                }, 9 : {
+                'lib' : 'consultation.info.consultant' | trans,
+                'form' : editable ? form.consultant : null,
+                'content' : '<input type="text" readonly value="'~(rdv.consultant ? rdv.consultant.username : '')~'" />',
+                'editable' : editable ? form_widget(editable.consultant) : false
+                }
+                }) %}
+            {% endif %}
+            {% set table_class = 'table-bordered' %}
+            {{ block('formtable') }}
+        </div>
+    </div>
+{% endmacro consultation %}
+
+{% macro ajouter_consultation_info(options) %}
+    {% if options.form|default(false) %}
+        {% set form = options.form %}
+        {% set infos = {
+        1 : {
+        'lib'  : 'consultation.info.website' | trans,
+        'form' : form.website
+        }, 2 : {
+        'lib'  : 'consultation.info.source' | trans,
+        'form' : form.source
+        }, 3 : {
+        'lib'  : 'consultation.info.gclid' | trans,
+        'form' : form.gclid
+        }, 4 : {
+        'lib'  : 'consultation.info.formurl' | trans,
+        'form' : form.formurl
+        }, 5 : {
+        'lib'  : 'consultation.info.support' | trans,
+        'form' : form.support
+        }, 6 : {
+        'lib'  : 'consultation.info.psychic' | trans,
+        'form' : form.voyant
+        }
+        } %}
+        {% if is_granted(['ROLE_STANDARD','ROLE_ADMIN_PHONE','ROLE_MANAGER_PHONE', 'ROLE_QUALITE']) %}
+            {% set infos = infos|merge({
+            7 : {
+            'lib'  : 'consultation.info.offer_code' | trans,
+            'form' : form.codepromo
+            }, 8 : {
+            'lib'  : 'consultation.info.owner' | trans,
+            'form' : form.proprio
+            }
+            }) %}
+        {% endif %}
+        {% if options.suivi|default(false) %}
+            {% set infos = infos|merge({ 9 : {
+            'lib'  : 'consultation.info.consultant' | trans,
+            'form' : form.consultant
+            } }) %}
+        {% endif %}
+    {% endif %}
+    {% set param = {
+    'titre' : options.titre|default('Tracking'),
+    'infos' : infos|default(null),
+    } %}
+    {{ block('widgetbox') }}
+{% endmacro ajouter_consultation_info %}
+
+{% macro date_consultation(options) %}
+    {% if options.form is defined %}
+        {% set form = options.form %}
+        <div class="widget-box">
+            <div class="widget-header header-color-blue2">
+                <h5>
+                    <a data-action="collapse" href="#" class="form-inline">
+                        <i class="icon-chevron-up"></i>
+                        &nbsp;{{ 'consultation.info.date'|trans }} :
+                        {{ form_widget(form.dateConsultation) }}
+                    </a>
+                </h5>
+            </div>
+            <div class="widget-body no-padding" id="planning_selection">
+                {{ render(controller("KGCRdvBundle:Planning:widgetSelection", {'vue':'inside_widget'})) }}
+            </div>
+        </div>
+    {% endif %}
+{% endmacro date_consultation %}
+
+{% macro coordonneesbancaires(options) %}
+    {% if options.form is defined %}
+        {% set form = options.form %}
+        {% set add_cb = options.add_cb is defined ? options.add_cb : false %}
+        <div class="widget-box {{ options.collapsed|default(false) ? 'collapsed' }}">
+            <div class="widget-header widget-header-small header-color-blue2">
+                <h5>
+                    <a data-action="collapse" href="#">
+                        <i class="icon-chevron-{{ options.collapsed|default(false) ? 'down' : 'up' }}"></i>
+                        &nbsp;Coordonnées bancaires
+                    </a>
+                </h5>
+                {% if options.form_edit|default(false) %}
+                    <div class="widget-toolbar no-border">
+                        {{ form_widget(options.form_edit.cartebancaires) }}
+                    </div>
+                {% endif %}
+            </div>
+            <div class="widget-body widget-cb no-padding center">
+                {% if options.simple|default(false) %}{# affichage simple #}
+                    {% set cartebancaire = form.cartebancaires['__name__']|default(form.cartebancaires.vars.prototype) %}
+                    {{ _self.cartebancaires_prototype(cartebancaire) }}
+                    {% if form.new_card_send_choice is defined %}
+                        <div class="card_new_send_div">
+                            {{ form_widget(form.new_card_send_choice) }}
+                        </div>
+                    {% endif %}
+                {% else %}{# affichage collection #}
+                    <div id="cartebancaire_collection" class="tabbable collection_field" data-adrprototype="#collection_cartebancaires_prototype">
+                        <div id="collection_cartebancaires_prototype" data-prototype="{{ _self.cartebancaires_prototype(form.cartebancaires.vars.prototype, true)|e }}"></div>
+                        <ul class="nav nav-tabs padding-12 tab-color-blue background-blue" data-selection-input-id="{{ form.cartebancaires_selected.vars.id }}">
+                            {% for i, cb in form['cartebancaires'] %}
+                                <li class="{{ form.cartebancaires_selected.vars.value == i ? 'active' }}">
+                                    <a href="#tab-{{ cb.nom.vars.value|trim }}" data-toggle="tab" data-selected-index="{{ i }}">
+                                        {{ cb.nom.vars.value|trim }}
+                                        {% if cb.vars.data.interdite %}
+                                            <span class="label arrowed-right" title="Carte bancaire interdite">CBI</span>
+                                        {% endif %}
+                                    </a>
+                                </li>
+                            {% endfor %}
+                            <li>
+                                <a href="#" id="add_cartebancaire" class="collection_add" {{ editable|default(false) ? 'disabled readonly originaly-disabled="1"' }} {% if not add_cb %} disabled {% endif %}>
+                                    <i class="icon-plus" style="color: inherit;"></i> Ajouter
+                                </a>
+                            </li>
+                        </ul>
+                        <div class="tab-content collection_fields_container" data-collection-childs="div.tab-pane">
+                            {% for i, cb in form['cartebancaires'] %}
+                                <div id="tab-{{ cb.nom.vars.value }}" class="tab-pane in {{ form.cartebancaires_selected.vars.value == i ? 'active' }} no-padding">
+                                    {{ _self.cartebancaires_prototype(cb) }}
+                                </div>
+                            {% endfor %}
+                        </div>
+                        {% if form.new_card_send_checkbox is defined %}
+                            <div class="card_send_div">
+                                {{ form_widget(form.new_card_send_checkbox) }}
+                                <div class="buttons">
+                                    {% set rdv = options.form.vars.data %}
+                                    {% set url = "#{myastro_url}#{myastro_prefix}/validate-cb/#{rdv.newCardHash}" %}
+                                    <a href="{{ url }}" target="_blank">{{ myastro_url ~ myastro_prefix ~ '/...' }}</a>
+                                    {{ form_widget(form.new_card_send_by_mail, {attr: {class: 'btn btn-sm btn-success', 'data-url': path('kgc_rdv_send_card_link', {id: rdv.id, type: 'mail'})}}) }}
+                                </div>
+                            </div>
+                        {% endif %}
+                        {{ form_widget(form.cartebancaires_selected) }}
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    {% endif %}
+{% endmacro coordonneesbancaires %}
+
+{% macro cartebancaires_prototype(cb, edit) %}
+    {{ form_widget(cb.nom) }}
+        {% set infos = {
+        1 : {
+        'lib' : 'debit_card.info.number' | trans,
+        'form' : cb.numero,
+        'trclass' : cb.numero.vars.attr.hide ? : 'class',
+        'trid' : 'numeroCb'
+        }, 2 : {
+        'lib' : 'debit_card.info.number' | trans,
+        'form' : cb.maskedNumber,
+        'trclass' : cb.maskedNumber.vars.attr.hide ? : 'class',
+        'trid' : 'numeroMaskedCb',
+        'id' : 'maskedNumber',
+        'decrypt' : cb.maskedNumber.vars.attr.decrypt ? : false
+        }, 3 : {
+        'lib' : 'debit_card.info.date' | trans,
+        'form' : cb.expiration
+        }, 4 : {
+        'lib' : 'debit_card.info.cipher' | trans,
+        'form' : cb.cryptogramme
+        }
+        } %}
+    {% if cb.vars.value.paymentAliases is defined and cb.vars.value.paymentAliases is not null %}
+        {% set aliasList = '' %}
+        {% for alias in cb.vars.value.paymentAliases.toArray %}
+            {% set aliasList = aliasList is empty ? (alias.gateway|payment_gateway_to_label) : aliasList ~ ', ' ~ (alias.gateway|payment_gateway_to_label) %}
+        {% endfor %}
+        {% if aliasList is not empty %}
+            {% set infos = infos|merge({
+            4 : {
+            'lib' : 'Alias',
+            'content' : '<input type="text" disabled="disabled" value="' ~ aliasList ~ '" />'
+            }
+            }) %}
+        {% endif %}
+    {% endif %}
+    {{ block('formtable') }}
+{% endmacro %}
+
+{% macro securisation(options) %}
+    {% set rdv = options.rdv %}
+    {% if rdv.preAuthorization is not null %}
+        {% set title = 'Pré-Autorisation' %}
+    {% else %}
+        {% set title = rdv.securisation == 'PENDING' ? 'Sécurisation / Pré-Autorisation' : 'Sécurisation' %}
+    {% endif %}
+    {% set param = {
+    'titre' : title,
+    'collapsed' : options.collapsed|default(false)
+    } %}
+    {% if options.edit|default(false) %}
+        {% set form = options.form %}
+        {% set infos = {
+        1 : {
+        'lib' : 'Passer ?',
+        'form' : form.skip
+        }, 2 : {
+        'lib' : 'Validée ?',
+        'form' : form.securisation
+        }, 3 : {
+        'lib' : 'Pré-autorisation',
+        'form' : form.preauthorization
+        }, 4 : {
+        'lib' : 'TPE',
+        'form' : form.TPE
+        }, 5 : {
+        'lib' : 'Confirmer la consultation',
+        'form' : form.confirmation
+        }, 6 : {
+        'lib' : 'Choisir le motif si annulation',
+        'form' : form.dossier_annulation
+        }
+        } %}
+        {% set param = param|merge({
+        'infos' : infos,
+        'edit' : true
+        }) %}
+    {% elseif options.form|default(false) %}
+        {% set infos = {
+        1 : {
+        'lib' : 'État ',
+        'form' : options.form.securisation,
+        'editable' : options.form_edit|default(false) ? form_widget(options.form_edit.securisation) : false
+        }, 2 : {
+        'lib' : 'TPE ',
+        'form' : options.form.TPE,
+        'editable' : options.form_edit|default(false) ? form_widget(options.form_edit.TPE) : false
+        }
+        } %}
+        {% set param = param|merge({
+        'infos' : infos
+        }) %}
+    {% else %}
+        {% set param = param|merge({
+        'color_class' : 'grey',
+        'collapsed' : true
+        }) %}
+    {% endif %}
+
+    {{ block('widgetbox') }}
+{% endmacro securisation %}
+
+{% macro historique(rdv, collapsed) %}
+    {% if rdv is not null %}
+        {% import 'KGCRdvBundle::interfacedata.html.twig' as interface %}
+        <div class="widget-box compacted {{ collapsed|default(false) ? 'collapsed' }}" style="margin-top:12px">
+            <div class="widget-header widget-header-small header-color-blue2">
+                <h5>
+                    <a data-action="collapse" href="#">
+                        <i class="icon-chevron-up"></i>
+                        &nbsp;Historique
+                    </a>
+                </h5>
+                <div class="widget-toolbar no-border">
+                    <a href="#" title="Mode compact" data-action="compact" class="btn btn-xs btn-transparent">
+                        <i class="icon-resize-full bigger-130" data-switch-icon="icon-resize-small bigger-130"></i>
+                    </a>
+                </div>
+            </div>
+            <div class="widget-body widget-main">
+                <div class="timeline-container timeline-style2">
+                    <div class="timeline-items">
+                        {% for ligne in rdv.historique %}
+                            <div class="timeline-item clearfix {{ ligne.compact ? 'compactit' }}" data-id="{{ ligne.id }}">
+                                <div class="timeline-info">
+                                    <span class="timeline-date">{{ ligne.date|date('j/m/Y H:i') }}</span>
+                                    <i class="timeline-indicator btn-{{ ligne.etat.couleur }}" title="{{ ligne.id }}"></i>
+                                </div>
+                                <div class="widget-box transparent">
+                                    <b>{{ ligne.utilisateur.username }}</b>
+                                    <span class="text-muted"> – {{ ligne.utilisateur.mainprofil.name }}</span>
+                                    <div class="pull-right" style="line-height: normal;text-align: right;">
+                                        {{ interface.consultation_etat(ligne.etat) }}<br/>
+                                    </div>
+                                    <div class="widget-body">
+                                        <div class="widget-main no-padding">
+                                            {{ interface.historique_action(ligne.mainaction) }}
+                                            {% for action in ligne.actions %}
+                                                {{ interface.historique_action(action) }}
+                                            {% endfor %}
+                                            {% if ligne.commentaire is not null %}
+                                                <div class="commentaire" title="commentaire">
+                                                    {{ ligne.commentaire }}
+                                                </div>
+                                            {% endif %}
+                                            <div class="compactit">
+                                                {{ interface.consultation_classement(ligne.classement) }}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+{% endmacro historique %}
+
+{% macro miserelation(options) %}
+    {% set infos = options.form|default(false) ? {
+    0 : {
+    'lib' : 'Consultant',
+    'form' : options.form.consultant
+    }, 1 : {
+    'lib' : 'Voyant',
+    'form' : options.form.voyant
+    }, 2 : {
+    'lib' : 'Valider la mise en relation ',
+    'form' : options.form.miserelation
+    }, 3 : {
+    'lib' : 'Choisir le motif si annulation ',
+    'form' : options.form.dossier_annulation
+    }
+    } : null %}
+    {% set param = {
+    'titre' : options.titre|default('Mise en relation'),
+    'infos' : infos,
+    'edit' : true
+    } %}
+    {{ block('widgetbox') }}
+{% endmacro miserelation %}
+
+{% macro notes(options) %}
+    {% set body %}
+        {{ form_widget(options.form.notesLibres) }}
+    {% endset %}
+    {% set param = {
+    'titre' : options.titre|default('Notes'),
+    'body' : body,
+    'edit' : options.edit is defined ? options.edit : true,
+    } %}
+    {{ block('widgetbox') }}
+{% endmacro notes %}
+
+{% macro tarification(options) %}
+    {% set active = (options.form)|default(false) %}
+    {% set form = active ? options.form : false %}
+    {% set edit = options.edit|default(false) %}
+    {% set table_class = 'auto_amount_calc' %}
+
+    {% if active %}
+        {% set forfait = form.tarification.forfait_vendu.vars.value %}
+        {% set infos = {
+        1 : {
+        'lib' : 'Tarification ',
+        'tooltip_badge' : form.tarification.code_old.vars.value != '' ? { 'content' : form.tarification.code_old.vars.value } : null,
+        'form' : form.tarification.code
+        }, 2 : {
+        'lib' : 'Temps ',
+        'form' : form.tarification.temps,
+        'lib_form' : form.tarification.decount10min
+        }, 3 : {
+        'lib' : 'Montant Minutes',
+        'form' : form.tarification.montant_minutes
+        }, 4 : {
+        'collection' : { 'id' : form.tarification.produits.vars.id },
+        'lib' : 'Produits',
+        'form' : form.tarification.produits
+        }, 5 : {
+        'lib' : 'Montant Produits',
+        'form' : form.tarification.montant_produits,
+        }, 6 : {
+        'lib' : 'Forfait vendu',
+        'label' : {
+        'color' : forfait is not null ? 'primary' : 'light',
+        'content' : forfait is not null ? forfait.identifierLabel : 'Aucun'
+        },
+        'form' : form.tarification.forfait_vendu,
+        'lib_form' : form.tarification.forfait_vendu.cancel is defined ? form.tarification.forfait_vendu.cancel : null
+        }
+        } %}
+        {% if form.tarification.consommations_forfaits is defined %}
+            {% set nb_frf = form.tarification.consommations_forfaits.vars.prototype.forfait.vars.choices|length %}
+            {% set pluriel = nb_frf > 1 %}
+            {% set infos = infos | merge({
+            7 : {
+            'collection' : {
+            'id' : form.tarification.consommations_forfaits.vars.id,
+            'disabled' : nb_frf == 0,
+            'not_enableable' : nb_frf == 0
+            },
+            'lib' : 'Consommation de Forfait',
+            'form' : form.tarification.consommations_forfaits,
+            'label' : {
+            'color' : nb_frf == 0 ? 'light' : 'pink',
+            'badge' : true,
+            'content': nb_frf ~ ' forfait' ~ (pluriel ? 's') ~' disponible' ~ (pluriel ? 's')
+            }
+            }
+            }) %}
+        {% endif %}
+        {% set infos = infos | merge({
+        8 : {
+        'lib' : 'Montant Frais de gestion',
+        'form' : form.tarification.montant_frais,
+        }, 9 : {
+        'lib' : 'Montant Remise commerciale',
+        'form' : form.tarification.montant_remise,
+        }, 10 : {
+        'lib' : 'Montant Total',
+        'form' : form.tarification.montant_total,
+        'trclass' : 'info'
+        }
+        }) %}
+    {% endif %}
+    {% set param = {
+    'titre' : options.titre|default('Tarification'),
+    'color_class' : active ? 'blue2' : 'grey',
+    'debugdata' : form.tarification.vars.value.id|default(null),
+    'edit' : options.edit|default(false),
+    'form' : form,
+    'collapsed' : not form ? true,
+    'icon' : options.disable|default(false) ? 'remove' : 'time',
+    'infos' : infos|default(null),
+    'blockedit' : options.form_edit|default(false) ? options.form_edit.tarification : null
+    } %}
+    {{ block('widgetbox') }}
+{% endmacro tarification %}
+
+{% macro envoi_produits(options) %}
+    {% if options.form.envoisProduits.vars.data is not empty %}
+        {% set form = options.form.envoisProduits %}
+        {% set content %}
+            <table class="table table-striped">
+                {% for envoiform in form %}
+                    {% set envoi = envoiform.vars.data %}
+                    <tr>
+                        {% if options.read_only|default(false) %}
+                            {% import 'KGCRdvBundle::interfacedata.html.twig' as interface %}
+                            <th>{{ envoi.venteProduit.quantiteEnvoi ~ ' ' ~ envoi.venteProduit.produit.label }}</th>
+                            <td class="center">{{ interface.render_evp_etat(envoi.etat) }}</td>
+                            <td>{{ interface.render_evp_allumage(envoi.allumage, envoi.allumageConsultation.id|default(null), {'show_label':true}) }}</td>
+                            <td>{% if envoi.commentaire is not null %}
+                                    <div class="commentaire" title="commentaire">
+                                        {{ envoi.commentaire }}
+                                    </div>
+                                {% endif %}</td>
+                        {% else %}
+                            <th>{{ envoi.venteProduit.quantiteEnvoi ~ ' ' ~ envoi.venteProduit.produit.label }}</th>
+                            <td class="center">
+                                <span class="badge" id="{{ envoiform.etat.vars.id }}_light" style="color: white">●</span>
+                            </td>
+                            <td>{{ form_widget(envoiform.etat) }}</td>
+                            <td style="max-width: 100px">{{ form_widget(envoiform.date) }}</td>
+                            <td>
+                                <a {{ envoi.allumageConsultation is not null ? 'href=' ~ path('kgc_rdv_fiche', {'id':envoi.allumageConsultation.id}) : 'disabled' }} data-enableable="0"
+                                        class="modal-load label" id="{{ envoiform.allumage.vars.id }}_light" style="color: white" title="Ouvrir la fiche de l'allumage">
+                                    <i class="icon-fire"></i>
+                                </a>
+                            </td>
+                            <td>{{ form_widget(envoiform.allumage) }}</td>
+                            <td>{{ form_widget(envoiform.commentaire) }}</td>
+                        {% endif %}
+                    </tr>
+                {% endfor %}
+            </table>
+        {% endset %}
+
+        {% set param = {
+        'titre' : options.titre|default('Envoi des Produits'),
+        'body' : content,
+        'blockedit' : options.form_edit|default(false) ? options.form_edit.envoisProduits : null
+        } %}
+        {{ block('widgetbox') }}
+    {% endif %}
+{% endmacro envoi_produits %}
+
+{% macro recap_facturation(options) %}
+    {% set infos = options.rdv|default(false) ? {
+    0 : {
+    'lib' : 'Montant encaissé',
+    'content' : '<div class="input-group align-right"><input type="text" readonly="readonly" class="align-right form-control" value="'~ options.rdv.montantEncaisse|number_format(2,',') ~'" /><span class="input-group-addon"><i class="icon-euro"></i></span></div>'
+    }, 1 : {
+    'lib' : 'Reste dû',
+    'content' : '<div class="input-group align-right"><input type="text" readonly="readonly" class="align-right form-control" value="'~ (options.rdv.tarification.montantTotal - options.rdv.montantEncaisse)|number_format(2,',') ~'" /><span class="input-group-addon"><i class="icon-euro"></i></span></div>'
+    }, 2 : {
+    'lib' : 'Montant planifié',
+    'content' : '<div class="input-group align-right"><input type="text" readonly="readonly" class="align-right form-control" value="'~ options.rdv.montantPlanifie|number_format(2,',') ~'" /><span class="input-group-addon"><i class="icon-euro"></i></span></div>'
+    }, 3 : {
+    'lib' : 'Reste non prévu',
+    'content' : '<div class="input-group align-right"><input type="text" readonly="readonly" class="align-right form-control" value="'~ (options.rdv.tarification.montantTotal - options.rdv.montantPlanifie)|number_format(2,',')  ~'" /><span class="input-group-addon"><i class="icon-euro"></i></span></div>'
+    }
+    } : null %}
+    {% set param = {
+    'titre' : options.titre|default('Récapitulatif de Facturation'),
+    'infos' : infos,
+    'color_class' : 'red',
+    'collapsed' : true
+    } %}
+    {{ block('widgetbox') }}
+{% endmacro recap_facturation %}
+
+{% macro encaissements(options) %}
+    {% import 'KGCRdvBundle::interfacedata.html.twig' as interface %}
+    {% set color_class = options.edit|default(false) ? 'orange' : 'blue2' %}
+    {% set droitread = options.rdv|default(false) ? true : false %}
+    {% set droitwrite = options.form|default(false) ? true : false %}
+    {% set active = droitread or droitwrite ? true : false %}
+
+    {% set already_edit = options.editable.encaissements.vars.checked|default(false) %}
+    {% set edit = options.edit|default(already_edit) %}
+
+    {% if options.form|default(false) and not options.form.encaissements.vars.valid %}
+        <div class="space-6"></div>
+        <p class="alert alert-danger" style="margin-bottom: 10px; padding: 10px;">{{ form_errors(options.form.encaissements) }}</p>
+    {% endif %}
+    <div class="widget-box{{ not active or options.collapsed|default(false) ? ' collapsed' }}">
+        <div class="widget-header widget-header-small header-color-{{ active ? color_class : 'grey' }}">
+            <h5>
+                <a data-action="collapse" href="#">
+                    <i class="icon-chevron-{{ not active ? 'down' : 'up' }}"></i>
+                    &nbsp;Facturation
+                </a>
+            </h5>
+            <div class="widget-toolbar no-border">
+                <a href="#" title="Mode compact" data-action="compact" class="btn btn-xs btn-transparent">
+                    <i class="icon-resize-small bigger-130" data-switch-icon="icon-resize-full bigger-130"></i>
+                </a>
+            </div>
+            {% if droitwrite and options.editable|default(false) %}
+                <div class="widget-toolbar no-border">
+                    {{ form_widget(options.editable.encaissements) }}
+                </div>
+            {% endif %}
+        </div>
+        <div class="widget-body no-padding center tab-content">
+            {% if droitread %}
+                <div id="encaissement_edit_0" class="tab-pane {{ not edit ? 'active' }} no-padding">
+                    <table class="table table-striped" id="rdv_encaissements_fields">
+                        {% for encaissement in options.rdv.encaissements if encaissement.batchRetryFrom is null or encaissement.etat != 'STATE_DENIED' %}
+                            {% set current_enc = options.enc|default(false) and options.enc.id == encaissement.id %}
+                            <tr class="
+                    {{ current_enc ? 'lattice' }}
+                    {{ encaissement.etat == constant('DENIED', encaissement) ? 'compactit' }}">
+                                {% if encaissement.id is null %}
+                                    <th class="center"><span class="label label-yellow">Non enregistré en base</span></th>
+                                {% else %}
+                                    <th class="center">#{{ encaissement.id }}</th>
+                                {% endif %}
+                                <th class="center">{{ encaissement.montant|number_format(2,',',' ') }}€</th>
+                                <td style="padding-left: 8px; text-align: left; width: 70px">{{ interface.encaissement_etat(encaissement) }}</td>
+                                <td style="padding-right: 8px; width: 130px">
+                                    {%- if encaissement.fromBatch -%}
+                                        <span class="label label-lg label-info cron-info arrowed-in arrowed-left" title="Processé par le cron">{{ encaissement.date|date('d/m/Y H:i') }}</span>
+                                    {%- else -%}
+                                        {{ encaissement.date|date('d/m/Y H:i') }}
+                                    {%- endif -%}
+                                </td>
+                                <th style="white-space: nowrap">
+                                    <span class="label label-lg label-grey arrowed-right">
+                                        <i class="icon-credit-card"></i>
+                                    </span>
+                                    {% set paymentDetails = encaissement.payment ? paymentUtils.getPaymentDetails(encaissement.payment) : null %}
+                                    {% set paymentBoUrl = encaissement.payment ? paymentUtils.getPaymentBoUrl(encaissement.payment) : null %}
+                                    {% if paymentBoUrl %}
+                                    <a href="{{ paymentBoUrl }}" target="_blank" class="label label-lg label-light arrowed-in arrowed-left"{% if paymentDetails %} title="{{ paymentDetails }}"{% endif %}>
+                                        {{ encaissement.moyenPaiement.libelle|default('') }}
+                                        {{ encaissement.tpe|default(false) ? ', ' ~ encaissement.tpe : '' }}
+                                    </a>
+                                    {% else %}
+                                    <span class="label label-lg label-light arrowed-in arrowed-left"{% if paymentDetails %} title="{{ paymentDetails }}"{% endif %}>
+                                        {{ encaissement.moyenPaiement.libelle|default('') }}
+                                        {{ encaissement.tpe|default(false) ? ', ' ~ encaissement.tpe : '' }}
+                                    </span>
+                                    {% endif %}
+                                </th>
+                                {% if is_granted(['ROLE_STANDARD','ROLE_ADMIN_PHONE','ROLE_MANAGER_PHONE','ROLE_UNPAID_SERVICE','ROLE_VALIDATION']) and not options.no_standard_options|default(false) %}
+                                    <th>
+                                        {% if encaissement.etat == constant('DONE', encaissement) %}
+                                            {% set compte = encaissement.psychicAsso %}
+                                            <span class="label label-lg label-{{ compte ? 'info' : 'light' }}">
+                                                <i class="icon-{{ compte ? 'check' : 'check-empty' }}"></i>
+                                                {{ compte ? 'C' : 'Non c' }}omptabilisé pour le voyant
+                                            </span>
+                                        {% endif %}
+                                    </th>
+                                    <th>
+                                        {% if encaissement.etat == constant('PLANNED', encaissement) and encaissement.id is not null and not current_enc %}
+                                            <a href="{{ path('kgc_encaissements_trait', {'id':encaissement.id}) }}" class="btn btn-xs modal-load btn-warning" role="button">
+                                                <i class="icon-euro bigger-120"></i> Traiter cet encaissement
+                                            </a>
+                                        {% endif %}
+                                        {% if encaissement.etat == constant('DONE', encaissement) %}
+                                            <a href="{{ path('kgc_encaissements_oppo', {'id':encaissement.id}) }}" class="btn btn-xs modal-load btn-purple">
+                                                <i class="icon-ban-circle bigger-120"></i> Marquer une opposition
+                                            </a>
+                                        {% endif %}
+                                        {% if current_enc %}
+                                            <span class="label label-grey">Encaissement en cours</span>
+                                        {% endif %}
+                                    </th>
+                                {% endif %}
+                            </tr>
+                        {% else %}
+                            <tr>
+                                <td>Aucun encaissement.</td>
+                            </tr>
+                        {% endfor %}
+                    </table>
+                </div>
+            {% endif %}
+            {% if droitwrite %}
+                <div id="encaissement_edit_1" class="tab-pane {{ options.edit|default(false) ? 'active' }} collection_field no-padding" data-adrprototype="#kgc_RdvBundle_rdv_encaissements">
+                    <table class="table table-striped collection_fields_container" id="rdv_encaissements_fields" data-collection-childs="tr">
+                        {{ form_widget(options.form.encaissements, { 'default_etat':options.default_etat|default(0)} ) }}
+                    </table>
+                    <button type="button" id="ajout_encaissement" class="btn btn-sm btn-inverse btn-block collection_add">
+                        <i class="icon-plus bigger-110"></i> Ajouter
+                    </button>
+                </div>
+            {% endif %}
+            {% if not active %}
+                {% set icon = options.disable|default(false) ? 'remove' : 'time' %}
+                <p style="margin:0;padding:10px"><i class="icon-{{ icon }} bigger-240"></i></p>
+            {% endif %}
+        </div>
+    </div>
+{% endmacro encaissements %}
+
+{% macro validencaissement(options) %}
+    {% set form = options.form.encaissement %}
+    {% if not form.vars.valid %}
+        <div class="space-6"></div>
+        <p class="alert alert-danger" style="margin-bottom: 10px; padding: 10px;">{{ form_errors(form) }}</p>
+    {% endif %}
+    {% set body %}
+        <table class="table encaissement">
+            <tr>
+                <th>#{{ options.enc.id }}</th>
+                <td>{{ form_widget(form.montant) }}</td>
+                <td>{{ "now"|date('d/m/Y') }}</td>
+                <td>{{ form_widget(form.moyenPaiement) }}</td>
+                <td>{{ form_widget(form.tpe) }}</td>
+                <td class="cartebancaire">{{ form_widget(form.cartebancaire) }}</td>
+                <td>{{ form_widget(form.psychic_asso) }}</td>
+                <td class="center">
+                    <span class="badge" id="{{ form.etat.vars.id }}_light" style="color: white">●</span>
+                </td>
+                <td class="etat">{{ form_widget(form.etat) }}{{ form_widget(form.payer) }}</td>
+            </tr>
+        </table>
+    {% endset %}
+    {% set param = {
+    'titre' : options.titre|default('Traitement encaissement'),
+    'body' : body,
+    'edit' : true,
+    } %}
+    {{ block('widgetbox') }}
+{% endmacro validencaissement %}
+
+{% macro pendulum_template(form, id) %}
+    <tr class="pendulum-line {{ form.vars.value is not null ? 'type-' ~ form.vars.value.type }}" id="pendulum-{{ id|default('__name__') }}">
+        <td class="pendulum question">{{ form_row(form.question) }}</td>
+        <td class="pendulum custom" colspan="2">{{ form_row(form.customQuestion) }}</td>
+        <td class="pendulum target">{{ form_row(form.target) }}</td>
+        <td class="pendulum answer">{{ form_widget(form.answer) }}</td>
+        <td class="pendulum remove">
+            {{ form_widget(form.type) }}
+            <button type="button" class="btn-danger btn-xs btn js-remove-pendulum"><i class="icon-trash bigger-120"></i></button>
+        </td>
+    </tr>
+{% endmacro pendulum_template %}
+
+{% block historique_widgetbox %}
+    {% set currentSection = getHistorySectionConstant(param.section) %}
+    {% set default_body %}
+        {% for f in fields_by_section(currentSection) %}
+            {{ form_widget(form.notes[f], { 'attr': {'class': f} }) }}
+        {% endfor %}
+    {% endset %}
+    {% set param = {
+    'transparent' : true,
+    'color_class' : param.color_class|default(),
+    'titre' : param.titre|default(''),
+    'toolbar_links' : param.toolbar_links|default([])|merge({
+    1 : {
+    'icon' : 'list',
+    'title' : 'Voir lʼhistorique pour cette section',
+    'path' : path('kgc_client_historique',{'id':rdv.client.id, 'section': currentSection})
+    }
+    }),
+    'body' : param.body|default(default_body),
+    'collapsed' : param.collapsed is defined ? param.collapsed : true,
+    'edit' : param.edit|default(false),
+    'error' : param.error|default(false),
+    'padding_body' : param.padding_body|default(false)
+    } %}
+    {{ block('widgetbox') }}
+{% endblock historique_widgetbox %}
+
+{% macro notes_voyant(options) %}
+    {% import _self as macros %}
+    {% set rdv = options.rdv %}
+    {% set form = options.form %}
+
+    <div class="client">
+        <strong>{{ rdv.client.fullName }}</strong>, {{ rdv.client.dateNaissance | age }} ans, {{ rdv.client.dateNaissance | astro }}
+        <a class="tooltip-left modal-load pull-right" href="{{ path('kgc_client_historique',{'id':rdv.client.id}) }}"
+                data-rel="tooltip" title="Voir lʼhistorique complet">
+            <i class="icon-list"></i>
+        </a>
+    </div>
+    {# -- BLOC NOTES --#}
+    {% set param = {
+    'section' : 'NOTES',
+    'titre' : 'Prise de notes',
+    'collapsed' : false
+    } %}
+    {{ block('historique_widgetbox') }}
+    {# -- BLOC HISTORY --#}
+    {% set param = {
+    'section' : 'HISTORY',
+    'titre' : 'Historique de consultation'
+    } %}
+    {{ block('historique_widgetbox') }}
+    {# -- BLOC PENDULUM --#}
+    {% set pendulum_widget_body %}
+        <script id="pendulum_question_template" type="text/template">
+            {{ macros.pendulum_template(form.notes.pendulum.pendulum.vars.prototype) }}
+        </script>
+        <div class="row">
+            <div class="col-lg-12">
+                <table style="width: 100%">
+                    <tbody class="pendulum-wrapper">
+                        {% for f in fields_by_section(getHistorySectionConstant('PENDULUM')) %}
+                            {% for q in form.notes[f].pendulum.children %}
+                                {{ macros.pendulum_template(q, loop.index) }}
+                            {% endfor %}
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <br/>
+        <div class="row">
+            <div class="col-lg-6">
+                <button type="button" class="btn btn-sm btn-info btn-block js-add-pendulum-defined" title="Ajouter une question classique">
+                    <i class="icon-plus bigger-110"></i> Question classique
+                </button>
+            </div>
+            <div class="col-lg-6">
+                <button type="button" class="btn btn-sm btn-warning btn-block js-add-pendulum-custom" title="Ajouter une question personnalisée">
+                    <i class="icon-plus bigger-110"></i> Question personnalisée
+                </button>
+            </div>
+        </div>
+    {% endset %}
+    {% set param = {
+    'section' : 'PENDULUM',
+    'titre' : 'Questions du pendule',
+    'body' : pendulum_widget_body,
+    'padding_body' : true
+    } %}
+    {{ block('historique_widgetbox') }}
+    {# -- BLOC DRAW --#}
+    {% set draw_widget_body %}
+        <div class="widget-main collection_field" data-adrprototype="#collection_draw_prototype">
+            <div id="collection_draw_prototype" data-prototype="{{ form_widget(form.notes.draw.draw.vars.prototype) | e }}"></div>
+            <div class="row">
+                <table id="draw_collection_fields_container" class="col-lg-12 collection_fields_container" data-collection-childs="tbody">
+                    {% for f in fields_by_section(getHistorySectionConstant('DRAW')) %}
+                        {% for d in form.notes[f].draw.children %}
+                            {{ form_widget(d) }}
+                        {% endfor %}
+                    {% endfor %}
+                </table>
+            </div>
+            <br/>
+            <div class="row">
+                <div class="col-lg-12">
+                    <button type="button" class="btn btn-sm btn-info btn-block collection_add" title="Ajouter un tirage">
+                        <i class="icon-plus bigger-110"></i> Ajouter un tirage
+                    </button>
+                </div>
+            </div>
+        </div>
+    {% endset %}
+    {% set param = {
+    'section' : 'DRAW',
+    'titre' : 'Tirages de carte',
+    'body' : draw_widget_body
+    } %}
+    {{ block('historique_widgetbox') }}
+    {# -- BLOC COM --#}
+    {% set edit = options.edit_reminder|default(false) %}
+    {% set param = {
+    'section' : 'COM',
+    'titre' : 'Propositions commerciales',
+    'edit' : edit
+    } %}
+    {{ block('historique_widgetbox') }}
+    {# -- BLOC ALERT --#}
+    {% set alert_widget_body %}
+        {% set reminder_type = getHistoryTypeConstant('reminder') %}
+        {{ form_widget(form.notes[reminder_type], { 'attr': {'class': reminder_type ~ ' hidden'} }) }}
+        {% set date = form.notes[reminder_type].vars.value ? form.notes[reminder_type].vars.value : null %}
+        {{ render(controller("KGCRdvBundle:Planning:widgetSelectionReminder", {'default': date})) }}
+        <div class="space-6"></div>
+        <div class="row">
+            {% for f in fields_by_section(getHistorySectionConstant('ALERT')) %}
+                {% if f != reminder_type %}
+                    {% set stop_follow = getHistoryTypeConstant('stop_follow') %}
+                    {% set shown = (
+                    f == stop_follow
+                    and rdv.support.idcode == constant('KGC\\RdvBundle\\Entity\\Support::SUIVI_CLIENT')
+                    or  f != stop_follow
+                    ) %}
+                    {% if shown %}
+                        <div class="col-lg-6">
+                            <table>
+                                <tr>
+                                    <td class="align-right"><label class="control-label">{{ f | historique_type_label }}</label></td>
+                                    <td>{{ form_widget(form.notes[f].vars.form.bool) }}</td>
+                                </tr>
+                            </table>
+                        </div>
+                    {% endif %}
+                {% endif %}
+            {% endfor %}
+        </div>
+    {% endset %}
+    {% set error = not form.notes['reminder'].vars.valid %}
+    {% set titre = 'Programmation alerte/rappel ' %}
+    {% set param = {
+    'section' : 'ALERT',
+    'titre' : titre,
+    'edit' : edit,
+    'collapsed' :  not error and not edit,
+    'body' : alert_widget_body,
+    'error' : error
+    } %}
+    {{ block('historique_widgetbox') }}
+{% endmacro notes_voyant %}
+
+{% macro qualite(options) %}
+    {% set infos = options.form|default(false) ? {
+    0 : {
+    'lib' : 'Bilan',
+    'form' : options.form.qualite.recap.bool
+    }, 1 : {
+    'lib' : 'Notes',
+    'form' : options.form.qualite.notes.bool
+    }, 2 : {
+    'lib' : 'Avis',
+    'form' : options.form.qualite.opinion.option
+    }, 3 : {
+    'lib' : 'État du suivi',
+    'form' : options.form.qualite.reminder_state.option
+    }
+    } : null %}
+    {% set param = {
+    'titre' : 'Suivi Qualité',
+    'infos' : infos,
+    'edit' : options.edit is defined ? options.edit : true
+    } %}
+    {{ block('widgetbox') }}
+{% endmacro qualite %}
+
+{% macro allumage(options) %}
+    {% set count_ignition = options.form.allumage.vars.choices | length %}
+    {% set available = count_ignition > 0 %}
+    {% set defined = options.rdv.allumage is not null %}
+
+    {% if available or defined %}
+        <div class="widget-box">
+            <div class="widget-header header-color-pink">
+                {% if defined %}
+                <h5><i class="icon-fire"></i> Cette consultation est un allumage.</h5>
+                <div class="widget-toolbar">
+                    {% set url = app.user.isVoyant() ? 'kgc_consultations_fichevoyant' : 'kgc_rdv_fiche' %}
+                    <a href="{{ path(url,{'id':options.rdv.allumage.consultation.id}) }}"
+                            class="btn btn-xs btn-light {{ not app.user.isVoyant() ? 'modal-load' }}">Fiche d'origine</a>
+                </div>
+                <div class="hidden">{{ form_widget(options.form.allumage) }}</div>
+                {% elseif available %}
+                <h5><i class="icon-fire"></i> {{ count_ignition }} allumage(s) en attente :</h5>
+            </div>
+            <div class="widget-body">
+                {{ form_widget(options.form.allumage) }}
+                {% endif %}
+            </div>
+        </div>
+    {% endif %}
+{% endmacro allumage %}
+
+{% macro classement(options) %}
+    {% if options.form|default(false) %}
+        {% set form = options.form %}
+        {% set infos = {
+        1 : {
+        'lib'  : 'consultation.sorting.directory' | trans,
+        'form' : form.classement
+        }, 2 : {
+        'lib'  : 'consultation.sorting.giveup' | trans,
+        'form' : form.litige
+        },
+        } %}
+    {% endif %}
+    {% set param = {
+    'titre' : options.titre|default('Classement'),
+    'infos' : infos,
+    'edit' : true,
+    'blockedit' : options.form_edit|default(false) ? options.form_edit['classement:litige'] : null
+    } %}
+    {{ block('widgetbox') }}
+{% endmacro classement %}
+
+{% macro rdv_form_footer(options) %}
+    {% if options.form is defined and not options.no_tags|default(false) %}
+        {% set etiquettesDivId = "form_etiquettes" %}
+        {% set etiquettesDivId = options.target is defined ? (etiquettesDivId ~ options.target) : etiquettesDivId %}
+        <div id="{{ etiquettesDivId }}" class="collapse well" style="margin-bottom:0">
+            <h5 class="blue">Choisir les étiquettes</h5>
+            {{ form_widget(options.form.etiquettes, {'attr': { 'class':'inline-choices'} }) }}
+        </div>
+    {% endif %}
+    <div class="modal-footer">
+        <div class="form-footer">
+            {% if options.form is defined %}
+                {% if not options.no_tags|default(false) %}
+                    <span class="input-group-addon tooltip-info" data-toggle="collapse" href="#{{ etiquettesDivId }}" style="cursor: pointer">
+                        <i class="icon-tags"></i>
+                    </span>
+                {% endif %}
+                {{ form_widget(options.form.commentaire) }}
+                <button type="submit" class="btn btn-sm btn-{{ options.submit_color|default('primary') }}" style="display:inline-block">
+                    <i class="icon-ok"></i> {{ options.submit_txt|default('Enregistrer les modifications') }}
+                </button>
+                {% if options.form.pause is defined %}
+                    <button type="submit" title="Reconduire" class="js-card-pause pull-right btn btn-sm btn-inverse tooltip-info" style="display:inline-block"
+                            data-href="{{ path('kgc_rdv_pause',{'id':options.rdv.id}) }}"
+                            data-main-action="{{ constant('KGC\\RdvBundle\\Entity\\ActionSuivi::PAUSE_CONSULT') }}">
+                        <i class="icon-reply bigger-120"></i> &nbsp;Reconduire
+                    </button>
+                {% endif %}
+            {% endif %}
+        </div>
+        {% set no_close = options.no_close|default(false) %}
+        {% set retour = options.retour|default(false) %}
+        {% set no_modal = options.no_modal|default(false) %}
+
+        {% set selectDate = app.request.query.get('select_date') %}
+        {% set selectTpe = app.request.query.get('select_tpe') %}
+
+        <div class="pull-left">
+            {% if not no_close %}
+                <a class="btn btn-sm btn-danger" title="Fermer"
+                        {{ no_modal ? 'href='~ options.url_close|default('') : ' data-dismiss=modal' }}
+                        {{ retour or selectDate is not null ? 'style="padding-left: 4px;padding-right: 2px;"' }}>
+                    <i class="icon-remove"></i>{{ not retour and selectDate is null ? ' Fermer' }}
+                </a>
+                {% if retour %}
+                    <a id="retour_fiche" href="{{ path('kgc_rdv_fiche',{'id':options.rdv.id}) }}" class="btn btn-sm btn-grey {{ not no_modal ? 'modal-load' }}" style="margin-left:0">
+                        <i class="icon-arrow-left"></i> Retour à la fiche
+                    </a>
+                {% endif %}
+
+                {% if selectDate is not null %}
+                    <a class="modal-load btn btn-sm btn-gray" href="{{ path('kgc_stat_admin_ca_detail', {'select_date':selectDate, 'select_tpe':selectTpe }) }}">
+                        <i class="icon-arrow-left"></i> Retour au CA
+                    </a>
+                {% endif %}
+
+                {% if app.request.get('specific_statistics') is not null %}
+                    <a class="modal-load btn btn-sm btn-gray" href="{{ path('kgc_stat_admin_specific_details', app.request.query.all) }}">
+                        <i class="icon-arrow-left"></i> Retour au statistiques
+                    </a>
+                {% endif %}
+
+            {% endif %}
+        </div>
+        {% if options.cochefermeture|default(false) %}
+            {{ form_widget(options.form.fermeture, {'label':" Fermer automatiquement la fiche sʼil n'y a pas d'erreur", 'checked':true, 'attr':{'style':'float: right; font-size: 80%'} }) }}
+        {% endif %}
+    </div>
+{% endmacro rdv_form_footer %}
+
+{% macro rdv_chat_form_footer(options) %}
+    <div class="modal-footer">
+        <div class="form-footer">
+            {% if options.form is defined %}
+                <button type="submit" class="btn btn-sm btn-{{ options.submit_color|default('primary') }}" style="display:inline-block">
+                    <i class="icon-ok"></i> {{ options.submit_txt|default('Enregistrer les modifications') }}
+                </button>
+            {% endif %}
+        </div>
+        {% set no_close = options.no_close|default(false) %}
+        {% set retour = options.retour|default(false) %}
+        {% set no_modal = options.no_modal|default(false) %}
+
+        {% set selectDate = app.request.query.get('select_date') %}
+        {% set selectTpe = app.request.query.get('select_tpe') %}
+
+        <div class="pull-left">
+            {% if not no_close %}
+                <a class="btn btn-sm btn-danger" title="Fermer"
+                        {{ no_modal ? 'href='~ options.url_close|default('') : ' data-dismiss=modal' }}
+                        {{ retour or selectDate is not null ? 'style="padding-left: 4px;padding-right: 2px;"' }}>
+                    <i class="icon-remove"></i>{{ not retour and selectDate is null ? ' Fermer' }}
+                </a>
+                {% if selectDate is not null %}
+                    <a class="modal-load btn btn-sm btn-gray" href="{{ path('kgc_stat_admin_ca_detail', {'select_date':selectDate, 'select_tpe':selectTpe }) }}">
+                        <i class="icon-arrow-left"></i> Retour au CA
+                    </a>
+                {% endif %}
+
+                {% if app.request.get('specific_statistics') is not null %}
+                    <a class="modal-load btn btn-sm btn-gray" href="{{ path('kgc_stat_admin_specific_details', app.request.query.all) }}">
+                        <i class="icon-arrow-left"></i> Retour au statistiques
+                    </a>
+                {% endif %}
+
+            {% endif %}
+        </div>
+        {% if options.cochefermeture|default(false) %}
+            {{ form_widget(options.form.fermeture, {'label':" Fermer automatiquement la fiche sʼil n'y a pas d'erreur", 'checked':true, 'attr':{'style':'float: right; font-size: 80%'} }) }}
+        {% endif %}
+    </div>
+{% endmacro rdv_chat_form_footer %}
+
+{% macro rdv_form_header(rdv, close) %}
+    <div class="barre-info">
+        {% if close|default(false) %}
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+        {% endif %}
+        <ul class="classement">
+            {% for classement in rdv.classement.viewData %}
+                <li class="label {{ classement.couleur is not null ? "label-" ~ classement.couleur ~ " tooltip-" ~ classement.couleur }} arrowed-right" title="{{ classement.desc }}" data-rel="tooltip">
+                    <i class="icon-{{ classement.icon }}"></i>
+                    {{ classement.libelle }}
+                </li>
+            {% endfor %}
+        </ul>
+        <ul>
+            <li class="label label-transparent">
+                <a href="{{ path('kgc_rdv_fiche',{'id':rdv.id}) }}" class="modal-load" tile="Ouvrir la fiche" data-rel="tooltip">
+                    <i class="icon-file"></i>
+                    Fiche n°{{ rdv.id }}
+                </a>
+            </li>
+        </ul>
+        <div>
+            {% for etiquette in rdv.etiquettes %}
+                <span class="label arrowed"><i class="icon-tag"></i> {{ etiquette.libelle }}</span>&nbsp;
+            {% endfor %}
+        </div>
+    </div>
+{% endmacro rdv_form_header %}

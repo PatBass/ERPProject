@@ -1,0 +1,17 @@
+<ul class="nav ace-nav">
+    {% if poste.id is defined %}
+        <li class="light-green" style="border-right: 1px solid #DDD">
+            <a href="{{ path('kgc_user_poste') }}" class="modal-load" role="button">
+                <i class="icon-phone"></i>
+                <span class="user-info">Poste<small>{{ app.user.poste.name }}</small></span>
+            </a>
+        </li>
+    {% else %}
+        <li class="red" style="border-right: 1px solid #DDD">
+            <a href="{{ path('kgc_user_poste') }}" class="modal-load" role="button">
+                <i class="icon-phone"></i>
+                <span class="user-info">Poste<small>absent</small></span>
+            </a>
+        </li>
+    {% endif %}
+</ul>

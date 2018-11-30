@@ -1,0 +1,37 @@
+{# src/KGC/DashboardBundle/Ressources/views/Dashboard/standard.html.twig #}
+
+{% extends "KGCDashboardBundle::layout.html.twig" %}
+
+{% block ariane %}
+    {% set fil = ['Tableau de bord'] %}
+    {{ parent() }}
+{% endblock %}
+
+{% block page_header %}
+    {% set reload = {
+    'url':'#rdv_planning_chat, #rdv_status_done,#rdv_status_refused, #rdv_stats_general, #rdv_stats_chatter, #rdv_stats_users'
+    } %}
+    {{ parent()}}
+{% endblock %}
+
+{% block dashboard_body %}
+    <div class="row" style="min-height: 200px;">
+        <div class="col-lg-4">
+            <form method="post" action="{{ path('kgc_chat_planning_widget') }}" class="ajax_load" id="rdv_planning_chat"></form>
+        </div>
+        <div class="col-lg-4">
+            <form method="post" action="{{ path('kgc_chat_last_status', {'status': constant('KGC\\ChatBundle\\Entity\\ChatRoom::STATUS_CLOSED')}) }}" class="ajax_load" id="rdv_status_done"></form>
+            <div class="space-6"></div>
+            <form method="post" action="{{ path('kgc_chat_last_status', {'status': constant('KGC\\ChatBundle\\Entity\\ChatRoom::STATUS_REFUSED')}) }}" class="ajax_load" id="rdv_status_refused"></form>
+        </div>
+        <div class="col-lg-4">
+            <form method="post" action="{{ path('kgc_chat_stats_users') }}" class="ajax_load" id="rdv_stats_users"></form>
+            <div class="space-6"></div>
+            {% if is_granted('ROLE_ADMIN_CHAT') %}
+                <form method="post" action="{{ path('kgc_chat_stats_general') }}" class="ajax_load" id="rdv_stats_general"></form>
+                <div class="space-6"></div>
+            {% endif %}
+            <form method="post" action="{{ path('kgc_chat_stats_chatter') }}" class="ajax_load" id="rdv_stats_chatter"></form>
+        </div>
+    </div>
+{% endblock %}

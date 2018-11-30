@@ -1,0 +1,32 @@
+{% extends not app.request.isXmlHttpRequest() ? '::layout.html.twig' : '::emptylayout.html.twig' %}
+
+{% block body %}
+    {% import 'KGCClientBundle:client:blocsficheClient.html.twig' as fiche %}
+    {% if form %}
+        {% if not form.vars.valid %}
+            <p class="alert alert-danger">{{ form_errors(form) }}</p>
+        {% endif %}
+        {% set options_client = { 'client':client, 'form':form, 'form_edit':form_edit } %}
+        <div class="row">
+            <div class="col-lg-4">
+                {{ fiche.client(options_client, true) }}
+                {{ fiche.coordonneesbancaires({'form':form, 'form_edit':form_edit}) }}
+                {{ fiche.infos_client(client) }}
+                {{ form_row(form._token) }}
+            </div>
+            <div class="col-lg-8">
+                {{ fiche.prospects(client.landingUsers) }}
+                {{ fiche.consultations(client.consultations) }}
+            </div>
+        </div>
+        <div class="row">
+            <div class="pull-right">
+                <button type="submit" class="btn btn-sm btn-primary" style="display:inline-block">
+                    Enregistrer les modifications
+                </button>
+            </div>
+        </div>
+    {% else %}
+        <p class="alert alert-danger">La fiche demandée nʼa pas été trouvée. Il s'agit sûrement dʼun lien erroné.</p>
+    {% endif %}
+{% endblock %}

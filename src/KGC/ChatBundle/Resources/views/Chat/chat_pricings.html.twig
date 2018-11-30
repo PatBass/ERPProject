@@ -1,0 +1,61 @@
+{% embed '::widgetlayout.html.twig' %}
+
+    {% set widget_options = {
+    'titre' : title | default('Consommation générale'),
+    'header_class' : 'widget-header-small header-color-blue',
+    'refresh' : null,
+    'collapse' : true,
+    'no_padding' : true,
+    } %}
+
+    {% block widget_main %}
+    <div class="chat-subscriptions">
+        <div class="subscription-container">
+            <table class="table valign-middle table-striped table-condensed">
+            {% for pricing in pricings %}
+                <thead>
+                <tr>
+                    <th></th>
+                    <th>CREDIT</th>
+                    <th>MONTANT</th>
+                    <th>DATE</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>{{ pricing.offer }}</td>
+                    <td>{{ pricing.units }}</td>
+                    <td>{{ pricing.price }}</td>
+                    <td>{{ pricing.date | date('d/m/Y') }}</td>
+                </tr>
+                <tr>
+                    <td>Restant</td>
+                    <td colspan="3" class="chat-subscriptions-left">{{ pricing.left }}</td>
+                </tr>
+                <tr>
+                    <td>Consommation</td>
+                    <td colspan="3">{{ pricing.consumed }}</td>
+                </tr>
+                </tbody>
+            {% else %}
+                <tr>
+                    <td>Aucune consommation</td>
+                </tr>
+            {% endfor %}
+            </table>
+        </div>
+        {% if actionButtons|default(false) == true %}
+        <table class="table valign-middle table-striped table-condensed">
+            <tr>
+                <td{% if pricings|length > 0 %} colspan="4"{% endif %}>
+                    <a class="modal-load btn btn-xs btn-danger" href="{{ path('kgc_chat_formulas_offer', {id: client.id}) }}">{% if chatType|default(0) == 0 %}Offrir du temps{% else %}Offrir des questions{% endif %}</a>
+                    {% if client.lastSubscription %}
+                    <a class="modal-load btn btn-xs btn-danger" href="{{ path('kgc_chat_formulas_manual_subscription', {id: client.lastSubscription.id}) }}" title="Saisir un paiement lié à l'abonnement actif manuellement">Abonnement manuel</a>
+                    {% endif %}
+                </td>
+            </tr>
+        </table>
+        {% endif %}
+    </div>
+    {% endblock %}
+{% endembed %}

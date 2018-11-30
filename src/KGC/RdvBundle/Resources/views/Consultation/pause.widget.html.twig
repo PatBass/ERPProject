@@ -1,0 +1,37 @@
+{# src/KGC/RdvBundle/Resources/views/Consultation/pause.widget.html.twig #}
+
+{% extends not app.request.isXmlHttpRequest() ? '::layout.html.twig' : '::emptylayout.html.twig' %}
+    
+{% block body %}
+    {% embed '::widgetlayout.html.twig' %}
+        {% use 'KGCRdvBundle::listefichesRDV.html.twig' %}
+        
+        {% set widget_options = {
+            'titre' : 'Consultations en pause',
+            'header_class' : 'header-color-grey widget-header-small',
+            'collapse' : true,
+            'refresh' : '#rdv_pause',
+            'no_padding' : true
+        } %}
+
+        {% block widget_main %}
+            {% set actions = {
+                1 : {
+                    'route_action' : 'kgc_priseencharge',
+                    'load' : 'gritter-load',
+                    'color' : 'primary',
+                    'icon' : 'comments-alt',
+                    'disabled' : false,
+                    'title' : 'Prendre en charge'
+                },
+                2 : {
+                    'route_action' : 'kgc_consultations_fichevoyant',
+                    'load' : 'nothing',
+                    'color' : 'grey'
+                }
+            } %}
+            {% set fiches = liste %}
+            {{ fiches|length > 0 ? block('tableau_fiches') : '<table class="table"><tr><td>Aucun résultat</td></tr><table>' }}
+        {% endblock %}
+    {% endembed %}
+{% endblock %}

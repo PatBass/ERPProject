@@ -1,0 +1,64 @@
+{# src/KGC/DashboardBundle/Resources/views/Config/salary.list.html.twig #}
+
+{% extends not app.request.isXmlHttpRequest() ? '::layout.html.twig' : '::emptylayout.html.twig' %}
+
+{% block body %}
+    {% embed '::widgetlayout.html.twig' %}
+        {% set sujet = type == 'follow' ? 'Suivi' : type == 'consultation' ? 'Consultation' : 'Bonus' %}
+        {% set statut = nature == 'employee' ? 'Salarié' : 'AE' %}
+        {% set widget_options = {
+            'titre' : sujet ~ " " ~ statut,
+            'refresh' : '#config_' ~ type ~ '_' ~ nature,
+            'collapse' : true,
+            'collapsed' : true,
+            'body_extra_class' : 'config',
+            'no_padding' : true
+        } %}
+
+        {% block widget_main %}
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Min</th>
+                        <th>Max</th>
+                        {% if objects[0].valueMax is not null %}
+                        <th>Min</th>
+                        <th>Max</th>
+                        {% endif %}
+                        <th>Pourcentage</th>
+                        <th>Création</th>
+                        <th>Modification</th>
+                        <th>&nbsp;</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for o in objects %}
+                    <tr>
+                        <td>{{ o.caMin }} {{ type != 'bonus' ? '€' : '%' }}</td>
+                        <td>{{ o.caMax }} {{ type != 'bonus' ? '€' : '%' }}</td>
+                        {% if objects[0].valueMax is not null %}
+                        <td>{{ o.valueMin }}</td>
+                        <td>{{ o.valueMax }}</td>
+                        {% endif %}
+                        <td>{{ o.percentage | number_format(2, ',', ' ') }} %</td>
+                        <td>{{ o.createdAt | date('d/m/Y H:i')}}</td>
+                        <td>{{ o.updatedAt | date('d/m/Y H:i') }}</td>
+                        <td>
+                            <span class="pull-right">
+                                <a href="{{ path('kgc_config_salary_edit', {'id': o.id, 'type': type, 'nature': nature}) }}" class="btn btn-xs btn-primary tooltip-primary modal-load" role="button" title="" data-rel="tooltip" data-placement="left" data-original-title="Editer">
+                                    <i class="icon-pencil"></i>
+                                </a>
+                            </span>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        {% endblock %}
+        {% block widget_body_after %}
+            <a href="{{ path('kgc_config_salary_edit', {'type': type, 'nature': nature}) }}" class="btn btn-block modal-load" role="button" title="Ajouter un paramètre">
+                <i class="icon-plus"></i> Ajouter un paramètre
+            </a>
+        {% endblock %}
+    {% endembed %}
+{% endblock body %}

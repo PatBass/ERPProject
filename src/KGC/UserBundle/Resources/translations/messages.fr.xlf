@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
+    <file source-language="en" datatype="plaintext" original="file.ext">
+        <body>
+            <trans-unit id="1">
+                <source>User account is disabled.</source>
+                <target>Ce compte utilisateur est désactivé !</target>
+            </trans-unit>
+
+            <trans-unit id="2">
+                <source>User account is locked.</source>
+                <target>Ce compte utilisateur est verrouillé !</target>
+            </trans-unit>
+
+            <trans-unit id="3">
+                <source>User account has expired.</source>
+                <target>Ce compte utilisateur à expiré !</target>
+            </trans-unit>
+
+            <trans-unit id="4">
+                <source>Bad credentials.</source>
+                <target>Login ou mot de passe incorrect !</target>
+            </trans-unit>
+
+        </body>
+    </file>
+</xliff>

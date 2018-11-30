@@ -1,0 +1,45 @@
+{# src/KGC/RdvBundle/Resources/views/Consultation/fiche.voyant.html.twig #}
+
+{% extends not app.request.isXmlHttpRequest() ? '::layout.html.twig' : '::emptylayout.html.twig' %}
+
+{% block body %}
+    {% import 'KGCRdvBundle::blocsficheRDV.html.twig' as fiche %}
+
+    <div class="row voyant">
+        <div class="col-lg-4 fiche">
+            {% if form %}
+                {% if not form.vars.valid %}
+                    <p class="alert alert-danger">{{ form_errors(form) }}</p>
+                {% endif %}
+                {{ fiche.consultation({'rdv':rdv, 'form':form}) }}
+                {{ fiche.allumage({ 'rdv':rdv, 'form':form }) }}
+                {{ fiche.client({'form':form, 'form_edit':form_edit, 'rdv':rdv}, true) }}
+                {{ form_widget(form._token) }}
+                {{ form_widget(form.mainaction) }}
+            {% else %}
+                <p class="alert alert-danger">Consultation introuvable.</p>
+            {% endif %}
+        </div>
+        <div class="col-lg-4 historique">
+            {{ fiche.notes_voyant({'rdv':rdv,'form':form}) }}
+        </div>
+        <div class="col-lg-4 fiche">
+
+            {{ fiche.notes({'form':form}) }}
+            {{ fiche.tarification({'form':form}) }}
+            {{ fiche.encaissements({'rdv':rdv}) }}
+            {{ fiche.envoi_produits({'form':form, 'read_only':true}) }}
+            {{ fiche.qualite({'form':form, 'edit':false}) }}
+
+        </div>
+    </div>
+    <div class="space-12"></div>
+    <div class="row">
+        {% if not form %}
+            {{ parent() }}
+        {% else %}
+            {{ fiche.rdv_form_footer({'no_modal':true,'form':form,'cochefermeture':true, 'url_close':path('kgc_dashboard')}) }}
+        {% endif %}
+    </div>
+
+{% endblock body %}

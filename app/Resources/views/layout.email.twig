@@ -1,0 +1,142 @@
+{% trans_default_domain 'KGCSharedBundle' %}
+{% set h3Style = 'font-size: 24px; margin-bottom: 30px; font-weight: normal;' %}
+{% set buttonStyle = 'background: #fd698b; padding: 10px 30px; color: white; font-size: 16px; font-weight: bold; border-radius: 20px; text-decoration: none' %}
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta name="viewport" content="width=device-width"/>
+</head>
+<body>
+    {% trans_default_domain 'KGCSharedBundle' %}
+{% set h3Style = 'font-size: 24px; margin-bottom: 30px; font-weight: normal;' %}
+{% set buttonStyle = 'background: url(' ~ siteUrl ~ asset('/img/validateCb/button.png') ~ '); width: 244px; line-height: 53px; color: white; font-size: 15px; text-decoration: none; text-align: center;' %}
+  <table class="body" style="width: 100%; max-width: 580px; background: white; margin: 0 auto;">
+    <tr>
+      <td class="center" align="center" valign="top">
+        <center>
+
+          <table class="row header" style="background: #757575; width: 100%">
+            <tr>
+              <td class="center" align="center">
+                <center>
+
+                  <table>
+                    <tr>
+                      <td>
+
+                        <table>
+                          <tr>
+                            <td class="center" align="center">
+                              <img style="float: none; margin: 8px auto 20px;" src="{{ siteUrl ~ asset('/img/validateCb/logo.png') }}" />
+                            </td>
+                            <td class="expander"></td>
+                          </tr>
+                        </table>
+
+                      </td>
+                    </tr>
+                  </table>
+
+                </center>
+              </td>
+            </tr>
+          </table>
+
+          <table>
+            <tr>
+              <td>
+
+                <table>
+                  <tr>
+                    <td>
+                      <div style="padding: 20px 20px 10px;">
+                        <table class="columns">
+                          <tr>
+                            <td>
+                              <div style="font-size: 14px">
+                                {% block body %}{% endblock %}
+                              </div>
+                            </td>
+                            <td class="expander"></td>
+                          </tr>
+                          <tr>
+                            <td>
+
+                              <table class="columns bottomList">
+                                <tr valign="bottom">
+                                  {% set imgTdStyle='width: 25%; text-align: center; vertical-align: bottom' %}
+                                  {% set imgStyle='float: none; display: inline;  vertical-align: top;' %}
+                                  <td style="{{ imgTdStyle }}">
+                                    <img src="{{ siteUrl ~ asset('/img/validateCb/shield.png') }}" style="{{ imgStyle }}" />
+                                  </td>
+                                  <td style="{{ imgTdStyle }}">
+                                    <img src="{{ siteUrl ~ asset('/img/validateCb/expert.png') }}" style="{{ imgStyle }}; position: relative; bottom: -5px;" />
+                                  </td>
+                                  <td style="{{ imgTdStyle }}">
+                                    <img src="{{ siteUrl ~ asset('/img/validateCb/price.png') }}" style="{{ imgStyle }}" />
+                                  </td>
+                                  <td style="{{ imgTdStyle }}">
+                                    <img src="{{ siteUrl ~ asset('/img/validateCb/new-lock.png') }}" style="{{ imgStyle }}" />
+                                  </td>
+                                </tr>
+                                <tr valign="top">
+                                  {% set colStyle='width: 25%; font-size: 10px; line-height: 13px; color: #757575; text-align: center' %}
+                                  <td style="{{ colStyle }}">
+                                    {{ 'shared.validateCb.email.layout.bottom.discretion'|trans|raw }}
+                                  </td>
+                                  <td style="{{ colStyle }}">
+                                    {{ 'shared.validateCb.email.layout.bottom.expertise'|trans|raw }}
+                                  </td>
+                                  <td style="{{ colStyle }}">
+                                    {{ 'shared.validateCb.email.layout.bottom.price'|trans|raw }}
+                                  </td>
+                                  <td style="{{ colStyle }}">
+                                    {{ 'shared.validateCb.email.layout.bottom.secured'|trans|raw }}
+                                  </td>
+                                </tr>
+                                </tr>
+                              </table>
+
+                            </td>
+                            <td class="expander"></td>
+                          </tr>
+                        </table>
+                      </div>
+                    </td>
+                  </tr>
+                </table>
+
+              </td>
+            </tr>
+          </table>
+
+          <table class="row footer" style="width: 100%; max-width: 580px; background: #757575; margin: 0 auto;">
+            <tr>
+              <td class="center" align="center">
+
+                <table>
+                  <tr>
+                    <td>
+                      <table>
+                        <tr>
+                          <td class="left-text-pad center" align="center" style="font-size: 11px; color: white">
+                            {{ 'shared.validateCb.email.layout.footer'|trans }}
+                          </td>
+                          <td class="expander"></td>
+                        </tr>
+                      </table>
+                    </td>
+                  </tr>
+                </table>
+
+              </td>
+            </tr>
+          </table>
+
+        </center>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>

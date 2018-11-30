@@ -1,0 +1,62 @@
+{# src/KGC/DashboardBundle/Resources/views/Config/forfaits.edit.html.twig #}
+
+{% extends not app.request.isXmlHttpRequest() ? '::layout.html.twig' : '::emptylayout.html.twig' %}
+
+{% block body %}
+    {% embed '::modallayout.html.twig' %}
+        {% block modal_header %}
+            {% set link = {
+                'txt' : (upd ? 'Édition' : 'Ajout') ~ ' de forfait',
+                'url' : path('kgc_config_forfait_edit',{'id':object.id}),
+                'icon' : upd ? 'pencil' : 'plus'
+            } %}
+            {{ parent() }}
+        {% endblock %}
+
+        {% block modal_content %}
+            <form id="tpe_config_modal" method="post" action="{{ path('kgc_config_forfait_edit', {'id': object.id}) }}" {{ form_enctype(form) }}
+                  class="ajax_modal_form form-horizontal" {{ form.vars.valid ? 'data-close="1" data-refresh="#config_forfait"' }} >
+                {{ parent() }}
+                {{ form_widget(form._token) }}
+            </form>
+        {% endblock modal_content %}
+
+        {% block modal_body %}
+            <div class="row">
+                <div class="col-md-3">
+                    <strong>Libellé :</strong><br />
+                    {{ form_widget(form.label) }}
+                </div>
+                <div class="col-md-3">
+                    <strong>Code :</strong><br />
+                    {{ form_widget(form.code) }}
+                </div>
+                <div class="col-md-3">
+                    <strong>Temps :</strong><br />
+                    {{ form_widget(form.dataAttr) }}
+                </div>
+                <div class="col-md-3">
+                    <strong>Actif :</strong><br />
+                    <div class="space-2"></div>
+                    {{ form_widget(form.enabled) }}
+                </div>
+            </div>
+        {% endblock modal_body %}
+
+        {% block modal_footer %}
+            <div class="modal-footer">
+                <div class="pull-left">
+                    <button type="button" class="btn btn-sm btn-danger" data-dismiss="modal"><i class="icon-remove"></i> Fermer</button>
+                </div>
+                <div class="pull-right">
+                    <button type="submit" class="btn btn-success btn-block btn-sm js-wysiwyg-btn">
+                        <i class="icon-arrow-right"></i> Enregistrer
+                    </button>
+                </div>
+            </div>
+            <div style="display: none">
+                {{ form_rest(form) }}
+            </div>
+        {% endblock modal_footer %}
+    {% endembed %}
+{% endblock body %}

@@ -1,0 +1,16 @@
+{# src/KGC/DashboardBundle/Ressources/views/Dashboard/gestion.html.twig #}
+
+{% extends "KGCDashboardBundle::layout.html.twig" %}
+
+{% block ariane %}
+    {% set fil = ['Tableau de bord'] %}
+    {{ parent() }}
+{% endblock %}
+
+{% block dashboard_body %}
+    <div class="row">
+        <div class="col-xs-12">
+            Bienvenue dans l'interface de gestion de KGestion.
+        </div>
+    </div>
+{% endblock %}

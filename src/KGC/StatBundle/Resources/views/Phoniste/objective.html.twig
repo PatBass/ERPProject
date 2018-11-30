@@ -1,0 +1,68 @@
+{# src/KGC/StatBundle/Ressources/views/Phoniste/objective.html.twig #}
+
+{% extends not app.request.isXmlHttpRequest() ? '::layout.html.twig' : '::emptylayout.html.twig' %}
+
+{% import _self as circle %}
+
+{% macro create(color, rate, done, bonus, bonusPrice, bonusBefore, lineWidth, dataSize) %}
+    <div class="easy-pie-chart percentage"
+         data-size="{{ dataSize|default(150) }}" data-bar-color="{{ color|default('#629b58') }}" data-track-color="#ddd"  data-percent="{{ rate }}" data-line-width="{{ lineWidth|default(30) }}">
+        {% if done %}
+            <span class="percent">{{ done }} / {{ bonus }}</span>
+        {% endif %}
+    </div><br />
+    <strong>
+        Bonus {{ bonus }} {{ not done ? '<br />' }} ({{ bonusPrice }} &euro;)
+    </strong>
+    <br/>
+    {{ bonusBefore ? 'Plus que '~ bonusBefore ~ ' ' }}
+{% endmacro create  %}
+
+{% block body %}
+  <div class="widget-box">
+    <div class="widget-header">
+      <h5>
+        <a href="#" data-action="collapse">
+          <i class="icon-chevron-up"></i>
+          Bonus du jour et objectifs<b></b>
+        </a>
+      </h5>
+      <div class="widget-toolbar">
+        <a class="ajax_reload" href="#phoniste_objective" title="Recharger">
+          <i class="icon-refresh"></i>
+        </a>
+      </div>
+    </div>
+    <div class="widget-body stat-phoniste-objective">
+      <div class="widget-main">
+        <table>
+          <tr>
+            <td colspan="4">
+                {% if done < params.firstThreshold %}
+                    {{ circle.create("#9585bf", first.rate, done, params.firstThreshold, params.bonusFirstThreshold, first.before_bonus, 30, 150 ) }}
+                {% elseif done < params.secondThreshold %}
+                    {{ circle.create("#f89406", second.rate, done, params.secondThreshold, params.bonusSecondThreshold, second.before_bonus, 30, 150 ) }}
+                {% elseif done < params.thirdThreshold %}
+                    {{ circle.create("#428bca", third.rate, done,  params.thirdThreshold, params.bonusThirdThreshold, third.before_bonus, 30, 150 ) }}
+                {% else %}
+                    {{ circle.create("#629b58", rate, done, params.fourthThreshold, params.bonusFourthThreshold, before_bonus, 30, 150 ) }}
+                {% endif %}
+                <br /><br />
+            </td>
+          </tr>
+          <tr>
+            <td>
+                {{ circle.create("#9585bf", first.rate, null, params.firstThreshold, params.bonusFirstThreshold, first.before_bonus, 10, 50 ) }}
+            </td>
+            <td>
+                {{ circle.create("#f89406", second.rate, null, params.secondThreshold, params.bonusSecondThreshold, second.before_bonus, 10, 50 ) }}
+            </td>
+            <td>
+                {{ circle.create("#428bca", third.rate, null,  params.thirdThreshold, params.bonusThirdThreshold, third.before_bonus, 10, 50 ) }}
+            </td>
+          </tr>
+        </table>
+      </div>
+    </div>
+  </div>
+{% endblock body %}

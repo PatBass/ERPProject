@@ -1,0 +1,69 @@
+{% extends not app.request.isXmlHttpRequest() ? '::layout.html.twig' : '::emptylayout.html.twig' %}
+
+{% block body %}
+    {% embed '::modallayout.html.twig' %}
+        {% block modal_header %}
+            {% set link = {
+                'txt' : modal_title,
+                'url' : path('kgc_chat_formulas_manual_subscription',{'id':subscription.id}),
+                'icon' : 'pencil'
+            } %}
+            {{ parent() }}
+        {% endblock %}
+
+        {% block modal_content %}
+            <form id="chat_formula_manual_subscription_modal" method="post" action="{{ path('kgc_chat_formulas_manual_subscription', {'id': subscription.id}) }}" {{ form_enctype(form) }} data-close="1" data-refresh="#tab-website-{{ subscription.chatFormulaRate.chatFormula.website.id }}" class="ajax_modal_form form-horizontal chat_formula_form">
+                {{ parent() }}
+                {{ form_widget(form._token) }}
+            </form>
+        {% endblock modal_content %}
+
+        {% block modal_body %}
+            <div class="row">
+                <div class="col-md-6">
+                    {{ form_label(form.amount) }}
+                </div>
+                <div class="col-md-6">
+                    {{ form_label(form.paymentMethod) }}
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    {{ form_widget(form.amount) }}
+                </div>
+                <div class="col-md-6">
+                    {{ form_widget(form.paymentMethod, {'attr': {'class': 'paymentMethodSelect'}}) }}
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    {{ form_label(form.commentary) }}
+                </div>
+                <div class="col-md-6">
+                    {{ form_label(form.tpe, null, {'label_attr': {'class': 'show-only-if-cb'}}) }}
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    {{ form_widget(form.commentary) }}
+                </div>
+                <div class="col-md-6">
+                    {{ form_widget(form.tpe, {'attr': {'class': 'show-only-if-cb required-if-cb'}}) }}
+                </div>
+            </div>
+        {% endblock modal_body %}
+
+        {% block modal_footer %}
+            <div class="modal-footer">
+                <div class="pull-left">
+                    <button type="button" class="btn btn-sm btn-danger" data-dismiss="modal"><i class="icon-remove"></i> Fermer</button>
+                </div>
+                <div class="pull-right">
+                    <button type="submit" class="btn btn-success btn-block btn-sm">
+                        <i class="icon-arrow-right"></i> Valider
+                    </button>
+                </div>
+            </div>
+        {% endblock modal_footer %}
+    {% endembed %}
+{% endblock body %}

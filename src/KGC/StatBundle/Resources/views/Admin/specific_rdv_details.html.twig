@@ -1,0 +1,33 @@
+{# src/KGC/StatBundle/Ressources/views/Admin/specific_rdv_details.html.twig #}
+
+{% extends not app.request.isXmlHttpRequest() ? '::layout.html.twig' : '::emptylayout.html.twig' %}
+
+{% block body %}
+    {% embed '::modallayout.html.twig' %}
+
+        {% block modal_title %}
+            Détails des consultations  {{ title }}
+            {% set request_args = app.request.get('_route_params') | merge(app.request.query.all) | merge({ 'export': 1, 'rdv_details' : 1 }) %}
+            <a title="Export Excel (.csv)" href="{{ path('kgc_stat_admin_specific_details', request_args) }}" >
+                <i class="icon-download-alt"></i>
+            </a>
+        {% endblock modal_title %}
+
+        {% block modal_body %}
+            {% use 'KGCRdvBundle::listefichesRDV.html.twig' %}
+            {% set quality_info = true %}
+            {% set actions = {
+            1 : {
+            'route_action' : 'kgc_rdv_fiche',
+            'load' : 'modal-load',
+            'color' : 'primary',
+            'icon' : 'file',
+            'disabled' : false,
+            'title' : "Fiche standard",
+            'placement': 'left'
+            }
+            } %}
+            {{ fiches|length > 0 ? block('tableau_fiches') : '<table class="table"><tr><td>Aucun résultat</td></tr><table>' }}
+        {% endblock modal_body %}
+    {% endembed %}
+{% endblock body %}

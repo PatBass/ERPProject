@@ -1,0 +1,22 @@
+{# src/KGC/UserBundle/Resources/views/Security/ajaxlogin.html.twig #}
+
+<div class="modal-content" class="relogin">
+    <div class="modal-body">
+        <div class="infobox infobox-orange" style="display:block;width:auto;max-width: 600px;height:auto;border:none;">
+            <div class="infobox-icon">
+                <i class="icon-warning-sign"></i>
+            </div>
+            <div class="infobox-data" style="width:85%">
+                <span class="infobox-data-number">Session perdue</span>
+                <div class="infobox-content">
+                    Vous devez vous reconnecter.<br>
+                    Cliquez sur le bouton pour être redirigé vers la page de connexion.
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-footer">
+        <a href="{{ path('logout') }}" class="btn btn-warning center" title="Me reconnecter">Me reconnecter</a>
+    </div>
+</div>

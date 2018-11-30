@@ -1,0 +1,54 @@
+{# src/KGC/DashboardBundle/Resources/views/Config/forfait.tarifications.edit.html.twig #}
+
+{% extends not app.request.isXmlHttpRequest() ? '::layout.html.twig' : '::emptylayout.html.twig' %}
+
+{% block body %}
+    {% embed '::modallayout.html.twig' %}
+        {% block modal_header %}
+            {% set link = {
+                'txt' : upd ? 'Édition de la tarification du forfait ' ~ object.forfait.label : 'Ajout de tarification pour un forfait',
+                'url' : path('kgc_config_forfait_tarification_edit',{'id':object.id}),
+                'icon' : upd ? 'pencil' : 'plus'
+            } %}
+            {{ parent() }}
+        {% endblock %}
+
+        {% block modal_content %}
+            <form id="tpe_config_modal" method="post" action="{{ path('kgc_config_forfait_tarification_edit', {'id': object.id}) }}" {{ form_enctype(form) }}
+                  class="ajax_modal_form form-horizontal" {{ form.vars.valid ? 'data-close="1" data-refresh="#config_forfait_tarification"' }} >
+                {{ parent() }}
+                {{ form_widget(form._token) }}
+            </form>
+        {% endblock modal_content %}
+
+        {% block modal_body %}
+            <div class="row">
+                <div class="col-md-2">
+                    <strong>Forfait :</strong><br />
+                    {{ form_widget(form.forfait) }}
+                </div>
+                <div class="col-md-2">
+                    <strong>Tarification :</strong><br />
+                    {{ form_widget(form.codeTarification) }}
+                </div>
+                <div class="col-md-8">
+                    <strong>Prix :</strong><br />
+                    {{ form_widget(form.price) }}
+                </div>
+            </div>
+        {% endblock modal_body %}
+
+        {% block modal_footer %}
+            <div class="modal-footer">
+                <div class="pull-left">
+                    <button type="button" class="btn btn-sm btn-danger" data-dismiss="modal"><i class="icon-remove"></i> Fermer</button>
+                </div>
+                <div class="pull-right">
+                    <button type="submit" class="btn btn-success btn-block btn-sm js-wysiwyg-btn">
+                        <i class="icon-arrow-right"></i> Enregistrer
+                    </button>
+                </div>
+            </div>
+        {% endblock modal_footer %}
+    {% endembed %}
+{% endblock body %}

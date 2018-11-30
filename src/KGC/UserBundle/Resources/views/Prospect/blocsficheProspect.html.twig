@@ -1,0 +1,365 @@
+{# src/KGC/RdvBundle/Resources/views/blocsficheRDV.html.twig #}
+{% block formtable %}
+    <table class="table table-striped {{ table_class|default('') }}">
+        {% for data in infos %}
+            {% set form = data.form is defined ? data.form : null %}
+            {% set collection = data.collection|default(false) %}
+            {% if form is not null %}
+                {% set error = form.vars.errors|length > 0 ? true : false %}
+                {% set class = form.vars.required and not form.vars.disabled ? ' blue' : '' %}
+                {% set class = param.edit|default(false) and not form.vars.disabled ? ' text-orange' : class %}
+                {% set class = error ? 'danger text-danger' : class %}
+            {% endif %}
+            <tr {{ data.trclass is defined ? 'class='~data.trclass }}>
+                <th id="label-{{ form.vars.id|default('') }}" class="{{ class|default('') }} {{ collection ? 'collection_field' }}" {{ error|default(false) ? 'rowspan=2' }} {{ collection ? 'colspan=3 data-adrprototype=#' ~ collection.id }}>
+                    <span {{ collection ? 'style="line-height: 26px;"' }}>{{ data.lib }}</span>
+                    {% if data.lib_form is defined and data.lib_form is not null %}
+                        {{ form_widget(data.lib_form, {'attr':{'style':'float: right'} }) }}
+                    {% endif %}
+                    {% if data.lib2 is defined %}
+                        <br/>{{ data.lib2 }}
+                    {% endif %}
+                    {% if data.tooltip_badge is defined and data.tooltip_badge is not null %}
+                        <a class="debugdata tooltip-light pull-right" data-rel="tooltip" data-placement="right" title="{{ data.tooltip_badge.content }}" style="text-decoration:none">
+                            <i class="icon-{{ data.tooltip_badge.icon|default('info-sign') }}"></i>
+                        </a>
+                    {% endif %}
+                    {% if data.label is defined and data.label.content is not null %}
+                        &nbsp;<span class="{{ data.label.badge is defined ? 'badge badge' : 'label label' }}-{{ data.label.color|default('default') }}">
+                        {{ data.label.content }}
+                    </span>
+                    {% endif %}
+                    {% if collection %}
+                        <button type="button" id="{{ collection.id }}_addbutton" class="btn btn-xs btn-success pull-right collection_add" {{ form.vars.disabled or collection.disabled|default(false) ? 'disabled' }} {{ collection.not_enableable|default(false) ? 'data-enableable="0"' }}>
+                            <i class="icon-plus bigger-110"></i> Ajouter
+                        </button>
+                        <table class="table table-bordered table-striped collection_fields_container" id="{{ collection.id }}_container" data-collection-childs="tr">
+                            {{ form_widget(form) }}
+                        </table>
+                    {% endif %}
+                </th>
+                {% if data.editable|default(false) %}
+                    <td style="min-width:54%">
+                        {% if form is not null %}
+                            {{ form_widget(form) }}
+                        {% else %}
+                            {{ data.content|raw }}
+                        {% endif %}
+                    </td>
+                    <td style="width:60px">{{ data.editable|raw }}</td>
+                {% elseif not collection %}
+                    <td colspan="2" style="min-width:54%" {{ data.unified|default(false) ? 'colspan="2"' }}>
+                        {% if form is not null %}
+                            {{ form_widget(form) }}
+                        {% else %}
+                            {{ data.content|raw }}
+                        {% endif %}
+                    </td>
+                {% endif %}
+            </tr>
+            {% if error|default(false) %}
+                <tr>
+                    <td class="danger text-danger" {{ data.editable is defined ? 'colspan="2"' }}>{{ form_errors(form) }}</td>
+                </tr>
+            {% endif %}
+        {% else %}
+            <tr>
+                <td colspan="2" class="well">Aucune Donnée.</td>
+            </tr>
+        {% endfor %}
+    </table>
+{% endblock formtable %}
+
+{% block widgetbox %}
+    <div class="widget-box{{ param.collapsed|default(false) ? ' collapsed' }}{{ param.transparent|default(false) ? ' transparent' }}">
+        <div class="widget-header widget-header-small header-color-{{ param.edit|default(false) ? 'orange' : param.color_class|default('blue2') }} {{ param.error|default(false) ? 'red' }}">
+            <h5>
+                <a data-action="collapse" href="#">
+                    <i class="icon-chevron-{{ param.collapsed|default(false) ? 'down' : 'up' }}"></i>
+                    &nbsp;{{ param.titre|default('')|raw }}
+                    {{ param.error|default(false) ? '<i class="icon-warning-sign"></i>' }}
+                </a>
+            </h5>
+            {% if param.debugdata|default(null) is not null %}
+                <a class="debugdata tooltip-light" data-rel="tooltip" title="id : {{ param.debugdata }}" data-placement="right">
+                    <i class="icon-cog"></i>
+                </a>
+            {% endif %}
+            {% if param.blockedit is defined and param.blockedit is not null %}
+                <div class="widget-toolbar no-border">
+                    {{ form_widget(param.blockedit) }}
+                </div>
+            {% endif %}
+            {% if param.toolbar_links is defined and param.toolbar_links is not empty %}
+                <div class="widget-toolbar no-border">
+                    {% for link in param.toolbar_links %}
+                        <a class="modal-load"
+                                href="{{ link.path }}"
+                                data-rel="tooltip" title="{{ link.title }}">
+                            <i class="icon-{{ link.icon }}"></i>
+                        </a>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+        <div class="widget-body no-padding">
+            {% if param.infos is defined %}
+                {% set infos = param.infos %}
+                {{ block('formtable') }}
+            {% elseif param.body is defined %}
+                {% if param.padding_body|default(false) %}<div class="widget-main">{% endif %}
+                {{ param.body }}
+                {% if param.padding_body|default(false) %}</div>{% endif %}
+            {% else %}
+                <p class="center" style="margin:0;padding:10px"><i class="icon-{{ param.icon|default('time') }} bigger-240"></i></p>
+            {% endif %}
+        </div>
+    </div>
+{% endblock widgetbox %}
+
+{% macro prospect(options) %}
+    {% set form = options.form|default(false) %}
+    {% set editable = options.form_edit|default(false) %}
+    {% set prospect = form.vars.value %}
+    {% set param = {
+    'titre' : options.titre|default('Fiche prospect'),
+    'debugdata' : prospect.id|default(null),
+    'infos' : form ? {
+    1 : {
+    'lib': 'prospect.info.myastroId' | trans,
+    'form' : form.myastroId,
+    'editable' : editable and editable.myastroId is defined ? form_widget(editable.myastroId) : false
+    }, 2 : {
+    'lib' : 'prospect.info.firstname' | trans,
+    'form' : form.firstname,
+    'editable' : editable and editable.firstname is defined ? form_widget(editable.firstname) : false
+    }, 3 : {
+    'lib' : 'prospect.info.gender' | trans,
+    'form' : form.gender,
+    'editable' : editable and editable.gender is defined ? form_widget(editable.gender) : false
+    }, 4 : {
+    'lib' : 'prospect.info.birthday' | trans,
+    'lib2' : prospect is not null ? '(' ~ (prospect.birthday | age) ~ ' ans - ' ~ (prospect.birthday | astro) ~ ')',
+    'form' : form.birthday,
+    'editable' : editable and editable.birthday is defined ? form_widget(editable.birthday) : false
+    },
+    5 : {
+    'lib' : 'prospect.info.phone' | trans,
+    'form' : form.phone,
+    'editable' : editable and editable.phone is defined ? form_widget(editable.phone) : false
+    },
+    6 : {
+    'lib' : 'prospect.info.email' | trans,
+    'form' : form.email,
+    'editable' : editable and editable.email is defined ? form_widget(editable.email) : false
+    },
+    7 : {
+    'lib' : 'prospect.info.country' | trans,
+    'form' : form.country,
+    'editable' : editable and editable.country is defined ? form_widget(editable.country) : false
+    }
+    }
+    } %}
+    {{ block('widgetbox') }}
+{% endmacro prospect %}
+
+{% macro state(options) %}
+    {% set form = options.form|default(false) %}
+    {% set editable = options.form_edit|default(false) %}
+    {% set prospect = form.vars.value %}
+    {% set state = options.linkEntities and options.linkEntities.state is defined ? options.linkEntities.state : null %}
+    {% set param = {
+    'titre' : options.titre|default('Etat'),
+    'infos' : form ? {
+    1 : {
+    'lib': 'prospect.info.state' | trans,
+    'form' : form.state,
+    'content' : '<input type="text" readonly value="'~state and state.name is defined ? state.name : null~'" />',
+    'editable' : editable and editable.state is defined ? form_widget(editable.state) : false
+    }, 2 : {
+    'lib' : 'prospect.info.stateDate' | trans,
+    'form' : form.dateState,
+    'editable' : editable and editable.dateState is defined ? form_widget(editable.dateState) : false
+    }
+    }
+    } %}
+    {{ block('widgetbox') }}
+{% endmacro state %}
+
+
+{% macro tracking(options) %}
+    {% import 'KGCRdvBundle::interfacedata.html.twig' as interface %}
+    {% set prospect = options.prospect %}
+    <div class="widget-box transparent {{ options.collapsed|default(false) ? 'collapsed' }}">
+        <div class="widget-header widget-header-small">
+            <h5>
+                <a data-action="collapse" href="#">
+                    <i class="icon-chevron-{{ options.collapsed|default(false) ? 'down' : 'up' }}"></i>
+                    &nbsp;Inscription&nbsp;
+                </a>
+                <a class="debugdata tooltip-light" data-rel="tooltip" title="id : {{ prospect.id|default("null") }}" data-placement="right">
+                    <i class="icon-cog"></i>
+                </a>
+            </h5>
+        </div>
+        <div style="margin: 12px">
+            <table style="width:100%;">
+                <tr>
+                    <td class="bigger-120 align-center" style="border:1px solid orange; padding:0 5px;">
+                        {{ prospect.createdAt|date('d/m/Y H:i') }}
+                    </td>
+                </tr>
+            </table>
+            <div class="space-6"></div>
+        </div>
+        <div class="widget-body search-advanced">
+            {% set form = options.form|default(false) %}
+            {% set editable = options.form_edit|default(false) %}
+            {% set prospect = form.vars.value %}
+            {% set website = options.linkEntities and options.linkEntities.website is defined ? options.linkEntities.website : null %}
+            {% set source = options.linkEntities and options.linkEntities.source is defined ? options.linkEntities.source : null %}
+            {% set codepromo = options.linkEntities and options.linkEntities.codePromo is defined ? options.linkEntities.codePromo : null %}
+            {% set voyant = options.linkEntities and options.linkEntities.voyant is defined ? options.linkEntities.voyant : null %}
+            {% set formurl = options.linkEntities and options.linkEntities.formurl is defined ? options.linkEntities.formurl : null %}
+            {% set param = {
+            'titre' : options.titre|default('Tracking statistiques'),
+            'infos' : form ? {
+            1 : {
+            'lib': 'prospect.info.website' | trans,
+            'form' : editable ? form.website : null,
+            'content' : '<input type="text" readonly value="'~website and website.libelle is defined ? website.libelle : null~'" />',
+            'editable' : editable and editable.website is defined ? form_widget(editable.website) : false
+            }, 2 : {
+            'lib': 'prospect.info.source' | trans,
+            'form' : editable ? form.source : null,
+            'content' : '<input type="text" readonly value="'~source and source.label is defined ? source.label : null~'" />',
+            'editable' : editable and editable.source is defined ? form_widget(editable.source) : false
+            }, 3 : {
+            'lib' : 'prospect.info.myastroGclid' | trans,
+            'form' : form.myastroGclid,
+            'editable' : editable and editable.myastroGclid is defined ? form_widget(editable.myastroGclid) : false
+            }, 4 : {
+            'lib' : 'prospect.info.formurl' | trans,
+            'form' : form.formurl,
+            'editable' : editable and editable.formurl is defined ? form_widget(editable.formurl) : false
+            }
+            , 5 : {
+            'lib' : 'prospect.info.support' | trans,
+            'form' : form.support,
+            'editable' : editable and editable.support is defined ? form_widget(editable.support) : false
+            },
+            6 : {
+            'lib' : 'prospect.info.codepromo' | trans,
+            'form' : form.codepromo,
+            'editable' : editable and editable.codepromo is defined ? form_widget(editable.codepromo) : false
+            },
+            7 : {
+            'lib' : 'prospect.info.voyant' | trans,
+            'form' : form.voyant,
+            'editable' : editable and editable.voyant is defined ? form_widget(editable.voyant) : false
+            },
+            }
+            } %}
+            {{ block('widgetbox') }}
+        </div>
+    </div>
+{% endmacro tracking %}
+
+
+{% macro consultation(options) %}
+    {% set form = options.form|default(false) %}
+    {% set editable = options.form_edit|default(false) %}
+    {% set prospect = form.vars.value %}
+    {% set param = {
+    'titre' : options.titre|default('Information de la consultation'),
+    'infos' : form ? {
+    1 : {
+    'lib': 'prospect.info.questionSubject' | trans,
+    'form' : form.questionSubject,
+    'editable' : editable and editable.questionSubject is defined ? form_widget(editable.questionSubject) : false
+    }, 2 : {
+    'lib' : 'prospect.info.questionText' | trans,
+    'form' : form.questionText,
+    'editable' : editable and editable.questionText is defined ? form_widget(editable.questionText) : false
+    }, 3 : {
+    'lib' : 'prospect.info.questionContent' | trans,
+    'form' : form.questionContent,
+    'editable' : editable and editable.questionContent is defined ? form_widget(editable.questionContent) : false
+    }, 4 : {
+    'lib' : 'prospect.info.spouseName' | trans,
+    'form' : form.spouseName,
+    'editable' : editable and editable.spouseName is defined ? form_widget(editable.spouseName) : false
+    },
+    5 : {
+    'lib' : 'prospect.info.spouseBirthday' | trans,
+    'form' : form.spouseBirthday,
+    'editable' : editable and editable.spouseBirthday is defined ? form_widget(editable.spouseBirthday) : false
+    },
+    6 : {
+    'lib' : 'prospect.info.spouseSign' | trans,
+    'form' : form.spouseSign,
+    'editable' : editable and editable.spouseSign is defined ? form_widget(editable.spouseSign) : false
+    },
+    }
+    } %}
+    {{ block('widgetbox') }}
+{% endmacro consultation %}
+
+{% macro rdv_form_footer(options) %}
+    <div class="modal-footer">
+        {% set no_close = options.no_close|default(false) %}
+        {% set rdv_btn = options.options.rdv_btn|default(false) %}
+        {% set btn_save = options.options.btn_save|default(false) %}
+        {% set retour = options.retour|default(false) %}
+        {% set no_modal = options.no_modal|default(false) %}
+
+        {% set selectDate = app.request.query.get('select_date') %}
+
+        <div class="pull-left">
+            {% if not no_close %}
+                <a class="btn btn-sm btn-danger pull-left" title="Fermer"
+                        {{ no_modal ? 'href='~ options.url_close|default('') : ' data-dismiss=modal' }}
+                        {{ retour or selectDate is not null ? 'style="padding-left: 4px;padding-right: 2px;"' }}>
+                    <i class="icon-remove"></i>{{ not retour and selectDate is null ? ' Fermer' }}
+                </a>
+                {% if retour %}
+                    <a id="retour_fiche" href="{{ path('kgc_landinguser_fiche',{'id':options.prospect.id}) }}" class="btn btn-sm btn-grey {{ not no_modal ? 'modal-load' }}" style="margin-left:0">
+                        <i class="icon-arrow-left"></i> Retour à la fiche
+                    </a>
+                {% endif %}
+
+            {% endif %}
+        </div>
+        <div class="pull-right">
+            {% if rdv_btn %}
+                <button type="submit" class="btn btn-sm btn-success" style="display:inline-block">
+                    Créer un RDV à partir de ce prospect
+                </button>
+            {% endif %}
+            {% if btn_save %}
+                <button type="submit" class="btn btn-sm btn-primary" style="display:inline-block">
+                    Enregistrer
+                </button>
+            {% endif %}
+        </div>
+        {% if options.cochefermeture|default(false) and options.options.fermeture|default(false) %}
+            {{ form_widget(options.form.fermeture, {'label':" Fermer automatiquement la fiche sʼil n'y a pas d'erreur", 'checked':true, 'attr':{'style':'float: right; font-size: 80%; margin-right: 15px'} }) }}
+        {% endif %}
+    </div>
+{% endmacro rdv_form_footer %}
+
+{% macro rdv_form_header(prospect, close) %}
+    <div class="barre-info">
+        {% if close|default(false) %}
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+        {% endif %}
+        <ul>
+            <li class="label label-transparent">
+                <a href="{{ path('kgc_landinguser_fiche',{'id':prospect.id}) }}" class="modal-load" tile="Ouvrir la fiche" data-rel="tooltip">
+                    <i class="icon-file"></i>
+                    Fiche n°{{ prospect.id }}
+                </a>
+            </li>
+        </ul>
+    </div>
+{% endmacro rdv_form_header %}

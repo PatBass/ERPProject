@@ -1,0 +1,78 @@
+## src/KGC/RdvBundle/Ressources/fixtures/Version20150402164046/dossier.yml
+
+KGC\RdvBundle\Entity\Dossier:
+    dossier5:
+        idcode:
+        libelle: Arrangement
+        desc: Bénéficie de facilités de paiement
+        couleur:
+        tiroir: @tiroir3
+    dossier6:
+        idcode:
+        libelle: Geerim
+        desc: En procédure de recouvrement
+        couleur:
+        tiroir: @tiroir3
+    dossier7:
+        idcode: ABANDON
+        libelle: Abandon
+        desc: Impayé irrécupérable
+        couleur:
+        tiroir: @tiroir3
+    dossier8:
+        idcode: VALIDE
+        libelle: VALIDE
+        desc: Fiches cloturées au jour de la consultation.
+        tiroir: @tiroir2
+    dossier9:
+        idcode:
+        libelle: Litige
+        desc: Facture Non Acquitée
+        couleur:
+        tiroir: @tiroir3
+    dossier10:
+        idcode: OPPO
+        libelle: Opposition
+        desc: Fiches avec un encaissement en opposition
+        couleur:
+        tiroir: @tiroir3
+    dossier11:
+        idcode: RECUP
+        libelle: RECUP
+        desc: Fiches clôturée suite à récupération des encaissements
+        tiroir: @tiroir2
+    dossier12:
+        idcode: 10_MIN
+        libelle: 10 MIN
+        desc: Fiches de consultations de 10minutes ou moins.
+        tiroir: @tiroir2
+    dossier13:
+        idcode: EN_FNA
+        libelle: EN FNA
+        desc: Fiches Annulées parce que le client a déjà des Impayés en cours.
+        tiroir: @tiroir2
+        motifannulation: true
+    dossier14:
+        idcode: NRP
+        libelle: NRP
+        desc: Fiches annulées car le client nʼa pas répondu.
+        tiroir: @tiroir2
+        motifannulation: true
+    dossier15:
+        idcode: NVP
+        libelle: NVP
+        desc: Fiches annulées car le client ne voulait plus consulter.
+        tiroir: @tiroir2
+        motifannulation: true
+    dossier16:
+        idcode: CB_BELG
+        libelle: CB BELGE
+        desc: Fiches annulées car le client à une CB Belge incompatible.
+        tiroir: @tiroir2
+        motifannulation: true
+    dossier17:
+        idcode: REFUS_2E
+        libelle: REFUS 2€
+        desc: Fiches annulées suite à un échec de la sécurisation.
+        tiroir: @tiroir2
+        motifannulation: true

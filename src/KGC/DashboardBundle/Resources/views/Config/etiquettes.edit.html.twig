@@ -1,0 +1,59 @@
+{# src/KGC/DashboardBundle/Resources/views/Config/etiquettes.edit.html.twig #}
+
+{% extends not app.request.isXmlHttpRequest() ? '::layout.html.twig' : '::emptylayout.html.twig' %}
+
+{% block body %}
+    {% embed '::modallayout.html.twig' %}
+        {% block modal_header %}
+            {% set link = {
+            'txt' : upd ? 'Édition d\'étiquette « ' ~ object.libelle ~ ' »' : 'Ajout d\'étiquette',
+            'url' : path('kgc_config_etiquette_edit',{'id':object.id}),
+            'icon' : upd ? 'pencil' : 'plus'
+            } %}
+            {{ parent() }}
+        {% endblock %}
+
+        {% block modal_content %}
+            <form id="etiquettes_config_modal" method="post" action="{{ path('kgc_config_etiquette_edit', {'id': object.id}) }}" {{ form_enctype(form) }} data-close="1" data-refresh="#config_etiquettes" class="ajax_modal_form form-horizontal">
+                {{ parent() }}
+                {{ form_widget(form._token) }}
+            </form>
+        {% endblock modal_content %}
+
+        {% block modal_body %}
+            <div class="row">
+                <div class="col-md-12">
+                    <strong>Libelle :</strong><br />
+                    {{ form_widget(form.libelle) }}
+                </div>
+                <div class="col-md-12">
+                    <strong>Description :</strong><br />
+                    {{ form_widget(form.desc) }}
+                </div>
+                <div class="col-md-12">
+                    <strong>Actif :</strong><br />
+                    <div class="space-2"></div>
+                    {{ form_widget(form.active) }}
+                </div>
+                <div class="col-md-12">
+                    <strong>Profils :</strong><br />
+                    <div class="space-2"></div>
+                    {{ form_widget(form.profils) }}
+                </div>
+            </div>
+        {% endblock modal_body %}
+
+        {% block modal_footer %}
+            <div class="modal-footer">
+                <div class="pull-left">
+                    <button type="button" class="btn btn-sm btn-danger" data-dismiss="modal"><i class="icon-remove"></i> Fermer</button>
+                </div>
+                <div class="pull-right">
+                    <button type="submit" class="btn btn-success btn-block btn-sm">
+                        <i class="icon-arrow-right"></i> Enregistrer
+                    </button>
+                </div>
+            </div>
+        {% endblock modal_footer %}
+    {% endembed %}
+{% endblock body %}

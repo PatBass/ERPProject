@@ -1,0 +1,33 @@
+{# src/KGC/DashboardBundle/Resources/views/Config/tarifications.html.twig #}
+
+{% extends "KGCDashboardBundle::layout.html.twig" %}
+
+{% block ariane %}
+    {% set fil = ['Réglages'] %}
+    {{ parent() }}
+{% endblock %}
+
+{% block page_header %}
+    {% set infos = { 'titre':'Réglages','desc':'Tarification'} %}
+    {% set reload = { 'url':'#config_tarification, #config_forfait_tarification, #config_tarification_simple, #config_forfait' } %}
+    {{ parent()}}
+{% endblock %}
+
+{% block dashboard_body %}
+    <div class="row">
+        <div class="col-md-6">
+            <form method="post" action="{{ path('kgc_config_tarification_simple_list') }}" class="ajax_load" id="config_tarification_simple"></form>
+        </div>
+        <div class="col-md-6">
+            <form method="post" action="{{ path('kgc_config_forfait_list') }}" class="ajax_load" id="config_forfait"></form>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            <form method="post" action="{{ path('kgc_config_tarification_list') }}" class="ajax_load" id="config_tarification"></form>
+        </div>
+        <div class="col-md-6">
+            <form method="post" action="{{ path('kgc_config_forfait_tarification_list') }}" class="ajax_load" id="config_forfait_tarification"></form>
+        </div>
+    </div>
+{% endblock %}

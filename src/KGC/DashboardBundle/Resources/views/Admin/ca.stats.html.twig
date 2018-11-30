@@ -1,0 +1,16 @@
+{% extends "KGCDashboardBundle::layout.html.twig" %}
+
+{% block ariane %}
+    {% set fil = ['Administration'] %}
+    {{ parent() }}
+{% endblock %}
+
+{% block page_header %}
+    {% set infos = { 'titre':'Statistiques CA','desc':'Pointage'} %}
+    {% set reload = { 'url':'#admin_stats_ca' } %}
+    {{ parent()}}
+{% endblock %}
+
+{% block dashboard_body %}
+    <form method="post" action="{{ path('kgc_stat_admin_ca') }}" class="ajax_load" id="admin_stats_ca"></form>
+{% endblock %}

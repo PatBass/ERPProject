@@ -1,0 +1,59 @@
+{# src/KGC/StatBundle/Ressources/views/Phoniste/circle_ojectives.html.twig #}
+
+{% extends not app.request.isXmlHttpRequest() ? '::layout.html.twig' : '::emptylayout.html.twig' %}
+
+{% import _self as circle %}
+
+{% macro create(color, rate, done, bonus, bonusPrice, bonusBefore, lineWidth, dataSize) %}
+    <div class="easy-pie-chart percentage"
+         data-size="{{ dataSize|default(150) }}" data-bar-color="{{ color|default('#629b58') }}" data-track-color="#ddd"  data-percent="{{ rate }}" data-line-width="{{ lineWidth|default(30) }}">
+        {% if done %}
+            <span class="percent">{{ done }} / {{ bonus }}</span>
+        {% endif %}
+    </div><br />
+    <strong>
+        Bonus {{ bonus }}
+    </strong>
+    <br/>
+    {{ bonusBefore ? 'Plus que '~ bonusBefore ~ ' ' }}
+{% endmacro create  %}
+
+{% block body %}
+    {% embed '::widgetlayout.html.twig' %}
+        {% set widget_options = {
+            'titre' : 'Objectifs du jour',
+            'refresh' : '#phoniste_objective'
+        } %}
+        {% block widget_main %}
+            <table style="width: 100%; text-align: center;">
+                <tr>
+                    <td>
+                        <div class="easy-pie-chart percentage" data-size="100" data-bar-color="#9585BF" data-track-color="#ddd"  data-percent="{{ rdv_added / 15 * 100 }}" data-line-width="18">
+                            <span class="percent">{{ rdv_added }}</span>
+                        </div><br />
+                        <strong>Prime quantité</strong><br/>
+                        ({{ quantity_bonus|number_format }} MAD)
+                    </td>
+                    <td>
+                        <div class="easy-pie-chart percentage" data-size="100" data-bar-color="#87B87F" data-track-color="#ddd"  data-percent="{{ rdv_added > 0 ? rdv_validated / rdv_added * 100 : 0 }}" data-line-width="18">
+                            <span class="percent">{{ rdv_validated }}</span>
+                        </div><br />
+                        <strong>Prime qualité</strong><br/>
+                        ({{ quality_bonus|number_format }} MAD)
+                    </td>
+                    <td>
+                        <div class="easy-pie-chart percentage" data-size="100" data-bar-color="#428BCA" data-track-color="#ddd"  data-percent="{{ hebdo_objective > 0 ? week_rdv_added / hebdo_objective * 100 : 0 }}" data-line-width="18">
+                            <span class="percent">{{ week_rdv_added }}</span>
+                        </div><br />
+                        <strong>Prime Hebdo</strong><br/>
+                        {% if hebdo_objective - week_rdv_added < 0 %}
+                        ({{ hebdo_amount|number_format }} MAD)
+                        {% else %}
+                        (Plus que {{ hebdo_objective - week_rdv_added }} rdv)
+                        {% endif %}
+                    </td>
+                </tr>
+            </table>
+        {% endblock %}
+    {% endembed %}
+{% endblock body %}

@@ -1,0 +1,18 @@
+{% extends '::emptylayout.html.twig' %}
+
+{% block body %}
+    {% embed '::modallayout.html.twig' %}
+
+        {% block modal_title %}
+            Détails
+            {% set request_args = app.request.get('_route_params') | merge(app.request.query.all) | merge({ 'export': 1 }) %}
+            <a title="Export Excel (.csv)" href="{{ path(app.request.get('_route'), request_args) }}">
+                <i class="icon-download-alt"></i>
+            </a>
+        {% endblock modal_title %}
+
+        {% block modal_body %}
+            {{ include('KGCUserBundle:Prospect:detail_table.html.twig') }}
+        {% endblock modal_body %}
+    {% endembed %}
+{% endblock body %}

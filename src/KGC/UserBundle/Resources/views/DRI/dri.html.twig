@@ -1,0 +1,106 @@
+{# src/KGC/UserBundle/Resources/views/DRI/dri.html.twig #}
+
+{% extends "KGCDashboardBundle::layout.html.twig" %}
+
+{% block ariane %}
+    {% set fil = ['Demande de rappel'] %}
+    {{ parent() }}
+{% endblock %}
+
+{% block page_header %}
+    <div class="page-header">
+        <div class="pull-right">
+            <a class="ajax_reload close" href="#form_dri,#dri,#state_1,#state_2,#state_3,#state_4,#state_5,#state_6,#state_7,#state_9" title="Recharger">
+                <i class="icon-refresh"></i>
+            </a>
+        </div>
+        <h1>Demande de rappel</h1>
+    </div>
+{% endblock %}
+
+
+{% block dashboard_body %}
+    <div class="row" style="min-height: 200px;">
+        <div class="col-lg-12">
+            <form method="post" action="{{ path('kgc_prospect_dri_form') }}" class="ajax_load" id="form_dri"></form>
+        </div>
+        <div class="col-lg-12">
+            <form method="post" action="{{ path('kgc_prospect_dri_widget') }}" class="ajax_load" id="dri"></form>
+        </div>
+        <div class="col-lg-12">
+            <form method="post" action="{{ path('kgc_prospect_recall_widget') }}" class="ajax_load" id="state_3"></form>
+        </div>
+        <div class="col-lg-12">
+            <form method="post" action="{{ path('kgc_prospect_nrp_widget') }}" class="ajax_load" id="state_1"></form>
+        </div>
+        <div class="col-lg-12">
+            <form method="post" action="{{ path('kgc_prospect_nvp_widget') }}" class="ajax_load" id="state_2"></form>
+        </div>
+        <div class="col-lg-12">
+            <form method="post" action="{{ path('kgc_prospect_fn_widget') }}" class="ajax_load" id="state_4"></form>
+        </div>
+        <div class="col-lg-12">
+            <form method="post" action="{{ path('kgc_prospect_fna_widget') }}" class="ajax_load" id="state_5"></form>
+        </div>
+        <div class="col-lg-12">
+            <form method="post" action="{{ path('kgc_prospect_hesitant_widget') }}" class="ajax_load" id="state_6"></form>
+        </div>
+        <div class="col-lg-12">
+            <form method="post" action="{{ path('kgc_prospect_sscb_widget') }}" class="ajax_load" id="state_7"></form>
+        </div>
+        <div class="col-lg-12">
+            <form method="post" action="{{ path('kgc_prospect_mineur_widget') }}" class="ajax_load" id="state_9"></form>
+        </div>
+
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript">
+        (function($){
+            $(document).ready(function(){
+                $(document).on('change', '.changeState', function(ev){
+                    var $this= $(this), id = $this.data('id'), $td = $this.parent(), dateStateName = '#dateStateOf'+id;
+                    var hasState = $this
+                            .find('option[data-has-calendar="1"]')
+                            .filter(':selected')
+                            .get(0);
+
+                    if (hasState && $(hasState).val() > 0) {
+                        $td.find(dateStateName).removeClass('hide');
+                    }else{
+                        $td.find(dateStateName).addClass('hide');
+                    }
+                });
+                $(document).on('click', '.submit-row', function(ev){
+                    ev.preventDefault();
+                    ev.stopPropagation();
+                    var $this = $(this), sUrl = $this.data('url'), iId = $this.data('id'), data = {}, $tr = $this.parent().parent(), stateOfName = '#stateOf'+iId, dateStateName = '#dateStateOf'+iId;
+                    data['state'] = $tr.find(stateOfName).val();
+                    var hasState = $tr.find(stateOfName)
+                            .find('option[data-has-calendar="1"]')
+                            .filter(':selected')
+                            .get(0);
+                    if (hasState && $(hasState).val() > 0) {
+                        data['dateState'] = $tr.find(dateStateName).val();
+                    }
+
+                    $.ajax({
+                        url: sUrl,
+                        type: 'POST',
+                        data: data,
+                        success: function(data){
+                            data = jQuery.parseJSON(data);
+                            refresh($this.closest("form").find('.ajax_reload').attr('href'));
+                            if(data.reload){
+                                refresh(data.reload);
+                            }
+                            return false;
+                        }
+                    });
+                });
+            });
+        })(jQuery);
+    </script>
+{% endblock javascripts %}

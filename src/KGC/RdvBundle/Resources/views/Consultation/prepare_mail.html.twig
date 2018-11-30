@@ -1,0 +1,157 @@
+{# src/KGC/RdvBundle/Resources/views/Consultation/annuler.html.twig #}
+
+{% extends not app.request.isXmlHttpRequest() ? '::layout.html.twig' : '::emptylayout.html.twig' %}
+
+{% block body %}
+
+    {% set billing_code = constant('KGC\\ClientBundle\\Entity\\Mail::BILL') %}
+    {% embed '::modallayout.html.twig' %}
+        {% import 'KGCRdvBundle::blocsficheRDV.html.twig' as fiche %}
+
+        {% block modal_dialog_head %}
+            {% if not form.vars.valid %}
+                <p class="alert alert-danger">{{ form_errors(form) }}</p>
+            {% endif %}
+        {% endblock modal_dialog_head %}
+        
+        {% block modal_header %}
+            {% set link = {
+                'txt' : 'Envoyer un mail à ' ~ rdv.client.fullName,
+                'url' : path('kgc_rdv_prepare_mail',{'id':rdv.id}),
+                'icon' : 'envelope'
+            } %}
+            {{ parent() }}
+        {% endblock %}
+
+        {% block modal_content %}
+            <form id="prepare_mail_rdv_modal" method="post" action="{{ path('kgc_rdv_prepare_mail',{'id':rdv.id}) }}" {{ form_enctype(form) }} class="ajax_modal_form form-horizontal">
+                {{ parent() }}
+                {{ form_widget(form.mainaction) }}
+                {{ form_widget(form._token) }}
+            </form>
+        {% endblock modal_content %}
+
+        {% block modal_body %}
+            <div class="row sent-mail">
+                <div class="col-sm-12">
+                    {% embed '::widgetlayout.html.twig' %}
+                        {% set widget_options = {
+                            'titre' : 'Mails envoyés',
+                            'header_class' : 'widget-header-small',
+                            'collapse' : true,
+                            'collapsed' : form.vars.valid,
+                            'no_padding' : true
+                        } %}
+
+                        {% block widget_main %}
+                            {% if mails |length %}
+                            <table class="table table-striped table-condensed mail-list">
+                                <thead>
+                                <tr>
+                                    <th>Id</th>
+                                    <th>Par</th>
+                                    <th>Date</th>
+                                    <th>Code</th>
+                                    <th>Sujet</th>
+                                    <th>Envoi</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {%  for history in mails %}
+                                    <tr>
+                                        <td>{{ history.mail.id }}</td>
+                                        <td>{{ history.consultant }}</td>
+                                        <td>{{ history.createdAt | date('d/m/Y H:i') }}</td>
+                                        <td>{{ history.mail.mail is not null ? history.mail.mail.code : '-' }}</td>
+                                        <td>
+                                            <span class="hidden mail-attachment">
+                                                {% set aHidden = history.mail.mail is not null and history.mail.mail.code == billing_code ? '' : 'hidden' %}
+                                                {% set spanHidden = history.mail.mail is not null and history.mail.mail.code != billing_code ? '' : 'hidden' %}
+                                                <a class="{{ aHidden }}" href="{{ path('kgc_rdv_facture_affichage',{'id':rdv.id}) }}" target="_blank">facture.pdf</a>
+                                                <span class="{{ spanHidden }} none">Aucune</span>
+                                            </span>
+                                            <span class="hidden mail-id">{{ history.mail.mail is not null ? history.mail.mail.id }}</span>
+                                            <span class="mail-subject">{{ history.mail.subject }}</span>
+                                            <span class="hidden mail-html">{{ history.mail.html | raw }}</span>
+                                        </td>
+                                        <td>
+                                            {% if history.mail.status == "error" %}
+                                                <span class="label label-danger ">Erreur</span>
+                                            {% else %}
+                                                <span class="label label-success ">OK</span>
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                            {% else %}
+                                <div style="padding:20px;">Aucun mail envoyé pour le moment...</div>
+                            {% endif %}
+                        {% endblock widget_main %}
+                    {% endembed %}
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-sm-12">
+                    {% embed '::widgetlayout.html.twig' %}
+                        {% set widget_options = {
+                            'titre' : 'Nouveau mail',
+                            'header_class' : 'widget-header-small header-color-blue2',
+                            'collapse' : true,
+                            'collapsed' : false,
+                            'body_extra_class' : 'mail'
+                        } %}
+                        {% block widget_main %}
+                            <div style="margin:5px 15px;">
+                                <div class="row">
+                                    <span class="hidden billing-mail-code">{{ billing_code }}</span>
+                                    <div class="col-md-6">
+                                        <strong>Mail :</strong><br />
+                                        {{ form_widget(form.mail_sent.children.mail, {'attr':{'data-rdv' : rdv.id}}) }}
+                                    </div>
+                                </div>
+                                <div class="space-6"></div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <strong>Objet :</strong><br />
+                                        {{ form_widget(form.mail_sent.children.subject) }}
+                                    </div>
+                                    <div class="col-md-6">
+                                        <strong>Pièce(s) Jointe(s) :</strong><br />
+                                        <div class="col-md-8">
+                                            {{ form_widget(form.mail_sent.children.file) }}
+                                        </div>
+                                        <div class="space-4"></div>
+                                        <div class="col-md-4">
+                                            <span class="attachment-target">
+                                            <span class="none">Aucune</span>
+                                                <a class="hidden" href="{{ path('kgc_rdv_facture_affichage',{'id':rdv.id}) }}" target="_blank">facture.pdf</a>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="space-6"></div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <strong>Message :</strong><br />
+                                        <div style="border: 1px solid #D5D5D5">
+                                            {{ form_widget(form.mail_sent.children.html) }}
+                                            {{ form_rest(form.mail_sent) }}
+                                            <div id="wysiwyg-editor-1" class="wysiwyg-editor"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endblock %}
+                    {% endembed %}
+                </div>
+            </div>
+        {% endblock modal_body %}
+
+        {% block modal_footer %}
+            {{ fiche.rdv_form_footer({'form':form,'rdv':rdv,'retour': true, 'submit_color': 'success', 'submit_txt':'Envoyer'}) }}
+        {% endblock modal_footer %}
+    {% endembed %}
+{% endblock body %}

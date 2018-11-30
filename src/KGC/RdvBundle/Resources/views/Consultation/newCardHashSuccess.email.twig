@@ -1,0 +1,24 @@
+{% block subject %}Saisie de la carte bancaire{% endblock %}
+
+{% block body_text %}
+{% autoescape false %}
+Le lien vers le formulaire de paiement est : {{ "#{siteUrl}#{sitePrefix}validate-cb/#{rdv.newCardHash}" }}
+{% endautoescape %}
+{% endblock %}
+
+{% block body_html %}
+    {% embed "::layout.email.twig" %}
+        {% block body %}
+            <h1 style="margin: 0px 0px 20px; font-size: 20px; font-weight: normal;">Votre voyance par téléphone</h1>
+            <div style="border: 2px solid #29e9d5; line-height: 35px; font-size: 16px; width: 255px; text-align: center; margin: 0px auto 20px;"">1€ les 10 premières minutes</div>
+            Bonjour,
+            <br />
+            <br />
+            Voici le lien sécurisé vous permettant de profiter de l'offre: <strong>1€ les dix minutes</strong> mis en place par notre voyant.<br />
+            <br />
+            Veuillez cliquer sur le bouton ci-dessous pour procéder au paiement.
+
+            <a style="{{ buttonStyle }} display: block; margin: 30px auto 15px;" href="{{ "#{siteUrl}#{sitePrefix}validate-cb/#{rdv.newCardHash}" }}">ACCÉDER AU PAIEMENT</a>
+        {% endblock %}
+    {% endembed %}
+{% endblock %}

@@ -1,0 +1,51 @@
+{# src/KGC/RdvBundle/Resources/views/Encaissement/opposition.html.twig #}
+
+{% extends not app.request.isXmlHttpRequest() ? '::layout.html.twig' : '::emptylayout.html.twig' %}
+
+{% block body %}
+    {% embed '::modallayout.html.twig' %}
+        {% import 'KGCRdvBundle::blocsficheRDV.html.twig' as fiche %}
+
+        {% block modal_title %}Marquer une opposition sur la consultation de {{ rdv.client.fullName }}{% endblock modal_title %}
+
+        {% block modal_content %}
+            {% if form %}
+                <form id="opposition_modal" method="post" action="{{ path('kgc_encaissements_oppo',{'id':enc.id}) }}" {{ form_enctype(form) }} class="ajax_modal_form form-horizontal">
+                    {{ parent() }}
+                    {{ form_widget(form.mainaction) }}
+                    {{ form_widget(form._token) }}
+                </form>
+            {% else %}
+                {{ parent() }}
+            {% endif %}
+        {% endblock modal_content %}
+
+        {% block modal_body %}
+            {% if form %}
+            <div class="row">
+                <div class="col-xs-12">
+                    <p>Êtes-vous sûr de vouloir marquer une opposition sur lʼencaissement dʼun montant de {{ enc.montant|number_format(2,',',' ') }} € fait le {{ enc.date|date('d/m/Y') }} ?</p>
+
+                    <p>La consultation sera décloturée si besoin et déplacée dans le dossier « Oppositions ».</p>
+                </div>
+            </div>
+            {% elseif enc %}
+                <p class="alert alert-info">Il nʼest pas possible de marquer une opposition sur cet encaissement.</p>
+            {% else %}
+                <p class="alert alert-danger">La fiche demandée nʼa pas été trouvée. Il sʼagit sûrement dʼun lien erroné.</p>
+            {% endif %}
+        {% endblock modal_body %}
+
+        {% block modal_footer %}
+            {% if not form %}
+                {{ fiche.rdv_form_footer({'rdv':rdv,'retour': true}) }}
+            {% else %}
+                {{ fiche.rdv_form_footer({'form':form,'rdv':rdv,'retour': true}) }}
+            {% endif %}
+            
+            <div style="display: none">
+                {{ form_rest(form) }}
+            </div>
+        {% endblock modal_footer %}
+    {% endembed %}
+{% endblock body %}

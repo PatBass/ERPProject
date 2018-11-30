@@ -1,0 +1,116 @@
+imports:
+    - { resource: config.yml }
+
+
+framework:
+    router:
+        resource: "%kernel.root_dir%/config/routing_dev.yml"
+        strict_requirements: true
+    profiler: { only_exceptions: false }
+
+web_profiler:
+    toolbar: true
+    intercept_redirects: false
+
+monolog:
+    handlers:
+        subscription:
+            type:   stream
+            path:   "%kernel.logs_dir%/subscription.log"
+            channels: subscription
+            level: info
+            bubble: false
+        unpaid:
+            type:   stream
+            path:   "%kernel.logs_dir%/unpaidCron.log"
+            channels: unpaid
+            level: debug
+            bubble: false
+        main:
+            type:   stream
+            path:   "%kernel.logs_dir%/%kernel.environment%.log"
+            level:  debug
+        console:
+            type:   console
+            bubble: false
+        # uncomment to get logging in your browser
+        # you may have to allow bigger header sizes in your Web server configuration
+        #firephp:
+        #    type:   firephp
+        #    level:  info
+        #chromephp:
+        #    type:   chromephp
+        #    level:  info
+
+assetic:
+    use_controller: false
+
+swiftmailer:
+    mailers:
+        second_mailer:
+            transport: smtp
+            host: mailcatcher
+            port: 1025
+            username: null
+            password: null
+
+services:
+    kgc.payment.gateway.klikandpay:
+        class: KGC\PaymentBundle\Service\Payment\Gateway\Fake
+        arguments:
+            - @doctrine.orm.entity_manager
+            - @payum
+            - @payum.security.token_factory
+            - klikandpay
+        tags:
+            - { name: kgc.payment.gateway }
+
+    kgc.payment.gateway.be2bill:
+        class: KGC\PaymentBundle\Service\Payment\Gateway\Fake
+        arguments:
+            - @doctrine.orm.entity_manager
+            - @payum
+            - @payum.security.token_factory
+            - be2bill
+        tags:
+            - { name: kgc.payment.gateway }
+
+    kgc.payment.gateway.hipay:
+        class: KGC\PaymentBundle\Service\Payment\Gateway\Fake
+        arguments:
+            - @doctrine.orm.entity_manager
+            - @payum
+            - @payum.security.token_factory
+            - hipay
+        tags:
+            - { name: kgc.payment.gateway }
+
+    kgc.payment.gateway.hipay_tchat:
+        class: KGC\PaymentBundle\Service\Payment\Gateway\Fake
+        arguments:
+            - @doctrine.orm.entity_manager
+            - @payum
+            - @payum.security.token_factory
+            - hipay_tchat
+        tags:
+            - { name: kgc.payment.gateway }
+
+    kgc.payment.gateway.hipay_moto2:
+        class: KGC\PaymentBundle\Service\Payment\Gateway\Fake
+        arguments:
+            - @doctrine.orm.entity_manager
+            - @payum
+            - @payum.security.token_factory
+            - hipay_moto2
+        tags:
+            - { name: kgc.payment.gateway }
+
+    kgc.payment.gateway.hipay_moto3:
+        class: KGC\PaymentBundle\Service\Payment\Gateway\Fake
+        arguments:
+            - @doctrine.orm.entity_manager
+            - @payum
+            - @payum.security.token_factory
+            - hipay_moto3
+        tags:
+            - { name: kgc.payment.gateway }

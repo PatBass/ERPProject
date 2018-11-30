@@ -1,0 +1,50 @@
+{# src/KGC/DashboardBundle/Resources/views/Config/list.edit.list.html.twig #}
+
+{% extends not app.request.isXmlHttpRequest() ? '::layout.html.twig' : '::emptylayout.html.twig' %}
+
+{% block body %}
+    {% embed '::modallayout.html.twig' %}
+        {% block modal_header %}
+            {% set link = {
+                'txt' : (upd ? 'Édition' : 'Ajout') ~ ' de la liste de contact',
+                'url' : path('kgc_config_campagne_list_contact_edit',{'id':list.id}),
+                'icon' : upd ? 'pencil' : 'plus'
+            } %}
+            {{ parent() }}
+        {% endblock %}
+
+        {% block modal_content %}
+            <form id="list_template_modal" method="post" action="{{ path('kgc_config_campagne_list_contact_edit', {'id': list.id}) }}" {{ form_enctype(form) }} data-close="1" data-refresh="#config_list" class="ajax_modal_form form-horizontal">
+                {{ parent() }}
+                {{ form_widget(form._token) }}
+            </form>
+        {% endblock modal_content %}
+
+        {% block modal_body %}
+            <div class="row">
+                <div class="col-md-12">
+                    <strong>Nom :</strong><br />
+                    {{ form_widget(form.name) }}
+                </div>
+                <div class="col-md-12">
+                    <strong>Fichier Excel (.csv) => PRENOM;NOM;TELEPHONE :</strong><br />
+                    {{ form_widget(form.submitFile) }}
+                    {{ form_rest(form) }}
+                </div>
+            </div>
+        {% endblock modal_body %}
+
+        {% block modal_footer %}
+            <div class="modal-footer">
+                <div class="pull-left">
+                    <button type="button" class="btn btn-sm btn-danger" data-dismiss="modal"><i class="icon-remove"></i> Fermer</button>
+                </div>
+                <div class="pull-right">
+                    <button type="submit" class="btn btn-success btn-block btn-sm js-wysiwyg-btn">
+                        <i class="icon-arrow-right"></i> Enregistrer
+                    </button>
+                </div>
+            </div>
+        {% endblock modal_footer %}
+    {% endembed %}
+{% endblock body %}

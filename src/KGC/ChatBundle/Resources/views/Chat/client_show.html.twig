@@ -1,0 +1,69 @@
+{% extends not app.request.isXmlHttpRequest() ? '::layout.html.twig' : '::emptylayout.html.twig' %}
+
+{% block body %}
+
+   <div class="tabbable">
+      <ul class="nav nav-tabs">
+         {% for website in websites %}
+            <li {{ loop.first ? 'class="active"'}}>
+               <a href="#tab-website-{{ website.id }}" data-toggle="tab" class="ajax_reload">
+                  {{ website.libelle }} <i class="icon-refresh"></i>
+               </a>
+            </li>
+         {% endfor %}
+      </ul>
+
+      <div class="tab-content">
+         {% for website in websites %}
+            <form method="post" class="tab-pane fade {{ loop.first ? 'active'}} ajax_load" id="tab-website-{{ website.id }}"
+                  action="{{ path('kgc_clients_chat_show_website', {'websiteId':website.id, 'email':email}) }}">
+            </form>
+         {% endfor %}
+
+      </div>
+   </div>
+
+   <script type="text/javascript">
+      (function($){
+         $(document).ready(function(){
+            (function loadFirstTab () {
+               $('.tabbable li.active').removeClass('active');
+               $('.tabbable li:first a').click();
+            })()
+
+            $(document).on('click', '.js-show-payment', function(ev){
+               ev.preventDefault();
+               var target = $(this).data('target');
+               var target$ = $('.'+target);
+               target$.toggleClass('hidden');
+            });
+
+            $(document).on('click', '.js-edit-payment', function(ev){
+               ev.preventDefault();
+               var parent$ = $(this).closest('tr');
+               var id = parent$.data('payment');
+               var selector = '.js-payment-'+id;
+
+               $.ajax({
+                  url: parent$.data('href'),
+                  type: 'post',
+                  data: $(selector+' input, '+selector+' select').serialize(),
+                  beforeSend: function(){
+
+                  },
+                  success: function(data) {
+                     if (data.status == 'error') {
+                        erreur_generale();
+                     } else {
+                        $('.nav-tabs .active a').click();
+                     }
+                  },
+                  error: function(xhr){
+                     erreur_generale(xhr);
+                  }
+               });
+            });
+         });
+      })(jQuery);
+   </script>
+{% endblock body %}

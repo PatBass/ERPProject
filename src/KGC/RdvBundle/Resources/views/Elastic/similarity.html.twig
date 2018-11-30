@@ -1,0 +1,20 @@
+{# src/KGC/RdvBundle/Ressources/views/Elastic/similarity.html.twig #}
+
+{% extends '::widgetlayout.html.twig' %}
+
+{% set widget_options = {
+    'titre' : 'Fiches consultations de clients similaires',
+    'header_class' : 'header-color-blue2',
+    'collapse' : true,
+    'body_extra_class' : 'search-similarity',
+    'no_padding' : true,
+    'main_extra_class' : 'js-results-similarity results-similarity',
+    'collapsed' : collapsed|default(false)
+} %}
+
+{% block widget_toolbar %}
+    <div class="widget-toolbar no-border">
+        <button href="{{ path('kgc_elastic_similarity_rdv') }}" class="js-search-similarity btn btn-light btn-xs">Rechercher les clients similaires</button>
+    </div>
+{% endblock %}
+

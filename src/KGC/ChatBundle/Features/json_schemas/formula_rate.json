@@ -1,0 +1,32 @@
+{
+    "id": "formula_rate.json",
+    "title": "Formula rate schema",
+    "type": "object",
+    "properties": {
+        "id": {
+            "type": "integer"
+        },
+        "unit": {
+            "type": "integer"
+        },
+        "bonus": {
+            "type": "integer"
+        },
+        "price": {
+            "type": "number"
+        },
+        "is_discovery": {
+            "type": "boolean"
+        },
+        "is_standard": {
+            "type": "boolean"
+        },
+        "is_premium": {
+            "type": "boolean"
+        },
+        "is_subscription": {
+            "type": "boolean"
+        }
+    },
+    "required": ["id", "unit", "bonus", "price", "is_discovery", "is_standard", "is_premium", "is_subscription"]
+}

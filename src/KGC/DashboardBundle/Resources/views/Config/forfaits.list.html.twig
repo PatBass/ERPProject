@@ -1,0 +1,60 @@
+{# src/KGC/DashboardBundle/Resources/views/Config/forfaits.list.html.twig #}
+
+{% extends not app.request.isXmlHttpRequest() ? '::layout.html.twig' : '::emptylayout.html.twig' %}
+
+{% block body %}
+    {% embed '::widgetlayout.html.twig' %}
+        {% set widget_options = {
+            'titre' : 'Forfaits',
+            'refresh' : '#config_forfait',
+            'collapse' : true,
+            'no_padding' : true
+        } %}
+
+        {% block widget_main %}
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Nom</th>
+                        <th>Temps</th>
+                        <th>Création</th>
+                        <th>Modification</th>
+                        <th>Actif</th>
+                        <th>Inactif depuis</th>
+                        <th>&nbsp;</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for o in objects %}
+                    <tr>
+                        <td>{{ o.label }}</td>
+                        <td>{{ o.dataAttr }}</td>
+                        <td>{{ o.createdAt | date('d/m/Y H:i')}}</td>
+                        <td>{{ o.updatedAt | date('d/m/Y H:i') }}</td>
+                        <td>
+                            {% if o.enabled %}
+                                <span class="label label-success ">Oui</span>
+                            {% else %}
+                                <span class="label label-danger ">Non</span>
+                            {% endif %}
+                        </td>
+                        <td>{{ o.disabledDate != null ? o.disabledDate | date('d/m/Y') }}</td>
+                        <td class="line-actions">
+                            <a href="{{ path('kgc_config_forfait_edit', {'id': o.id}) }}" class="btn btn-xs btn-primary tooltip-primary modal-load"
+                               role="button" title="Éditer" data-rel="tooltip" data-placement="left">
+                                <i class="icon-pencil"></i>
+                            </a>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        {% endblock widget_main %}
+        
+        {% block widget_body_after %}
+            <a href="{{ path('kgc_config_forfait_edit') }}" class="btn btn-block modal-load" role="button" title="Ajouter un forfait">
+                <i class="icon-plus"></i> Ajouter un forfait
+            </a>
+        {% endblock %}
+    {% endembed %}
+{% endblock body %}

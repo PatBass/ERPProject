@@ -1,0 +1,43 @@
+{# src/KGC/RdvBundle/Resources/views/Encaissement/cloturees.widget.html.twig #}
+
+{% extends not app.request.isXmlHttpRequest() ? '::layout.html.twig' : '::emptylayout.html.twig' %}
+
+{% block body %}
+    <div class="widget-box">
+        <div class="widget-header widget-header-small header-color-green">
+            <h5>
+                <a href="#" data-action="collapse">
+                    <i class="icon-chevron-up"></i>
+                    Dernières consultations clôturées
+                </a>
+            </h5>
+            <div class="widget-toolbar">
+                <a class="ajax_reload" title="Recharger" href="#rdv_cloturees">
+                    <i class="icon-refresh"></i>
+                </a>
+            </div>
+        </div>
+        <div class="widget-body no-padding">
+            <table class="table table-striped valign-middle" style="margin:0">
+                {% for rdv in liste %}
+                <tr {{ rdv.tarification.montant == 0 ? 'class="text-muted"' }} >
+                    <td><b>{{ rdv.client.nom }}</b> {{ rdv.client.prenom }}</td>
+                    <td>{{ rdv.dateConsultation|date('d/m/Y') }}</td>
+                    <td class="success" style="text-align: right">
+                        {{ rdv.tarification.montant|number_format(2,',',' ') }} €
+                    </td>
+                    <td width="15%">
+                        <div class="btn-toolbar pull-right">
+                            <a href="{{ path('kgc_rdv_fiche', {'id':rdv.id}) }}" class="btn btn-xs btn-success modal-load tooltip-success" role="button" title="Ouvrir la fiche" data-rel="tooltip" data-placement="right">
+                                <i class="icon-file bigger-120"></i>
+                            </a>
+                        </div>
+                    </td>
+                </tr>
+                {% else %}
+                <tr><td colspan="4">Aucun résultat</td></tr>
+                {% endfor %}
+            </table>
+        </div>
+    </div>
+{% endblock %}

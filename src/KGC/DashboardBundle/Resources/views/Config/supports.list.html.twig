@@ -1,0 +1,75 @@
+{# src/KGC/DashboardBundle/Resources/views/Config/supports.list.html.twig #}
+
+{% extends not app.request.isXmlHttpRequest() ? '::layout.html.twig' : '::emptylayout.html.twig' %}
+
+{% block body %}
+    {% embed '::widgetlayout.html.twig' %}
+        {% set widget_options = {
+            'titre' : 'Supports',
+            'refresh' : '#config_supports',
+            'collapse' : true,
+            'no_padding' : true
+        } %}
+        
+        {% block widget_main %}
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>Nom</th>
+                        <th>Code</th>
+                        <th>Tracker</th>
+                        <th>Actif</th>
+                        <th>Inactif depuis</th>
+                        <th>Création</th>
+                        <th>Modification</th>
+                        <th>Profils</th>
+                        <th>&nbsp;</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for o in objects %}
+                    {% set state = o.enabled %}
+                    <tr>
+                        <td>{{ o.id }}</td>
+                        <td>{{ o.libelle }}</td>
+                        <td>{{ o.idcode ? o.idcode : '-' }}</td>
+                        <td>{{ o.idtracker ? o.idtracker : '-' }}</td>
+                        <td>
+                            {% if state %}
+                                <span class="label label-success">Oui</span>
+                            {% else %}
+                                <span class="label label-danger">Non</span>
+                            {% endif %}
+                        </td>
+                        <td>{{ o.disabledDate != null ? o.disabledDate | date('d/m/Y') }}</td>
+                        <td>{{ o.createdAt | date('d/m/Y H:i')}}</td>
+                        <td>{{ o.updatedAt | date('d/m/Y H:i') }}</td>
+                        <td>
+                            {% for profil in o.profils %}
+                                {{ profil.name ~ (not loop.last ? ', ') }}
+                            {% endfor %}
+                        </td>
+                        <td class="line-actions">
+                            <a href="{{ path('kgc_config_support_edit', {'id': o.id}) }}" class="btn btn-xs btn-primary tooltip-primary modal-load"
+                               role="button" title="Éditer" data-rel="tooltip" data-placement="left">
+                                <i class="icon-pencil"></i>
+                            </a>
+                            <a href="{{ path('kgc_config_support_state', {'id': o.id}) }}" class="btn btn-xs {{ state ? 'btn-purple tooltip-purple' : 'btn-info tooltip-info' }} gritter-load" data-refresh="#config_supports"
+                               role="button" title="{{ state ? 'Désactiver' : 'Activer' }}" data-rel="tooltip" data-placement="left">
+                                <i class="icon-{{ state ? 'ban-circle' : 'circle-blank' }}"></i>
+                            </a>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        {% endblock widget_main %}
+        
+        {% block widget_body_after %}
+            <a href="{{ path('kgc_config_support_edit') }}" class="btn btn-block modal-load" role="button" title="Ajouter un support">
+                <i class="icon-plus"></i> Ajouter un support
+            </a>
+        {% endblock widget_body_after %}
+    {% endembed %}
+{% endblock body %}

@@ -1,0 +1,39 @@
+{# src/KGC/RdvBundle/Resources/views/Facturation/index.html.twig #}
+
+{% extends not app.request.isXmlHttpRequest() ? '::layout.html.twig' : '::emptylayout.html.twig' %}
+
+{% block body %}
+    {% embed '::modallayout.html.twig' %}
+
+        {% block modal_title %}Générer la facture{% endblock modal_title %}
+
+        {% block modal_body %}
+        <p>La facture de la consultation de {{ rdv.client.fullName }} du {{ rdv.dateConsultation|date('d/m/Y H:i')}} va être générée.</p>
+        <p>Que voulez-vous faire ?</p>
+        <table class="table center">
+            <tr>
+                <td>
+                    <a href="{{ path('kgc_rdv_facture_affichage',{'id':rdv.id}) }}" class="btn btn-app btn-info radius-4" target="_blank">
+                        <i class="icon-print bigger-230"></i>
+                    </a><br>
+                    Visualiser, télécharger ou imprimer la facture
+                </td>
+                <td>
+                    <a disabled class="btn btn-app btn-default radius-4" title="En cours de développement">
+                        <i class="icon-envelope bigger-230"></i>
+                    </a><br>
+                    Envoyer la facture directement par mail
+                </td>
+            </tr>
+        </table>
+        {% endblock modal_body %}
+
+        {% block modal_footer %}
+            <div class="modal-footer">
+                <a id="retour_fiche" href="{{ path('kgc_rdv_fiche',{'id':rdv.id}) }}" class="btn btn-sm btn-danger pull-left modal-load">
+                    Retour à la fiche
+                </a>
+            </div>
+        {% endblock modal_footer %}
+    {% endembed %}
+{% endblock body %}

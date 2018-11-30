@@ -1,0 +1,28 @@
+{
+    "id": "subscription.json",
+    "title": "Subscription schema",
+    "type": "object",
+    "properties": {
+        "id": {
+            "type": "integer"
+        },
+        "subscription_date": {
+            "type": "integer"
+        },
+        "last_resubscription_date": {
+            "type": ["integer", null]
+        },
+        "desactivation_date": {
+            "type": ["integer", null]
+        },
+        "formula_rate": {
+            "type": "object",
+            "$ref": "formula_rate.json"
+        },
+        "chat_type": {
+            "type": "object",
+            "$ref": "chat_type.json"
+        }
+    },
+    "required": ["id", "subscription_date", "last_resubscription_date", "desactivation_date", "formula_rate", "chat_type"]
+}

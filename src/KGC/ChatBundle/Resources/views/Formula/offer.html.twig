@@ -1,0 +1,53 @@
+{% extends not app.request.isXmlHttpRequest() ? '::layout.html.twig' : '::emptylayout.html.twig' %}
+
+{% block body %}
+    {% embed '::modallayout.html.twig' %}
+        {% block modal_header %}
+            {% set link = {
+                'txt' : modal_title,
+                'url' : path('kgc_chat_formulas_edit',{'id':formula.id}),
+                'icon' : 'pencil'
+            } %}
+            {{ parent() }}
+        {% endblock %}
+
+        {% block modal_content %}
+            <form id="chat_formula_offer_modal" method="post" action="{{ path('kgc_chat_formulas_offer', {'id': client.id}) }}" {{ form_enctype(form) }} data-close="1" data-refresh="#tab-website-{{ formula.chatFormula.website.id }}" class="ajax_modal_form form-horizontal chat_formula_form">
+                {{ parent() }}
+                {{ form_widget(form._token) }}
+            </form>
+        {% endblock modal_content %}
+
+        {% block modal_body %}
+            <div class="row">
+                <div class="col-md-6">
+                    {{ form_label(form.unit) }}
+                </div>
+                <div class="col-md-6">
+                    {{ form_label(form.commentary) }}
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    {{ form_widget(form.unit) }}
+                </div>
+                <div class="col-md-6">
+                    {{ form_widget(form.commentary) }}
+                </div>
+            </div>
+        {% endblock modal_body %}
+
+        {% block modal_footer %}
+            <div class="modal-footer">
+                <div class="pull-left">
+                    <button type="button" class="btn btn-sm btn-danger" data-dismiss="modal"><i class="icon-remove"></i> Fermer</button>
+                </div>
+                <div class="pull-right">
+                    <button type="submit" class="btn btn-success btn-block btn-sm">
+                        <i class="icon-arrow-right"></i> Valider
+                    </button>
+                </div>
+            </div>
+        {% endblock modal_footer %}
+    {% endembed %}
+{% endblock body %}

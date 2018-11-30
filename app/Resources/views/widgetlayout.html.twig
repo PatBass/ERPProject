@@ -1,0 +1,51 @@
+{# app/Ressources/views/widgetlayout.html.twig #}
+
+<div class="widget-box {{ widget_options.collapsed|default(false) ? 'collapsed' }} {{ widget_options.compacted|default(false) ? 'compacted' }}">
+    {% block widget_header %}
+    <div class="widget-header {{ widget_options.header_class|default('') }}">
+        <h5>
+        {% set collapse = widget_options.collapse|default(false) %}
+        {% if collapse %}
+            <a data-action="collapse" href="#">
+                <i class="icon-chevron-{{ widget_options.collapsed|default(false) ? 'down' : 'up' }}"></i>&nbsp;
+        {% endif %}
+            {{ widget_options.titre|default('Widget sans titre')|raw }}
+        {{ collapse ? '</a>' }}
+        </h5>
+        {% block widget_toolbar %}
+        <div class="widget-toolbar no-border">
+            {% if widget_options.exportable|default(false) %}
+                {% set request_args = app.request.get('_route_params') | merge(app.request.query.all) | merge({ 'export': 1}) %}
+                <a title="Export Excel (.csv)" href="{{ path(app.request.get('_route'), request_args) }}" class="btn btn-xs btn-transparent">
+                    <i class="icon-download-alt"></i>
+                </a>
+            {% endif %}
+            {% if widget_options.compact|default(false) %}
+                <a href="#" title="Mode compact" data-action="compact" class="btn btn-xs btn-transparent">
+                    <i class="icon-resize-full bigger-130" data-switch-icon="icon-resize-small bigger-130"></i>
+                </a>
+            {% endif %}
+            {% if widget_options.refresh|default(false) %}
+            <a class="ajax_reload btn btn-xs btn-transparent" href="{{ widget_options.refresh }}" title="Recharger">
+                <i class="icon-refresh bigger-130"></i>
+            </a>
+            {% endif %}
+        </div>
+        {% endblock widget_toolbar %}
+    </div>
+    {% endblock widget_header %}
+    
+    {% block widget_body_before %}{% endblock %}
+    
+    <div class="widget-body {{ widget_options.body_extra_class|default('') }}">
+    {% block widget_body %}
+        <div class="widget-main {{ widget_options.no_padding|default(false) ? 'no-padding' : '' }} {{ widget_options.main_extra_class|default('') }}">
+            {% block widget_main %}
+
+            {% endblock widget_main %}
+        </div>
+    {% endblock widget_body %}
+    </div>
+    
+    {% block widget_body_after %}{% endblock %}
+</div>

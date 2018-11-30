@@ -1,0 +1,63 @@
+{# src/KGC/StatBundle/Ressources/views/Admin/psychic_oppos.html.twig #}
+
+{% extends not app.request.isXmlHttpRequest() ? '::layout.html.twig' : '::emptylayout.html.twig' %}
+
+{% block body %}
+    {% embed '::widgetlayout.html.twig' %}
+        {% set widget_options = {
+            'titre' : 'OPPOSITIONS',
+            'refresh' : '#psychic_Oppos'
+        } %}
+
+        {% block widget_body %}
+        <table class="table table-striped" style="margin-bottom: 0px;">
+            <thead>
+                <tr>
+                    <th></th>
+                    <th>Consultations</th>
+                    <th>Suivis</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <th>Montant</th>
+                    <td>
+                        <a class="modal-load" href="{{ path('kgc_stat_admin_psychicOppos', app.request.get('_route_params') | merge({ is_turnover: true, details : 'oppos_rdv_amount' })) }}">
+                            {{ oppos.rdv_amount | number_format(2, ',', ' ') }} €
+                        </a>
+                    </td>
+                    <td>
+                        <a class="modal-load" href="{{ path('kgc_stat_admin_psychicOppos', app.request.get('_route_params') | merge({ is_turnover: true, details : 'oppos_follow_amount' })) }}">
+                            {{ oppos.follow_amount | number_format(2, ',', ' ') }} €
+                        </a>
+                    </td>
+                </tr>
+                <tr>
+                    <th>Nombre de fiches</th>
+                    <td>
+                        <a class="modal-load" href="{{ path('kgc_stat_admin_psychicOppos', app.request.get('_route_params') | merge({ details : 'oppos_rdv_count' })) }}">
+                            {{ oppos.rdv_count }}
+                        </a>
+                    </td>
+                    <td>
+                        <a class="modal-load" href="{{ path('kgc_stat_admin_psychicOppos', app.request.get('_route_params') | merge({ details : 'oppos_follow_count' })) }}">
+                            {{ oppos.follow_count }}
+                        </a>
+                    </td>
+                </tr>
+                <tr>
+                    <th>Nombre d'encaissements</th>
+                    <td>{{ oppos.rdv_enc_count }}</td>
+                    <td>{{ oppos.follow_enc_count }}</td>
+                </tr>
+                <tr>
+                    <th>Frais</th>
+                    <td colspan="2" class="center">
+                        {{ oppos.costs }} €
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        {% endblock %}
+    {% endembed %}
+{% endblock body %}

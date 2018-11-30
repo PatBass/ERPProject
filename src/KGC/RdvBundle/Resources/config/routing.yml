@@ -1,0 +1,323 @@
+# src/KGC/RdvBundle/Resources/config/routing.yml
+
+kgc_rdv_add:
+    pattern:  /ajouter/{vue}
+    defaults: { _controller: KGCRdvBundle:Consultation:Ajouter, vue: widget }
+
+kgc_rdv_add_by_prospect:
+    pattern:  /ajouter/{vue}/{id}
+    defaults: { _controller: KGCRdvBundle:Consultation:AddRdvByProspect, vue: widget }
+
+kgc_rdv_dupliquer:
+    pattern:  /dupliquer/{id}/{suivi}
+    defaults: { _controller: KGCRdvBundle:Consultation:Dupliquer, id:0, suivi:0 }
+    requirements:
+        id: \d+
+        suivi: \d+
+
+kgc_rdv_search:
+    pattern:  /rechercher
+    defaults: { _controller: KGCRdvBundle:Consultation:Rechercher }
+
+kgc_rdv_date_intervalle:
+    pattern:  /build-date-intervalle
+    defaults: { _controller: KGCRdvBundle:Consultation:BuildSearchDateIntervalle }
+
+kgc_rdv_date_search:
+    pattern:  /rechercher-date
+    defaults: { _controller: KGCRdvBundle:Consultation:RechercherDate }
+
+kgc_rdv_voyant_search:
+    pattern:  /rechercher-voyant
+    defaults: { _controller: KGCRdvBundle:Consultation:RechercherVoyant }
+
+kgc_rdv_fiche:
+    pattern:  /fiche/{id}/{vue}
+    defaults: { _controller: KGCRdvBundle:Consultation:Voirfiche, vue: modal }
+    requirements:
+        id: \d+
+
+kgc_rdv_send_card_link:
+    pattern:  /fiche/{id}/envoyer-lien-carte/{type}
+    defaults: { _controller: KGCRdvBundle:Consultation:SendCardLink }
+    requirements:
+        id: \d+
+        type: (mail|sms)
+
+kgc_rdv_effectuer:
+    pattern: /effectuer/{id}
+    defaults: { _controller: KGCRdvBundle:Consultation:Effectuer }
+    requirements:
+        id: \d+
+
+kgc_rdv_classer:
+    pattern: /classer/{id}
+    defaults: { _controller: KGCRdvBundle:Consultation:Classer }
+    requirements:
+        id: \d+
+
+kgc_rdv_prepare_mail:
+    pattern: /prepare-mail/{id}
+    defaults: { _controller: KGCRdvBundle:Consultation:PrepareMail }
+    requirements:
+        id: \d+
+
+kgc_rdv_prepare_sms:
+    pattern: /prepare-sms/{id}
+    defaults: { _controller: KGCRdvBundle:Consultation:PrepareSms }
+    requirements:
+        id: \d+
+
+kgc_rdv_build_mail:
+    pattern: /build-mail
+    defaults: { _controller: KGCRdvBundle:Consultation:BuildMail }
+
+kgc_rdv_build_sms:
+    pattern: /build-sms
+    defaults: { _controller: KGCRdvBundle:Consultation:BuildSms }
+
+kgc_rdv_reporter:
+    pattern: /reporter/{id}
+    defaults: { _controller: KGCRdvBundle:Consultation:Reporter }
+    requirements:
+        id: \d+
+
+kgc_rdv_reactiver:
+    pattern: /reactiver/{id}
+    defaults: { _controller: KGCRdvBundle:Consultation:Reactiver }
+    requirements:
+        id: \d+
+
+kgc_rdv_pause:
+    pattern: /pause/{id}
+    defaults: { _controller: KGCRdvBundle:Consultation:Pause }
+    requirements:
+        id: \d+
+
+kgc_rdv_annuler:
+    pattern: /annuler/{id}/{comportement}
+    defaults: { _controller: KGCRdvBundle:Consultation:Annuler, comportement: 0 }
+    requirements:
+        id: \d+
+        comportement: \d+
+
+kgc_secu_list:
+    pattern:  /securisation/liste
+    defaults: { _controller: KGCRdvBundle:Securisation:Liste }
+
+kgc_secu:
+    pattern: /securisation/{id}
+    defaults: { _controller: KGCRdvBundle:Securisation:Securiser }
+    requirements:
+        id: \d+
+
+kgc_secu_cancel_preauth:
+    pattern: /securisation/preauth/{id}/cancel
+    defaults: { _controller: KGCRdvBundle:Securisation:CancelPreAuthorization }
+    requirements:
+        id: \d+
+
+kgc_planning_widget:
+    pattern: /planning/widget
+    defaults: { _controller: KGCRdvBundle:Planning:displayWidget }
+
+kgc_planning_selection:
+    pattern: /planning/selection/{vue}
+    defaults: { _controller: KGCRdvBundle:Planning:widgetSelection, vue: null }
+
+kgc_miserel:
+    pattern:  /miserelation/{id}
+    defaults: { _controller: KGCRdvBundle:Miserelation:Miserelation }
+    requirements:
+        id: \d+
+
+kgc_priseencharge:
+    pattern:  /priseencharge/{id}
+    defaults: { _controller: KGCRdvBundle:Miserelation:Priseencharge, id : 0 }
+    requirements:
+        id: \d+
+
+kgc_rdv_effectues_widget:
+    pattern: /effectue/widget
+    defaults: { _controller: KGCRdvBundle:Miserelation:effectueesWidget }
+
+kgc_rdv_annulees_widget:
+    pattern: /annulees/widget
+    defaults: { _controller: KGCRdvBundle:Consultation:annuleesWidget }
+
+kgc_rdv_pause_widget:
+    pattern: /pause/widget
+    defaults: { _controller: KGCRdvBundle:Consultation:pauseWidget }
+
+kgc_encaissements_list:
+    pattern: /encaissements/widget
+    defaults: { _controller: KGCRdvBundle:Encaissement:WidgetListe }
+
+kgc_encaissements_done:
+    pattern: /encaissements/done/{type}/widget
+    defaults: { _controller: KGCRdvBundle:Encaissement:WidgetDoneListe }
+    requirements:
+        type: (done|denied|cbi)
+
+kgc_encaissements_export:
+    pattern: /encaissements/done/{type}/export/{format}
+    defaults: { _controller: KGCRdvBundle:Encaissement:ExportDone }
+    requirements:
+        type: (done|denied|cbi)
+        format: (rdv-crm|rdv-global)
+
+kgc_encaissements_trait:
+    pattern: /encaissements/traitement/{id}
+    defaults: { _controller: KGCRdvBundle:Encaissement:ModalTraitement }
+    requirements:
+        id: \d+
+
+kgc_encaissements_oppo:
+    pattern: /encaissements/opposition/{id}
+    defaults: { _controller: KGCRdvBundle:Encaissement:Opposition }
+    requirements:
+        id: \d+
+
+kgc_encaissements_unbalanced_widget:
+    pattern: /encaissements/unbalanced
+    defaults: { _controller: KGCRdvBundle:Encaissement:WidgetUnbalanced }
+
+kgc_clotures_widget:
+    pattern: /cloturees
+    defaults: { _controller: KGCRdvBundle:Consultation:WidgetCloturees }
+
+kgc_rdv_facture:
+    pattern: /facture/{id}
+    defaults: { _controller: KGCRdvBundle:Facturation:index }
+    requirements:
+        id: \d+
+
+kgc_rdv_facture_affichage:
+    pattern: /facture/{id}/affichage
+    defaults: { _controller: KGCRdvBundle:Facturation:affichage }
+    requirements:
+        id: \d+
+
+kgc_rdv_calcmtmin:
+    pattern: /calc_montant_min/{idCodeTarif}/{nbMin}
+    defaults: { _controller: KGCRdvBundle:Facturation:ajaxCalcMontantMinutes, idCodeTarif: 128, nbMin: 256 }
+    requirements:
+        idCodeTarif: \d+
+        nbMin: \d+
+
+kgc_consultjour_widget:
+    pattern: /consultjour
+    defaults: { _controller: KGCRdvBundle:Statistiques:WidgetConsultJour }
+
+kgc_consultmois_widget:
+    pattern: /consultmois
+    defaults: { _controller: KGCRdvBundle:Statistiques:WidgetConsultMois }
+
+kgc_fna_widget_list:
+    pattern: /impaye/widgetlist
+    defaults: { _controller: KGCRdvBundle:Encaissement:WidgetFNAListe }
+
+kgc_fna_stat_widget_list:
+    pattern: /impaye/statWidgetlist
+    defaults: { _controller: KGCRdvBundle:Encaissement:WidgetStatFNAListe }
+
+kgc_fna_stat_widget_list_detail:
+    pattern: /impaye/statWidgetlist/detail/{classement}/{date}
+    defaults: { _controller: KGCRdvBundle:Encaissement:WidgetStatFNAListeDetail }
+
+kgc_fna_tab_list:
+    pattern: /impaye/tablist/{idclassement}/{page}
+    defaults: { _controller: KGCRdvBundle:Encaissement:ListeFicheTab, page: 1 }
+    requirements:
+        idclassement: \d+
+        page: \d+
+
+kgc_elastic_search_rdv:
+    pattern:  /elastic
+    defaults: { _controller: KGCRdvBundle:Elastic:searchConsultation}
+
+kgc_elastic_search_rdv_phoniste:
+    pattern:  /elastic/phoniste
+    defaults: { _controller: KGCRdvBundle:Elastic:searchPhoniste}
+
+kgc_elastic_similarity_rdv:
+    pattern:  /elastic/similarity
+    defaults: { _controller: KGCRdvBundle:Elastic:searchSimilarity}
+
+kgc_elastic_export_rdv:
+    pattern:  /elastic/export/{format}
+    defaults: { _controller: KGCRdvBundle:Elastic:exportConsultation}
+
+kgc_tracking_missingidastros:
+    pattern: /tracking/missingidastros
+    defaults: { _controller: KGCRdvBundle:Tracking:MissingIdastros }
+
+kgc_yesterday_done_list:
+    pattern: /qualite/consultation-veille/{idconsultant}
+    defaults: { _controller: KGCRdvBundle:Qualite:ListeConsultationsVeille, idconsultant: 0 }
+    requirements:
+        idconsultant: \d+
+
+kgc_today_reminders_list:
+    pattern: /qualite/suivis-jour/{idconsultant}
+    defaults: { _controller: KGCRdvBundle:Qualite:ListeSuivisJour, idconsultant: 0 }
+    requirements:
+        idconsultant: \d+
+
+kgc_today_reminders_list_psychic:
+    pattern: /qualite/suivis-jour-voyant
+    defaults: { _controller: KGCRdvBundle:Qualite:ListeSuivisJourPsychic }
+
+kgc_qa_fiche:
+    pattern: /qualite/fiche/{id}
+    defaults: { _controller: KGCRdvBundle:Qualite:VoirFiche }
+    requirements:
+        id: \d+
+
+kgc_gclid_export:
+    pattern: /admin/gclid-export
+    defaults: { _controller: KGCRdvBundle:Tracking:gclidExport }
+
+kgc_gclid_export_list:
+    pattern: /admin/gclid-export-list
+    defaults: { _controller: KGCRdvBundle:Tracking:gclidWidget }
+
+kgc_j1_canceled_widget:
+    pattern: /j1/canceled/{type}/widget
+    defaults: { _controller: KGCRdvBundle:J1:WidgetCanceledListe }
+    requirements:
+        type: (nrp|nvp|cb|min)
+
+kgc_j1_min_widget:
+    pattern: /j1/min/widget
+    defaults: { _controller: KGCRdvBundle:J1:Widget10Liste }
+
+kgc_j1_canceled_export:
+    pattern: /j1/canceled/{type}/export/{format}
+    defaults: { _controller: KGCRdvBundle:J1:exportCanceled }
+    requirements:
+        type: (nrp|nvp|cb)
+        format: (rdv-crm|rdv-global)
+
+kgc_j1_min_export:
+    pattern: /j1/min/export/{format}
+    defaults: { _controller: KGCRdvBundle:J1:export10 }
+    requirements:
+        format: (rdv-crm|rdv-global)
+
+kgc_rdv_make_call:
+    pattern: /makecall
+    defaults: { _controller: KGCRdvBundle:Consultation:MakeCall }
+
+kgc_rdv_realtime_callback_url:
+    pattern: /realtime_callback_url
+    defaults: { _controller: KGCRdvBundle:Consultation:realtime }
+kgc_telecollecte_widget:
+        pattern: /admin/telecollecte
+        defaults: { _controller: KGCRdvBundle:Telecollecte:telecollecteWidget }
+
+kgc_telecollecte_ajouter:
+    pattern: /admin/telecollecte/add/{id}
+    defaults: { _controller: KGCRdvBundle:Telecollecte:telecollecteAjouter, id: 0 }
+    requirements:
+        id: \d+

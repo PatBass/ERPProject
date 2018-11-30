@@ -1,0 +1,45 @@
+{# src/KGC/DashboardBundle/Resources/views/Qualite/index.html.twig #}
+
+{% extends "KGCDashboardBundle::layout.html.twig" %}
+
+{% block ariane %}
+    {% set fil = ['Qualité'] %}
+    {{ parent() }}
+{% endblock %}
+
+{% block page_header %}
+    <div class="page-header">
+        <div class="pull-right">
+            <a class="ajax_reload close" href="#qa_done_list,#qa_reminders_list,#quality_stats" title="Recharger">
+                <i class="icon-refresh"></i>
+            </a>
+        </div>
+        <h1>
+            Suivi Qualité de {{ consultant.username|default('tous')|capitalize }}
+            <small>
+                <i class="icon-double-angle-right"></i>
+                <form action="" method="post" class="form-inline" style="max-width: 400px">
+                    Choisir le consultant :
+                    {{ form_widget(form.consultant) }}
+                    {{ form_widget(form._token) }}
+                    <button type="submit" class="btn btn-success btn-xs">
+                        <i class="icon-arrow-right"></i> Appliquer
+                    </button>
+                </form>
+            </small>
+        </h1>
+    </div>
+{% endblock %}
+
+{% block dashboard_body %}
+<div class="row">
+    <div class="col-lg-6">
+        <form method="post" action="{{ path('kgc_yesterday_done_list', { 'idconsultant':consultant.id|default(0) }) }}" class="form-search form-search-ajax ajax_load" id="qa_done_list"></form>
+        <div class="space-6"></div>
+        <form method="post" action="{{ path('kgc_stat_quality', { 'idconsultant':consultant.id|default(0) }) }}" class="form-search form-search-ajax ajax_load" id="quality_stats"></form>
+    </div>
+    <div class="col-lg-6">
+      <form method="post" action="{{ path('kgc_today_reminders_list', { 'idconsultant':consultant.id|default(0) }) }}" class="form-search form-search-ajax ajax_load" id="qa_reminders_list"></form>
+    </div>
+</div>
+{% endblock %}

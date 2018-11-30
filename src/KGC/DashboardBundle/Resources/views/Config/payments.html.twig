@@ -1,0 +1,25 @@
+{# src/KGC/DashboardBundle/Resources/views/Config/payments.html.twig #}
+
+{% extends "KGCDashboardBundle::layout.html.twig" %}
+
+{% block ariane %}
+    {% set fil = ['Réglages'] %}
+    {{ parent() }}
+{% endblock %}
+
+{% block page_header %}
+    {% set infos = { 'titre':'Réglages','desc':'TPE/Paiement'} %}
+    {% set reload = { 'url':'#config_payments,#config_tpe' } %}
+    {{ parent()}}
+{% endblock %}
+
+{% block dashboard_body %}
+    <div class="row">
+        <div class="col-md-6">
+            <form method="post" action="{{ path('kgc_config_tpe_list') }}" class="ajax_load" id="config_tpe"></form>
+        </div>
+        <div class="col-md-6">
+            <form method="post" action="{{ path('kgc_config_payment_list') }}" class="ajax_load" id="config_payments"></form>
+        </div>
+    </div>
+{% endblock %}

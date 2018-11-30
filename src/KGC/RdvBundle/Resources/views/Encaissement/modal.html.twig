@@ -1,0 +1,84 @@
+{# src/KGC/RdvBundle/Resources/views/Encaissement/modal.html.twig #}
+
+{% extends not app.request.isXmlHttpRequest() ? '::layout.html.twig' : '::emptylayout.html.twig' %}
+
+{% block body %}
+    {% embed '::modallayout.html.twig' %}
+        {% import 'KGCRdvBundle::blocsficheRDV.html.twig' as fiche %}
+
+        {% block modal_dialog_head %}
+            {% if form|default(false) and not form.vars.valid %}
+                <p class="alert alert-danger">
+                    {{ form_errors(form) }}
+                </p>
+            {% endif %}
+        {% endblock %}
+
+        {% block modal_header %}
+            {% set link = {
+                'txt' : 'Traitement dʼun encaissement - ' ~ rdv.client.fullName,
+                'url' : path('kgc_encaissements_trait',{'id':enc.id}),
+                'icon' : 'euro'
+            } %}
+            {{ parent() }}
+            {{ fiche.rdv_form_header(rdv) }}
+        {% endblock %}
+
+        {% block modal_main %}
+            {% if form %}
+                {% set modal_body_class = 'fiche' %}
+                <form id="form_encaissement_modal" method="post" action="{{ path('kgc_encaissements_trait',{'id':enc.id}) }}" {{ form_enctype(form) }}
+                      class="ajax_modal_form form-horizontal" {{ close|default(false) ? 'data-close="1" data-refresh="#rdv_encaissements,#rdv_effectues,#rdv_cloturees"' }}>
+                    {{ parent() }}
+                    {{ form_widget(form.mainaction) }}
+                    {{ form_widget(form._token) }}
+                    {{ form_edit ? form_widget(form_edit._token) }}
+                </form>
+            {% else %}
+                {{ parent() }}
+            {% endif %}
+        {% endblock modal_main %}
+
+        {% block modal_body %}
+            {% if form %}
+            <div class="row">
+                <div class="col-lg-6">
+                    {{ fiche.client({'form':form, 'form_edit':form_edit, 'rdv':rdv}, true) }}
+                    {{ fiche.coordonneesbancaires({'form':form, 'form_edit':form_edit}) }}
+                    {{ fiche.historique(rdv) }}
+                </div>
+                <div class="col-lg-6">
+                    {{ fiche.consultation({'rdv':rdv,'form':form, 'form_edit':form_edit}) }}
+                    {{ fiche.classement({'form':form, 'form_edit':form_edit}) }}
+                    {{ fiche.securisation({'rdv': rdv, 'form':form, 'form_edit':(rdv.isConfirmedSecurisationEditable() ? form_edit : false)}) }}
+                    {{ fiche.tarification({'form':form, 'form_edit':form_edit}) }}
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-12">
+                    {{ fiche.encaissements({'rdv':rdv,'enc':enc, 'form':form, 'editable':form_edit }) }}
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-12 validEncaissement">
+                    {{ fiche.validencaissement({'form':form,'enc':enc}) }}
+                </div>
+            </div>
+            {% elseif enc %}
+                <p class="alert alert-info">Cet encaissement à déjà été traité. Fermez la fenêtre et actualisez le bloc des encaissements.</p>
+            {% else %}
+                <p class="alert alert-danger">La fiche demandée nʼa pas été trouvée. Il sʼagit sûrement dʼun lien erroné.</p>
+            {% endif %}
+        {% endblock modal_body %}
+
+        {% block modal_footer %}
+            {% if form %}
+                {{ fiche.rdv_form_footer({'form':form, 'rdv':rdv,'retour': true, 'cochefermeture':true}) }}
+            {% elseif enc %}
+                {{ fiche.rdv_form_footer({'rdv':rdv,'retour': true}) }}
+            {% else %}
+                {{ fiche.rdv_form_footer() }}
+            {% endif %}
+        {% endblock %}
+    {% endembed %}
+{% endblock body %}

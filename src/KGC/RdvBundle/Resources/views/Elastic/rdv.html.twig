@@ -1,0 +1,205 @@
+{# src/KGC/RdvBundle/Resources/views/Elastic/standard.html.twig #}
+
+{% extends not app.request.isXmlHttpRequest() ? '::layout.html.twig' : '::emptylayout.html.twig' %}
+
+{% import _self as macros %}
+
+{% set SearchFormBlock %}
+    {% block search_form %}
+        <div class="row">
+            <div class="col-lg-3 col-md-3">
+                {{ form_row(form.name) }}
+            </div>
+            <div class="col-lg-3 col-md-3">
+                {{ form_row(form.mail) }}
+            </div>
+            <div class="col-lg-2 col-md-2">
+                {{ form_row(form.birthdate) }}
+            </div>
+            <div class="col-lg-2 col-md-2">
+                {{ form_row(form.phones) }}
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-4 col-md-4">
+                {{ form_row(form.card) }}
+            </div>
+            <div class="col-lg-2 col-md-2">
+                {{ form_row(form.dateBegin) }}
+            </div>
+            <div class="col-lg-2 col-md-2">
+                {{ form_row(form.dateEnd) }}
+            </div>
+            <div class="col-lg-2 col-md-2">
+                {{ form_row(form.dateType) }}
+            </div>
+            <div class="col-lg-2 col-md-2">
+                {{ form_row(form.forfaits) }}
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-2 col-md-2">
+                {{ form_row(form.idastro) }}
+            </div>
+            <div class="col-lg-2 col-md-2">
+                {{ form_row(form.websites) }}
+            </div>
+            <div class="col-lg-2 col-md-2">
+                {{ form_row(form.sources) }}
+            </div>
+            <div class="col-lg-2 col-md-2">
+                {{ form_row(form.form_urls) }}
+            </div>
+            <div class="col-lg-2 col-md-2">
+                {{ form_row(form.supports) }}
+            </div>
+            <div class="col-lg-2 col-md-2">
+                {{ form_row(form.codepromos) }}
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-2 col-md-2">
+                {{ form_row(form.timeMin) }}
+            </div>
+            <div class="col-lg-2 col-md-2">
+                {{ form_row(form.timeMax) }}
+            </div>
+
+            <div class="col-lg-2 col-md-2">
+                {{ form_row(form.consultants) }}
+            </div>
+            <div class="col-lg-2 col-md-2">
+                {{ form_row(form.psychics) }}
+            </div>
+
+            <div class="col-lg-2 col-md-2">
+                {{ form_row(form.amountMin) }}
+            </div>
+            <div class="col-lg-2 col-md-2">
+                {{ form_row(form.amountMax) }}
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-3 col-md-3">
+                {{ form_row(form.tpes) }}
+            </div>
+            <div class="col-lg-3 col-md-3">
+                {{ form_row(form.states) }}
+            </div>
+            <div class="col-lg-3 col-md-3">
+                {{ form_row(form.classements) }}
+            </div>
+            <div class="col-lg-3 col-md-3">
+                {{ form_row(form.tags) }}
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-4 col-md-4">
+                {{ form_row(form.orderBy) }}
+            </div>
+            <div class="col-lg-4 col-md-4">
+                {{ form_row(form.sortDirection) }}
+            </div>
+            <div class="col-lg-4 col-md-4">
+                {{ form_row(form.pageRange) }}
+            </div>
+        </div>
+    {% endblock search_form %}
+{% endset %}
+
+{% block body %}
+    {% embed '::widgetlayout.html.twig' %}
+        {% use 'KGCRdvBundle::listefichesRDV.html.twig' %}
+
+        {% set widget_options = {
+        'titre' : 'Recherche rapide - <b>' ~ paginator.totalItemsCount ~ ' résultats</b>',
+        'header_class' : header_color | default('header-color-blue2'),
+        'refresh' : '#elastic_search',
+        'collapse' : true,
+        'collapsed' : paginator.totalItemsCount == 0 and compact|default(false),
+        'no_padding' : true,
+        'body_extra_class' : 'search-advanced' ~ (compact|default(false) ? ' compact')
+        } %}
+
+        {% block widget_main %}
+            <form method="post" action="{{ path('kgc_elastic_search_rdv') }}">
+                {{ SearchFormBlock }}
+                <div class="row">
+                    <div class="col-lg-6 col-md-6">
+                        <button type="submit" class="save btn {{ button_color | default('btn-success') }} btn-block {{ compact|default(false) ? 'btn-sm' }}">Rechercher</button>
+                    </div>
+                    <div class="col-lg-6 col-md-6">
+                        <button type="button" class="btn btn-info btn-block js-reset-empty {{ compact|default(false) ? 'btn-sm' }}">Réinitialiser la recherche</button>
+                        <div style="display:none;">{{ form_rest(form) }}</div>
+                    </div>
+                </div>
+            </form>
+            <div class="space-6"></div>
+            {% if paginator %}
+                {{ not compact|default(false) ? macros.pager(paginator) }}
+                {% set fiches = paginator.elements %}
+                {% set quality_info = show_quality_info|default(true) %}
+
+                {% if is_granted(['ROLE_QUALITE', 'ROLE_ADMIN_PHONE', 'ROLE_MANAGER_PHONE']) %}
+                    {% set actions = {
+                    1 : { 'placement': 'left' },
+                    2 : {
+                    'route_action' : 'kgc_qa_fiche',
+                    'load' : 'nothing',
+                    'title' : "Fiche voyant",
+                    'color' : 'warning',
+                    'placement': 'left'
+                    }
+                    } %}
+                {% endif %}
+                {{ fiches|length > 0 ? block('tableau_fiches_client') : '<table class="table"><tr><td>Aucun résultat</td></tr><table>' }}
+
+                <div class="space-6"></div>
+
+                {{ macros.pager(paginator, compact|default(false)) }}
+            {% endif %}
+        {% endblock %}
+    {% endembed %}
+{% endblock body %}
+
+{% macro pager(paginator, compact) %}
+    {% if paginator.totalPagesCount %}
+        <div class="row align-center">
+            {% if compact|default(false) %}
+            <div class="col-lg-6">
+                <h5>
+                    {% else %}
+                    <div class="col-lg-12">
+                        {% endif %}
+                        <strong>{{ paginator.totalItemsCount }}</strong> résultats.
+                        Page <strong>{{ paginator.currentPage }}</strong> sur <strong>{{ paginator.totalPagesCount }}</strong>.
+                        {% if compact|default(false) %}
+                </h5>
+            </div>
+            <div class="col-lg-6">
+                {% else %}
+                    <br/>
+                {% endif %}
+                {% if paginator.totalPagesCount > 1 %}
+                    <ul class="pagination no-margin">
+                        <li><a href="#" class="js-page-target" data-page-target="1">&lt;&lt;</a></li>
+                        <li><a href="javascript:void(0);">...</a></li>
+                        {% for page in paginator.showPages %}
+                            <li class="{{ page == paginator.currentPage ? 'active' : '' }}">
+                                <a href="#" class="js-page-target" data-page-target="{{ page }}">{{ page }}</a>
+                            </li>
+                        {% endfor %}
+                        <li><a href="javascript:void(0);">...</a></li>
+                        <li><a href="#" class="js-page-target" data-page-target="{{ paginator.totalPagesCount }}">&gt;&gt;</a></li>
+                    </ul>
+                {% endif %}
+            </div>
+        </div>
+        <div class="space-6"></div>
+    {% endif %}
+{% endmacro pager %}

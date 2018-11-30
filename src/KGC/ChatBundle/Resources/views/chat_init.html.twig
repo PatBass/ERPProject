@@ -1,0 +1,84 @@
+{#
+    For example, theses are the var you have access here :
+
+    'env': app.env,
+    'token': get_chat_token(app.user),
+    'socketio_url': socketio_url
+#}
+
+{% if env is defined
+  and token is defined
+  and psychic_id is defined
+  and socketio_url is defined
+%}
+
+{% set key = 'chat' %}
+{% set translations = key|transkeys %}
+
+<div class="modal bs-example-modal-sm" id="chatExitRoomModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div class="ask">
+                    {{ 'chat.are_you_sure_you_want_to_exit_this_room'|trans }}
+                </div>
+                <div class="action">
+                    <button type="button" class="btn btn-primary yes" data-dismiss="modal"><i class="icon-ok"></i> {{ 'chat.yes'|trans }}</button>
+                    <button type="button" class="btn btn-default no" data-dismiss="modal"><i class="icon-remove"></i> {{ 'chat.no'|trans }}</button>
+                    <div class="clear"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript" src="{{ socketio_url }}/js/psychic-logic.js"></script>
+<script type="text/javascript">
+    $(window).load(function(){
+
+        var chatExitRoomModal = $('#chatExitRoomModal');
+
+        askExit = function(room_id) {
+            chatExitRoomModal.find('.action .yes').data('room_id', room_id);
+            chatExitRoomModal.modal({
+                backdrop: false
+            });
+        }
+
+        window.chatClient = new ChatClient({
+            env: '{{ env }}',
+            token: '{{ token }}',
+            psychic_id: '{{ psychic_id }}',
+            socketio_url: '{{ socketio_url }}',
+            kgestion_url: '{{ app.request.uri }}',
+            images_dir: '/img/chat/',
+            images: {
+                answer_yes: 'answer_yes.png',
+                answer_no: 'answer_no.png',
+                expand: 'expand.png',
+                reduce: 'reduce.png',
+                avatar: 'avatar.png',
+                send: 'send.png'
+            },
+            translation: {
+                {% for translation in translations %}
+                    '{{ translation|replace({(key ~ '.'):''}) }}': '{{ (translation)|trans }}',
+                {% endfor %}
+            },
+            'event.ask_exit': askExit
+        });
+
+        chatExitRoomModal.find('.action .yes').on('click', function(){
+            window.chatClient.exitRoom($(this).data('room_id'));
+        });
+
+        chatExitRoomModal.on('hidden.bs.modal', function(e){
+            e.stopPropagation();
+        });
+    });
+</script>
+{% else %}
+    <script type="text/javascript">
+        console.error('All required parameters are not defined');
+    </script>
+{% endif %}

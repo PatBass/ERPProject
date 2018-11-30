@@ -1,0 +1,15 @@
+{
+    "id": "credit_by_chat_type.json",
+    "title": "Credit by chat type",
+    "type": "object",
+    "properties": {
+        "remaining_credit": {
+            "type": "integer"
+        },
+        "chat_type": {
+            "type": "object",
+            "$ref": "chat_type.json"
+        }
+    },
+    "required": ["remaining_credit", "chat_type"]
+}

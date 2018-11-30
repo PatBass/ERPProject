@@ -1,0 +1,39 @@
+{% extends '::emptylayout.html.twig' %}
+
+{% block body %}
+    {% embed '::modallayout.html.twig' %}
+
+        {% block modal_title %}
+            Détails
+        {% endblock modal_title %}
+
+        {% block modal_body %}
+            <table class="table table-striped valign-middle">
+                <thead>
+                    <tr>
+                        <th>{% if type in ['turnover_oppo', 'turnover_refund'] %}Date d'opposition{% else %}Date de paiement{% endif %}</th>
+                        <th>Montant</th>
+                        <th>Site</th>
+                        <th>Mail</th>
+                        <th>Prénom</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tboby>
+                {% for elem in list %}
+                    <tr>
+                        <td>{{ type in ['turnover_oppo', 'turnover_refund'] ? elem.opposedDate|date('d/m/Y') : elem.date|date('d/m/Y H:i') }}</td>
+                        <td>{{ (elem.amount/100)| number_format(2, ',', ' ') }} &euro;</td>
+                        <td>{{ elem.chatFormulaRate.chatFormula.website }}</td>
+                        <td>{{ elem.client.mail }}</td>
+                        <td>{{ elem.client.prenom }}</td>
+                        <td class="line-actions">
+                            <a data-original-title="Fiche client" href="{{ path('kgc_clients_show', {'id': elem.client.id}) }}" target="_blank" class="btn btn-xs btn-primary tooltip-primary" role="button" title="" data-rel="tooltip" data-placement="left"><i class="icon-file"></i></a>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        {% endblock modal_body %}
+    {% endembed %}
+{% endblock body %}

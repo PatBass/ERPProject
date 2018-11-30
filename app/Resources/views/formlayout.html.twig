@@ -1,0 +1,448 @@
+{# app/Resources/views/formlayout.html.twig #}
+
+{% block form_row %}
+    {% spaceless %}
+        {% if without_label is not defined %}
+            {% set inline = inline|default(false) %}
+            <div class="form-group row">
+                <div class="{{ errors|length > 0 ? 'has-error' : '' }}">
+                    {{ form_label(form, label, label_attr) }}
+                    <div class="controls {{ controls_size is defined ? controls_size : '' }} {{ inline ? 'form-inline' }}">
+                        <div>{{ form_widget(form) }}</div>
+                        {% if affiliate_form is defined %}
+                            <div>{{ form_widget(affiliate_form) }}</div>
+                        {% endif %}
+                        {{ form_errors(form) }}
+                    </div>
+                </div>
+            </div>
+        {% else %}
+            <div class="{{ errors|length > 0 ? 'has-error' : '' }}">
+                {{ form_widget(form, {'attr':{'class':'form-control','placeholder':placeholder|default('')} }) }}
+                {{ form_errors(form) }}
+            </div>
+        {% endif %}
+    {% endspaceless %}
+{% endblock form_row %}
+
+{% use 'form_div_layout.html.twig' with form_label as base_form_label %}
+{% block form_label %}
+    {% set label_attr = label_attr|merge({'class': (label_attr.class|default('') ~ ' control-label')|trim}) %}
+    {{ block('base_form_label') }}
+{% endblock form_label %}
+
+{% use 'form_div_layout.html.twig' with form_widget_simple as base_form_widget_simple %}
+{% block form_widget_simple %}
+    {% spaceless %}
+        {% set form_control_class = form_control_class is defined ? form_control_class : true %}
+        {% if form_control_class %}
+            {% set attr = attr|merge({
+            'class': (attr.class|default('') ~ ' form-control')
+            }) %}
+        {% endif %}
+        {% if input_addon != false %}
+            <div class="input-group">
+        {% endif %}
+        {{ block('base_form_widget_simple') }}
+        {% if input_addon != false %}
+            <span class="input-group-addon"><i class="icon-{{ input_addon }}"></i></span>
+            </div>
+        {% endif %}
+    {% endspaceless %}
+{% endblock form_widget_simple %}
+
+{% block form_errors %}
+    {% spaceless %}
+        {% for child in form.children %}
+            {% if child.vars.valid is defined %}
+                {% if not child.vars.valid %}
+                    {{ form_errors(child) }}
+                {% endif %}
+            {% endif %}
+        {% endfor %}
+        {% if errors|length > 0 %}
+            <span class="help-inline">
+                {% for error in errors %}
+                    {{ error.messagePluralization is null
+                    ? error.messageTemplate|trans(error.messageParameters, 'validators')|raw
+                    : error.messageTemplate|transchoice(error.messagePluralization, error.messageParameters, 'validators')|raw }}
+                {% endfor %}
+            </span>
+        {% endif %}
+    {% endspaceless %}
+{% endblock form_errors %}
+
+{% block button_widget %}
+    {% set attr = attr|merge({'class': (attr.class|default('') ~ ' btn')|trim}) %}
+    {% if label is empty %}
+        {% set label = name|humanize %}
+    {% endif %}
+    <button type="{{ type|default('button') }}" {{ block('button_attributes') }}>{{ label|raw }}</button>
+{% endblock button_widget %}
+
+
+{% block date_widget %}
+    {% spaceless %}
+        {% if widget == 'single_text' %}
+            {% set attr = attr|merge({
+            'class': (attr.class|default('') ~ (date_picker ? ' date-picker') ~ (input_mask ? ' input-mask-date'))|trim,
+            'data-startdate': start_date
+            }) %}
+            <div class="input-group" style="{{ date_picker ? 'z-index:1030;' }} {{ limit_size ? 'min-width:120px;' }}">
+                {{ block('form_widget_simple') }}
+                <span class="input-group-addon"><i class="icon-calendar"></i></span>
+            </div>
+        {% else %}
+            <div {{ block('widget_container_attributes') }}>
+                {{ date_pattern|replace({
+                    '{{ year }}': form_widget(form.year),
+                    '{{ month }}': form_widget(form.month),
+                    '{{ day }}': form_widget(form.day),
+                })|raw }}
+            </div>
+        {% endif %}
+    {% endspaceless %}
+{% endblock date_widget %}
+
+
+{% block kgc_datetime_widget %}
+    {% spaceless %}
+        {% if widget == 'single_text' %}
+            {{ block('form_widget_simple') }}
+        {% else %}
+            <div {{ block('widget_container_attributes') }}>
+                {{ form_errors(form.date) }}
+                {{ form_widget(form.date) }}
+                {% if hide_time %}
+                    <div class="hidden">{{ form_widget(form.time) }}</div>
+                {% else %}
+                    {{ form_errors(form.time) }}
+                    {{ form_widget(form.time) }}
+                {% endif %}
+            </div>
+        {% endif %}
+    {% endspaceless %}
+{% endblock kgc_datetime_widget %}
+
+{% block phone_widget %}
+    {% spaceless %}
+        {% set input_addon = 'phone' %}
+        {{ block('form_widget_simple') }}
+    {% endspaceless %}
+{% endblock phone_widget %}
+
+{% use 'form_div_layout.html.twig' with checkbox_widget as base_checkbox_widget %}
+{% block checkbox_widget %}
+    {% spaceless %}
+        {% if checked_label_style and not switch_style %}
+            {% set attr = attr|merge({
+            'class': (attr.class|default('') ~ ' checked-label-style')
+            }) %}
+        {% endif %}
+        <label class="input-group" style="{{ attr.style|default('') }}">
+            {% set attr = attr|merge({'class': attr.class|default('') ~ ' ace'}) %}
+            {% if switch_style is not null %}
+                {% set attr = attr|merge({'class': attr.class|default('') ~ ' ace-switch ace-switch-' ~ switch_style}) %}
+            {% endif %}
+            {% if enable_fields %}
+                {% set attr = attr|merge({'class': attr.class|default('') ~ ' enable-fields', 'data-enable':enable_fields}) %}
+            {% endif %}
+            {% if checked %}
+                {% set attr = attr|merge({'originally-checked': '1'}) %}
+            {% endif %}
+            {{ block('base_checkbox_widget') }}
+            <span class="lbl"> {{ label|default('') }}</span>
+        </label>
+    {% endspaceless %}
+{% endblock checkbox_widget %}
+
+{% use 'form_div_layout.html.twig' with radio_widget as base_radio_widget %}
+{% block radio_widget %}
+    {% spaceless %}
+        {% if checked_label_style %}
+            {% set attr = attr|merge({
+            'class': (attr.class|default('') ~ ' checked-label-style')
+            }) %}
+        {% endif %}
+        <label class="input-group" style="{{ attr.style|default('') }}">
+            {% set attr = attr|merge({'class': attr.class|default('') ~ ' ace'}) %}
+            {{ block('base_radio_widget') }}
+            <span class="lbl"> {{ label|default('') }}</span>
+        </label>
+    {% endspaceless %}
+{% endblock radio_widget %}
+
+{% block email_widget %}
+    {% spaceless %}
+        {% set input_addon = 'envelope-alt' %}
+        {% set type = 'email' %}
+        {{ block('form_widget_simple') }}
+    {% endspaceless %}
+{% endblock email_widget %}
+
+{% block kgc_RdvBundle_adresse_widget %}
+    {% spaceless %}
+        {{ form_row(form.voie, {'without_label':true,'placeholder':'Voie'}) }}
+        {{ form_row(form.complement, {'without_label':true,'placeholder':'Complément dʼadresse'}) }}
+        <div class="{{ form.codepostal.vars.errors|length>0 or form.ville.vars.errors|length>0 ? 'has-error' : '' }}">
+            <div>
+                {{ form_widget(form.codepostal, {'attr':{'class':'inline col-lg-3','placeholder':'Code postal'}, 'form_control_class':false }) }}
+                {{ form_widget(form.ville, {'attr':{'class':'inline col-lg-9','placeholder':'Ville'}, 'form_control_class':false }) }}
+            </div>
+            <div>
+                {{ form_errors(form.codepostal) }}<br/>
+                {{ form_errors(form.ville) }}
+            </div>
+        </div>
+        {{ form_row(form.pays, {'without_label':true,'placeholder':'Pays'}) }}
+    {% endspaceless %}
+{% endblock kgc_RdvBundle_adresse_widget %}
+
+{% block kgc_RdvBundle_encaissement_row %}
+    {% spaceless %}
+        {% set class = form.vars.data.contextColor | default('') %}
+        <tr class="{{ form.supprimer.vars.id | default('') ~ ' ' ~ class ~ ' ' ~ form.vars.id }} {{ form.montant.vars.attr['data-enableable']|default(1) == 0 ? 'lattice' }}">
+            {% if is_granted('ROLE_STANDARD') %}
+                {% if form.etat is defined %}
+                    <td class="center" style="padding-left: 8px">
+                        <span class="badge" id="{{ form.etat.vars.id }}_light" style="color: white">●</span>
+                    </td>
+                    <td>
+                        {{ form_widget(form.etat) }}
+                    </td>
+                {% else %}
+                    <td colspan="2"></td>
+                {% endif %}
+            {% endif %}
+            <td style="min-width:90px">
+                {% if not is_granted('ROLE_STANDARD') and form.etat is defined %}
+                    {{ form_widget(form.etat, {'attr': {'style': 'display: none'}}) }}
+                {% endif %}
+                {{ form_widget(form.montant) }}
+            </td>
+            <td> le</td>
+            <td>
+                {{ form_widget(form.date, {'limit_size':true}) }}
+            </td>
+            <td>
+                {{ form_widget(form.moyenPaiement) }}
+            </td>
+            {% set has_standard_admin_role = is_granted(['ROLE_STANDARD','ROLE_ADMIN']) %}
+            <td{% if not has_standard_admin_role %} style="display: none"{% endif %}>
+                {{ form_widget(form.tpe) }}
+            </td>
+            <td{% if not has_standard_admin_role %} style="display: none"{% endif %}>
+                {{ form_widget(form.psychic_asso) }}
+            </td>
+            <td>
+                {{ form.supprimer is defined ? form_widget(form.supprimer) }}
+            </td>
+        </tr>
+        {% if form.vars.errors|length > 0 %}
+            <tr>
+                <td colspan="3">
+                    {{ form_errors(form) }}
+                </td>
+            </tr>
+        {% endif %}
+    {% endspaceless %}
+{% endblock kgc_RdvBundle_encaissement_row %}
+
+{% block kgc_RdvBundle_VentesProduits_row %}
+    {% spaceless %}
+        <tr class="{{ form.supprimer.vars.id | default('') ~ ' ' ~ class|default('') }} price-calc-container">
+            <td width="60%">
+                {{ form_widget(form.produit) }}
+            </td>
+            <td style="border-right-width: 0px; min-width: 26px;">
+                {{ form_widget(form.quantite) }}
+            </td>
+            <td>
+                {{ form_widget(form.montant) }}
+            </td>
+            <td>
+                {{ form.offsetExists('supprimer') ? form_widget(form.supprimer) }}
+            </td>
+        </tr>
+    {% endspaceless %}
+{% endblock kgc_RdvBundle_VentesProduits_row %}
+
+{% block money_widget %}
+    {% spaceless %}
+        <div class="input-group align-right">
+            {% set attr = attr|merge({'class': attr.class|default('') ~ ' align-right'}) %}
+            {{ block('form_widget_simple') }}
+            <span class="input-group-addon"><i class="icon-euro"></i></span>
+        </div>
+    {% endspaceless %}
+{% endblock money_widget %}
+
+{% block kgc_minute_widget %}
+    {% spaceless %}
+        <div class="input-group align-right">
+            {% set attr = attr|merge({'class': attr.class|default('') ~ ' align-right'}) %}
+            {{ block('form_widget_simple') }}
+            <span class="input-group-addon text-group-addon">
+                min.
+            </span>
+        </div>
+    {% endspaceless %}
+{% endblock kgc_minute_widget %}
+
+{% block choice_widget_options %}
+{% spaceless %}
+    {% for group_label, choice in options %}
+        {% if choice is iterable %}
+            <optgroup label="{{ group_label|trans({}, translation_domain) }}">
+                {% set options = choice %}
+                {{ block('choice_widget_options') }}
+            </optgroup>
+        {% else %}
+            <option value="{{ choice.value }}" {% if choice is selectedchoice(value) %}selected="selected"{% endif %}
+                {% if choices_attr[choice.value] is defined %}
+                {% for attrname, attrvalue in choices_attr[choice.value] %}
+                    {% if attrname in ['placeholder', 'title'] %}
+                        {{ attrname }}="{{ attrvalue|trans({}, translation_domain) }}"
+                    {% else %}
+                        {{ attrname }}="{{ attrvalue }}"
+                    {% endif %}
+                {% endfor %}
+                {% endif %}
+                {% if choice.data.website is defined and not choice.data.website is null %}
+                    data-website-id="{{ choice.data.website.id }}"
+                {% endif %}
+                {% if choice.data.hasSource is defined %}
+                    data-has-source="{{ choice.data.hasSource ? '1' : '0' }}"
+                {% endif %}
+                {% if choice.data.hasCalendarType is defined %}
+                    data-has-calendar="{{ choice.data.hasCalendarType ? '1' : '0' }}"
+                {% endif %}
+                {% if choice.data.hasGclid is defined %}
+                    data-has-gclid="{{ choice.data.hasGclid ? '1' : '0' }}"
+                {% endif %}
+
+                {% if js_dependant_select is not empty %}
+                    {% set dependant_value = [''] %}
+                    {% for ref in js_dependant_select['reference_value'] %}
+                        {% set ref_data = choice.data.get(ref)|default(0)|split(',') %}
+                        {% set temp_dependant_value = [] %}
+                        {% for data in ref_data %}
+                            {% for ref_value in dependant_value %}
+                                {% set temp_dependant_value = temp_dependant_value|merge([ref_value ~ '-' ~ data]) %}
+                            {% endfor %}
+                        {% endfor %}
+                        {% set dependant_value = temp_dependant_value %}
+                    {% endfor %}
+                    data-dependant-value="{{ dependant_value|json_encode()|replace({'"':'\"'}) }}"
+                {% endif %}
+            >
+                {{ choice.label|trans({}, translation_domain) }}
+            </option>
+        {% endif %}
+    {% endfor %}
+{% endspaceless %}
+{% endblock choice_widget_options %}
+
+{% use 'form_div_layout.html.twig' with choice_widget_collapsed as base_choice_widget_collapsed %}
+{% block choice_widget_collapsed %}
+    {% spaceless %}
+        {% set form_control_class = form_control_class is defined ? form_control_class : true %}
+        {% if form_control_class %}
+            {% set attr = attr|merge({
+            'class': (attr.class|default('') ~ ' form-control')
+            }) %}
+        {% endif %}
+        {% if input_addon != false %}
+            <div class="input-group">
+        {% endif %}
+        {{ block('base_choice_widget_collapsed') }}
+        {% if action_button != false %}
+            <button{% for attr, value in action_attr %} {{ attr }}="{% if attr == 'data-ajax-url' -%}{{ path(value[0], value[1]) }}{%- else -%}{{ value }}{%- endif %}"{% endfor %}>{{ action_button }}</button>
+        {% endif %}
+        {% if input_addon != false %}
+            <span class="input-group-addon"><i class="icon-{{ input_addon }}"></i></span>
+            </div>
+        {% endif %}
+    {% endspaceless %}
+{% endblock choice_widget_collapsed %}
+
+{% block choice_widget_expanded %}
+    {% spaceless %}
+        <div {{ block('widget_container_attributes') }}>
+            {% for child in form %}
+                <div class="{{ multiple ? 'checkbox' : 'radio' }}">
+                    {{ form_widget(child) }}
+                </div>
+            {% endfor %}
+        </div>
+    {% endspaceless %}
+{% endblock choice_widget_expanded %}
+
+{% block repeated_widget %}
+    {{ block('base_repeated_row') }}
+{% endblock repeated_widget %}
+
+{% block repeated_row %}
+    {% spaceless %}
+        <div class="form-group row">
+            <div class="{{ form.first.vars.errors|length > 0 ? 'has-error' : '' }}">
+                {{ form_label(form.first, label, {'label_attr':label_attr}) }}
+                <div class="controls {{ controls_size is defined ? controls_size : '' }}">
+                    {{ form_widget(form.first) }}
+                    {{ form_widget(form.second, {'attr':{'placeholder':'Confirmation'} }) }}
+                    {{ form_errors(form.first) }}
+                </div>
+            </div>
+        </div>
+    {% endspaceless %}
+{% endblock repeated_row %}
+
+{% block kgc_RdvBundle_Forfait_widget %}
+    {% spaceless %}
+        {{ form_widget(form.nom) }}
+        {{ form_widget(form.prix) }}
+        {{ form.offsetExists('temps_consomme') ? form_widget(form.temps_consomme) }}
+        {{ form.offsetExists('cancel') ? form_widget(form.cancel) }}
+    {% endspaceless %}
+{% endblock kgc_RdvBundle_Forfait_widget %}
+
+{% block kgc_RdvBundle_ConsommationForfait_row %}
+    {% spaceless %}
+        <tr class="{{ form.supprimer.vars.id ~ ' ' ~ class|default('') }}">
+            <td>
+                {{ form_widget(form.forfait) }}
+            </td>
+            <td style="max-width: 100px;">
+                {{ form_widget(form.temps) }}
+            </td>
+            <td style="width: 40px;">
+                {{ form_widget(form.supprimer) }}
+            </td>
+        </tr>
+    {% endspaceless %}
+{% endblock kgc_RdvBundle_ConsommationForfait_row %}
+
+{% block kgc_clientbundle_draw_widget %}
+    {% spaceless %}
+        <tbody class="{{ form.supprimer.vars.id ~ ' ' ~ class|default('') }} well" style="padding-bottom: 0">
+            <tr>
+                <td>
+                    {{ form_widget(form.deck) }}
+                </td>
+                <td>
+                    {{ form_widget(form.card) }}
+                </td>
+                <td style="width: 34px">
+                    {{ form_widget(form.supprimer) }}
+                </td>
+            </tr>
+            <tr>
+                <td colspan="3">
+                    <p class="js-dependant-ajax-autofill well-sm" data-depends-on="#{{ form.card.vars.id }}" data-ajax-autofill-url="{{ path('kgc_client_historique_ajax_autofill_interpretation') }}">
+                        Sélectionner une carte pour voir lʼinterprétation...
+                    <p>
+                </td>
+            </tr>
+        </tbody>
+    {% endspaceless %}
+{% endblock kgc_clientbundle_draw_widget %}

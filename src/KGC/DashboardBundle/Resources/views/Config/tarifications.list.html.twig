@@ -1,0 +1,73 @@
+{# src/KGC/DashboardBundle/Resources/views/Config/tarifications.list.html.twig #}
+
+{% extends not app.request.isXmlHttpRequest() ? '::layout.html.twig' : '::emptylayout.html.twig' %}
+
+{% block body %}
+    {% embed '::widgetlayout.html.twig' %}
+        {% set widget_options = {
+            'titre' : 'Voyants',
+            'refresh' : '#config_tarification',
+            'collapse' : isChat == false,
+            'no_padding' : true
+        } %}
+
+        {% block widget_main %}
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Voyant</th>
+                        <th>Référence</th>
+                        <th>Site</th>
+                        <th>Sexe</th>
+                        {% if isChat %}
+                        <th>Lié à</th>
+                        {% else %}
+                        <th>Tarif/min</th>
+                        {% endif %}
+                        <th>Actif</th>
+                        <th>Inactif depuis</th>
+                        <th>&nbsp;</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for o in objects %}
+                    {% set state = o.enabled %}
+                    <tr>
+                        <td>{{ loop.index }}</td>
+                        <td>{{ o.nom }}</td>
+                        <td>{{ o.reference }}</td>
+                        <td>{{ o.website }}</td>
+                        <td>{{ o.sexe is not null ? (o.sexe ? 'Femme' : 'Homme') : '-' }}</td>
+                        {% if isChat %}
+                        <td>{{ o.utilisateur ? o.utilisateur.username : '-' }}</td>
+                        {% else %}
+                        <td>{{ o.codeTarification ? o.codeTarification.libelle : '-' }}</td>
+                        {% endif %}
+                        <td>
+                            {% if state %}
+                                <span class="label label-success">Oui</span>
+                            {% else %}
+                                <span class="label label-danger">Non</span>
+                            {% endif %}
+                        </td>
+                        <td>{{ o.disabledDate != null ? o.disabledDate | date('d/m/Y') }}</td>
+                        <td class="line-actions">
+                            <a href="{{ path('kgc_config_tarification_edit', {'id': o.id}) }}" class="btn btn-xs btn-primary tooltip-primary modal-load"
+                               role="button" title="Éditer" data-rel="tooltip" data-placement="left">
+                                <i class="icon-pencil"></i>
+                            </a>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        {% endblock widget_main %}
+
+        {% block widget_body_after %}
+            <a href="{{ path('kgc_config_tarification_edit') }}" class="btn btn-block modal-load" role="button" title="Ajouter un voyant">
+                <i class="icon-plus"></i> Ajouter un voyant
+            </a>
+        {% endblock %}
+    {% endembed %}
+{% endblock body %}

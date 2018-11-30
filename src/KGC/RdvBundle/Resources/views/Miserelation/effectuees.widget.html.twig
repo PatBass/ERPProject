@@ -1,0 +1,28 @@
+{# src/KGC/RdvBundle/Resources/views/Encaissement/effectuees.widget.html.twig #}
+
+{% extends not app.request.isXmlHttpRequest() ? '::layout.html.twig' : '::emptylayout.html.twig' %}
+
+{% block body %}
+    {% embed '::widgetlayout.html.twig' %}
+        
+        {% use 'KGCRdvBundle::listefichesRDV.html.twig' %}
+        
+        {% set widget_options = {
+            'titre' : 'Dernières consultations effectuées',
+            'header_class' : 'widget-header-small header-color-pink',
+            'refresh' : '#rdv_effectues',
+            'collapse' : true,
+            'no_padding' : true,
+        } %}
+
+        {% block widget_main %}
+            {% set actions = {
+                1 : {
+                    'color' : 'pink-light'
+                }
+            } %}
+            {% set fiches = liste %}
+            {{ fiches|length > 0 ? block('tableau_fiches') : '<table class="table"><tr><td>Aucun résultat.</td></tr><table>' }}
+        {% endblock %}
+    {% endembed %}
+{% endblock body %}

@@ -1,0 +1,124 @@
+consultation:
+
+  stateline:
+    secure:
+      waiting_card: En attente de la saisie de la carte bancaire
+      waiting: Sécurisation en attente
+      done: Sécurisation effectuée
+      refused: Sécurisation refusée
+      skipped: Sécurisation passée
+    life:
+      cancelled: Consultation annulée
+      waiting_link: En attente de mise en relation
+      waiting_take: En attente de prise en charge
+      taken: Prise en charge
+      paused: Consultation en pause
+      done: Consultation effectuée
+    receipt:
+      partial: Encaissement partiel
+      free: Consultation gratuite
+      unpaid: Impayé Total
+      done: Encaissements terminés
+      abandonned: Facturation abandonnée
+
+  menu:
+    secure: Sécuriser
+    connecting: Mettre en relation
+    cancel: Annuler
+    postpone: Reporter
+    reactivate: Réactiver
+    duplicate: Dupliquer
+    bill: Facture
+    classify: Classer
+    client_card: Fiche client
+
+  info:
+    website: Site
+    support: Support
+    offer_code: Code promo
+    owner: Propriétaire
+    psychic: Voyant
+    consultant: Consultant
+    date: Date de consultation
+    comment: Commentaire
+    source: Source
+    gclid: GClid
+    formurl: URL
+    questionSubject: Thème de la question
+    questionText: Question
+    questionContent: Commentaires
+    spouseName: Prénom du conjoint
+    spouseBirthday: Date de naissance
+    spouseSign: Signe astrologique
+
+  sorting:
+    directory: Choisir le dossier
+    giveup: Marquer la fiche en « Abandon définitif »
+
+client:
+  info:
+    idProspect: ID prospect
+    myastro: ID myastro
+    firstname: Prénom
+    lastname: Nom
+    birthdate: Date de naissance
+    gender: Genre
+    phone: Téléphone
+    phone2: Téléphone 2
+    email: Adresse mail
+    address: Adresse postale
+    prenom: Prénom
+    nom: Nom
+    dateNaissance: Date de naissance
+    genre: Genre
+    mail: Adresse mail
+
+  form:
+    labels:
+      website: Site web
+      myastro: ID myastro
+      firstname: Prénom
+      lastname: Nom
+      birthdate: Date de naissance
+      phone: Numéro de téléphone
+      phone2: Numéro de téléphone 2
+      email: Adresse mail
+      address: Adresse postale
+
+
+debit_card:
+  form:
+    labels:
+      number: Numéro de carte
+      date: Date d'expiration
+      cipher: Cryptogramme visuel
+  info:
+    number: Numéro
+    date: Expiration
+    cipher: Cryptogramme
+
+
+prospect:
+  info:
+    myastroId: ID Astro
+    firstname: Prénom
+    birthday: Date de naissance
+    gender: Genre
+    phone: Téléphone
+    email: Adresse mail
+    country: Pays
+    website: Site
+    myastroGclid: Gclid
+    source: Source
+    formurl: URL
+    support: Support
+    state: Etat
+    stateDate: Calendrier
+    codepromo: Code promo
+    voyant: Voyant
+    questionSubject: Thème de la question
+    questionText: Question
+    questionContent: Commentaires
+    spouseName: Prénom du conjoint
+    spouseBirthday: Date de naissance
+    spouseSign: Signe astrologique

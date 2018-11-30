@@ -1,0 +1,65 @@
+{# src/KGC/DashboardBundle/Resources/views/Config/statisticRenderingRules.edit.html.twig #}
+
+{% extends not app.request.isXmlHttpRequest() ? '::layout.html.twig' : '::emptylayout.html.twig' %}
+
+{% block body %}
+    {% embed '::modallayout.html.twig' %}
+        {% block modal_header %}
+            {% set link = {
+            'txt' : upd ? 'Édition de la règle de rendu statistique « ' ~ object.id ~ ' »' : 'Ajout de règle de rendu statistique',
+            'url' : path('kgc_config_statistic_rendering_rule_edit',{'id':object.id}),
+            'icon' : upd ? 'pencil' : 'plus'
+            } %}
+            {{ parent() }}
+        {% endblock %}
+
+        {% block modal_content %}
+            <form id="tpe_config_modal" method="post" action="{{ path('kgc_config_statistic_rendering_rule_edit', {'id': object.id}) }}" {{ form_enctype(form) }} data-close="1" data-refresh="#config_statistic_rendering_rules" class="ajax_modal_form form-horizontal">
+                {{ parent() }}
+                {{ form_widget(form._token) }}
+            </form>
+        {% endblock modal_content %}
+
+        {% block modal_body %}
+            <div class="row center">
+                <div class="col-md-2">
+                    <strong>Colonne affectée :</strong><br />
+                    {{ form_widget(form.columnCode, { 'attr': {'class' : 'width-100' } }) }}
+                </div>
+                <div class="col-md-2">
+                    <strong>Opérateur :</strong><br />
+                    {{ form_widget(form.operator, { 'attr': {'class' : 'width-100' } }) }}
+                </div>
+                <div class="col-md-2">
+                    <strong>Valeur :</strong><br />
+                    {{ form_widget(form.value, { 'attr': {'class' : 'width-100' } }) }}
+                </div>
+                <div class="col-md-2">
+                    <strong>Couleur :</strong>
+                    {{ form_widget(form.color) }}
+                </div>
+                <div class="col-md-2">
+                    <strong>Ratio :</strong><br />
+                    {{ form_widget(form.isRatio) }}
+                </div>
+                <div class="col-md-2">
+                    <strong>Actif :</strong><br />
+                    {{ form_widget(form.enabled) }}
+                </div>
+            </div>
+        {% endblock modal_body %}
+
+        {% block modal_footer %}
+            <div class="modal-footer">
+                <div class="pull-left">
+                    <button type="button" class="btn btn-sm btn-danger" data-dismiss="modal"><i class="icon-remove"></i> Fermer</button>
+                </div>
+                <div class="pull-right">
+                    <button type="submit" class="btn btn-success btn-block btn-sm">
+                        <i class="icon-arrow-right"></i> Enregistrer
+                    </button>
+                </div>
+            </div>
+        {% endblock modal_footer %}
+    {% endembed %}
+{% endblock body %}

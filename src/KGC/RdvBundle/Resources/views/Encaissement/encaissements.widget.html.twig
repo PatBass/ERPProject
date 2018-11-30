@@ -1,0 +1,53 @@
+{# src/KGC/RdvBundle/Resources/views/Encaissement/encaissements.widget.html.twig #}
+
+{% extends not app.request.isXmlHttpRequest() ? '::layout.html.twig' : '::emptylayout.html.twig' %}
+
+{% import _self as macros %}
+    
+{% block body %}
+    {% embed '::widgetlayout.html.twig' %}
+        {% set widget_options = {
+            'titre' : 'Encaissements - <b>'~ rdv_counts ~' résultats</b>',
+            'header_class' : 'widget-header-small header-color-red3',
+            'refresh' : '#rdv_encaissements',
+            'collapse' : true,
+            'collapsed' : display_from == 'unpaid',
+            'no_padding' : true,
+            'compact' : display_from != 'unpaid',
+            'compacted' : display_from != 'unpaid'
+        } %}
+
+        {% block widget_main %}
+            <table class="table table-striped table-hover" style="margin:0">
+                <thead style="border-bottom: 4px solid #B94A48" class="{{ display_from != 'unpaid' ? 'compactit' }} valign-middle">
+                {% for ligne in compact %}
+                    {{ macros.ligne_encaissement(ligne, true, display_from)}}
+                {% endfor %}
+                </thead>
+                <tbody>
+                {% for ligne in display %}
+                    {{ macros.ligne_encaissement(ligne)}}
+                {% else %}
+                <tr><td colspan="4">Aucun résultat.</td></tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        {% endblock %}
+    {% endembed %}
+{% endblock body %}
+
+{% macro ligne_encaissement(ligne, alerte, display_from) %}
+    {% import 'KGCRdvBundle::interfacedata.html.twig' as interface %}
+    <tr {{ alerte|default(false) ? 'class="text-danger"' }}>
+        <td {{ alerte|default(false) ? 'class="warning"' }}><b>{{ ligne.consultation.client.nom }}</b> {{ ligne.consultation.client.prenom }}</td>
+        <td {{ alerte|default(false) ? 'class="warning"' }}>{{ display_from == 'unpaid' ? interface.stateline(ligne.consultation) }}</td>
+        <td {{ alerte|default(false) ? 'class="warning"' }}>{{ ligne.date|date('d/m/Y') }}</td>
+        <td class="danger" style="text-align: right">{{ ligne.montant|number_format(2,',',' ') }} €</td>
+        <td width="15%" {{ alerte|default(false) ? 'class="warning"' }}>
+            <div class="btn-toolbar pull-right">
+            <a href="{{ path('kgc_encaissements_trait', {'id':ligne.id}) }}" class="btn btn-xs btn-danger modal-load tooltip-danger" title="Traiter l'encaissement" role="button" data-rel="tooltip" data-placement="right">
+                <i class="icon-euro bigger-120"></i>
+            </a></div>
+        </td>
+    </tr>
+{% endmacro ligne_encaissement %}

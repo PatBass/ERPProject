@@ -1,0 +1,30 @@
+# This file is auto-generated during the composer install
+parameters:
+    database_driver: pdo_mysql
+    database_host: '%database.host%'
+    database_port: '%database.port%'
+    database_name: '%database.name%'
+    database_user: '%database.user%'
+    database_password: '%database.password%'
+    locale: fr
+    secret: '%app.secret%'
+    apikey: '%app.apikey%'
+
+    mailer_transport:  smtp
+    mailer_host:       '%mailer.host%'
+    mailer_user:       '%mailer.user%'
+    mailer_password:   '%mailer.password%'
+    mailer_port:       '%mailer.port%'
+    mailer_encryption: '%mailer.encryption%'
+
+    webmaster_mail: laurene.kgcom@gmail.com
+    server_mail: kgestion@kg-com.fr
+    elastic_enabled: true
+    elastic_host: %elastic.host%
+    elastic_port: %elastic.port%
+    jwt_private_key_path: '%jwt.private.key.path%'
+    jwt_public_key_path: '%jwt.public.key.path%'
+    jwt_key_pass_phrase: '%jwt.key.pass.phrase%'
+    jwt_token_ttl: '%jwt.token.ttl%'
+
+    socketio_url: '%socketio.url%'

@@ -1,0 +1,88 @@
+{# src/KGC/DashboardBundle/Resources/views/Config/websites.edit.html.twig #}
+
+{% extends not app.request.isXmlHttpRequest() ? '::layout.html.twig' : '::emptylayout.html.twig' %}
+
+{% block body %}
+    {% embed '::modallayout.html.twig' %}
+        {% block modal_header %}
+            {% set link = {
+                'txt' : 'Édition de formule',
+                'url' : path('kgc_chat_formulas_edit',{'id':formula.id}),
+                'icon' : 'pencil'
+            } %}
+            {{ parent() }}
+        {% endblock %}
+
+        {% block modal_content %}
+            <form id="chat_formula_modal" method="post" action="{{ path('kgc_chat_formulas_edit', {'id': formula.id}) }}" {{ form_enctype(form) }} data-close="1" data-refresh="#config_formula" class="ajax_modal_form form-horizontal chat_formula_form">
+                {{ parent() }}
+                {{ form_widget(form._token) }}
+            </form>
+        {% endblock modal_content %}
+
+        {% block modal_body %}
+            <div class="row">
+                <div class="col-md-6">
+                    {{ form_label(form.unit) }}<br />
+                    {{ form_widget(form.unit) }}
+                </div>
+                <div class="col-md-6">
+                    {{ form_label(form.bonus) }}<br />
+                    {{ form_widget(form.bonus) }}
+                </div>
+            </div>
+            {% if form.price is defined %}
+            <div class="space-4"></div>
+            <div class="row">
+                <div class="col-md-6">
+                    {{ form_label(form.price) }}<br />
+                    {{ form_widget(form.price) }}
+                </div>
+            </div>
+            {% endif %}
+
+            {% if history|length > 1 %}
+            {% set modifier = formula.chatFormula.chatType.type == 0 ? 60 : 1 %}
+            {% set param = [] %}
+            <div class="widget-box widget-box-history">
+                <div class="widget-header widget-header-small header-color-blue2">
+                    <h5>
+                        <a data-action="collapse" href="#">
+                            <i class="icon-chevron-{{ param.collapsed|default(false) ? 'down' : 'up' }}"></i>
+                            &nbsp;Historique
+                            {{ param.error|default(false) ? '<i class="icon-warning-sign"></i>' }}
+                        </a>
+                    </h5>
+                </div>
+                <div class="widget-body no-padding">
+                    <table class="table table-striped">
+                    {%- set lastData = null -%}
+                    {% for entry in history %}
+                        {% set data = entry.data %}
+                        <tr>
+                            <td>{{ loop.last ? 'Original' : entry.loggedAt|date('d/m/Y à H\\hm') }}</td>
+                            <td>{{ data.unit is defined ? data.unit/modifier ~ (modifier == 1 ? ' questions' : ' minutes') : '-' }}</td>
+                            <td>{{ data.bonus is defined ? '+ ' ~ data.bonus/modifier ~ (modifier == 1 ? ' questions' : ' minutes') ~ ' bonus' : '-' }}</td>
+                            <td>{{ data.price is defined ? data.price|number_format(2, '.') ~ '€' : '-' }}</td>
+                        </tr>
+                    {% endfor %}
+                    </table>
+                </div>
+            </div>
+            {% endif %}
+        {% endblock modal_body %}
+
+        {% block modal_footer %}
+            <div class="modal-footer">
+                <div class="pull-left">
+                    <button type="button" class="btn btn-sm btn-danger" data-dismiss="modal"><i class="icon-remove"></i> Fermer</button>
+                </div>
+                <div class="pull-right">
+                    <button type="submit" class="btn btn-success btn-block btn-sm">
+                        <i class="icon-arrow-right"></i> Enregistrer
+                    </button>
+                </div>
+            </div>
+        {% endblock modal_footer %}
+    {% endembed %}
+{% endblock body %}

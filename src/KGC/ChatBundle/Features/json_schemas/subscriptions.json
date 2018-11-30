@@ -1,0 +1,8 @@
+{
+    "id": "subscriptions.json",
+    "title": "Subscriptions schema",
+    "type": "array",
+    "items": {
+        "$ref": "subscription.json"
+    }
+}

@@ -1,0 +1,57 @@
+{# src/KGC/DashboardBundle/Resources/views/Config/salary.html.twig #}
+
+{% extends "KGCDashboardBundle::layout.html.twig" %}
+
+{% block ariane %}
+    {% set fil = ['Réglages'] %}
+    {{ parent() }}
+{% endblock %}
+
+{% block page_header %}
+    {% set infos = { 'titre':'Réglages','desc':'Bonus/Primes'} %}
+    {% set reload = { 'url':'#config_follow_employee,#config_consultation_employee, #config_bonus_employee, #config_follow_ae, #config_consultation_ae, #config_bonus_ae,#config_phoniste_bonus_hebdo,#config_phoniste_bonus_challenge' } %}
+    {% set reload = { 'url':'#config_phoniste_bonus_hebdo,#config_phoniste_bonus_challenge,#config_phoniste_penalty,#config_psychic_bonus_hebdo,#config_psychic_penalty' } %}
+    {{ parent()}}
+{% endblock %}
+
+{% block dashboard_body %}
+    {% if not app.user.isManagerPhoning() %}
+    <div class="row">
+        <div class="col-md-6">
+            <form method="post" action="{{ path('kgc_config_salary_list', {type:'follow', nature: 'employee'}) }}" class="ajax_load" id="config_follow_employee"></form>
+            <div class="space-2"></div>
+            <form method="post" action="{{ path('kgc_config_salary_list', {type:'consultation', nature: 'employee'}) }}" class="ajax_load" id="config_consultation_employee"></form>
+            <div class="space-2"></div>
+            <form method="post" action="{{ path('kgc_config_salary_list', {type:'bonus', nature: 'employee'}) }}" class="ajax_load" id="config_bonus_employee"></form>
+        </div>
+        <div class="col-md-6">
+            <form method="post" action="{{ path('kgc_config_salary_list', {type:'follow', nature: 'ae'}) }}" class="ajax_load" id="config_follow_ae"></form>
+            <div class="space-2"></div>
+            <form method="post" action="{{ path('kgc_config_salary_list', {type:'consultation', nature: 'ae'}) }}" class="ajax_load" id="config_consultation_ae"></form>
+            <div class="space-2"></div>
+            <form method="post" action="{{ path('kgc_config_salary_list', {type:'bonus', nature: 'ae'}) }}" class="ajax_load" id="config_bonus_ae"></form>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            <form method="post" action="{{ path('kgc_config_psychic_bonus_hebdo') }}" class="ajax_load" id="config_psychic_bonus_hebdo"></form>
+        </div>
+        <div class="col-md-6">
+            <form method="post" action="{{ path('kgc_config_psychic_penalty') }}" class="ajax_load" id="config_psychic_penalty"></form>
+        </div>
+    </div>
+    {% endif %}
+    <div class="row">
+        <div class="col-md-6">
+            <form method="post" action="{{ path('kgc_config_phoniste_bonus_hebdo') }}" class="ajax_load" id="config_phoniste_bonus_hebdo"></form>
+        </div>
+        <div class="col-md-6">
+            <form method="post" action="{{ path('kgc_config_phoniste_bonus_challenge') }}" class="ajax_load" id="config_phoniste_bonus_challenge"></form>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            <form method="post" action="{{ path('kgc_config_phoniste_penalty') }}" class="ajax_load" id="config_phoniste_penalty"></form>
+        </div>
+    </div>
+{% endblock %}

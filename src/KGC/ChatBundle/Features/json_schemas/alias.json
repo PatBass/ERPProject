@@ -1,0 +1,20 @@
+{
+    "id": "alias.json",
+    "title": "Alias schema",
+    "type": "object",
+    "properties": {
+        "id": {
+            "type": "integer"
+        },
+        "name": {
+            "type": "string"
+        },
+        "expiredAt": {
+            "type": "date"
+        },
+        "machinRequired": {
+            "type": "string"
+        }
+    },
+    "required": ["id", "name", "expiredAt", "machinRequired"]
+}

@@ -1,0 +1,46 @@
+default:
+    suites:
+        chat:
+            type: symfony_bundle
+            bundle: KGCChatBundle
+            contexts:
+                - ChatContext:
+                    parameters:
+                        environment: "test"
+                        base_url: "http://kgestion_web_1"
+                        prefix_url: "/chat/api"
+                        json_schemas: "/src/KGC/ChatBundle/Features/json_schemas/"
+                        log_dir: %paths.base%/behat/logs
+
+        client:
+            type: symfony_bundle
+            bundle: KGCClientBundle
+            contexts:
+                - ClientContext:
+                    parameters:
+                        environment: "test"
+                        base_url: "http://kgestion_web_1"
+                        prefix_url: "/client/api"
+                        json_schemas: "/src/KGC/ClientBundle/Features/json_schemas/"
+                        log_dir: %paths.base%/behat/logs
+
+    formatters:
+        html:
+            output_path: %paths.base%/behat
+
+        pretty: true
+
+    extensions:
+        Behat\Symfony2Extension: ~
+        Behat\MinkExtension:
+            sessions:
+                default:
+                    symfony2: ~
+
+        emuse\BehatHTMLFormatter\BehatHTMLFormatterExtension:
+            name: html
+            renderer: Twig,Behat2
+            file_name: Index
+            print_args: true
+            print_outp: true
+            loop_break: true

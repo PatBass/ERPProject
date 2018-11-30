@@ -1,0 +1,161 @@
+## src/KGC/RdvBundle/DataFixtures/ORM/support.yml
+
+KGC\RdvBundle\Entity\Support:
+    support1:
+        id: 1
+        libelle: Phoning
+        actif: 1
+        profils: [@profil_2, @profil_4, @profil_5, @profil_7]
+    support2:
+        id: 2
+        libelle: Demande rappel de Myastro
+        idtracker: 129
+        actif: 1
+        profils: [@profil_4, @profil_5, @profil_7]
+    support3:
+        id: 3
+        libelle: Appel entrant (04 82 53 71 59)
+        actif: 1
+        profils: [@profil_4, @profil_5, @profil_7]
+    support5:
+        id: 5
+        libelle: Demande rappel Tchat
+        actif: 1
+        profils: [@profil_4, @profil_5, @profil_7]
+    support6:
+        id: 6
+        libelle: FLASH 12
+        actif: 0
+        profils: [@profil_4, @profil_5, @profil_7]
+    support7:
+        id: 7
+        libelle: AMOUR 12
+        actif: 0
+        profils: [@profil_4, @profil_5, @profil_7]
+    support8:
+        id: 8
+        libelle: ANNIV
+        actif: 0
+        profils: [@profil_4, @profil_5, @profil_7]
+    support9:
+        id: 9
+        libelle: ASTRO 1
+        actif: 0
+        profils: [@profil_4, @profil_5, @profil_7]
+    support10:
+        id: 10
+        libelle: ASTRO 2
+        actif: 0
+        profils: [@profil_4, @profil_5, @profil_7]
+    support11:
+        id: 11
+        libelle: ASTRO 3
+        actif: 0
+        profils: [@profil_4, @profil_5, @profil_7]
+    support12:
+        id: 12
+        libelle: ASTRO 4
+        actif: 0
+        profils: [@profil_4, @profil_5, @profil_7]
+    support13:
+        id: 13
+        libelle: ASTRO 5
+        actif: 0
+        profils: [@profil_4, @profil_5, @profil_7]
+    support14:
+        id: 14
+        libelle: ASTRO 6
+        actif: 0
+        profils: [@profil_4, @profil_5, @profil_7]
+    support15:
+        id: 15
+        libelle: ASTRO 10
+        actif: 0
+        profils: [@profil_4, @profil_5, @profil_7]
+    support16:
+        id: 16
+        libelle: ASTRO 11
+        actif: 0
+        profils: [@profil_4, @profil_5, @profil_7]
+    support17:
+        id: 17
+        libelle: ASTRO 12
+        actif: 0
+        profils: [@profil_4, @profil_5, @profil_7]
+    support18:
+        id: 18
+        libelle: ASTRO 22
+        actif: 0
+        profils: [@profil_4, @profil_5, @profil_7]
+    support19:
+        id: 19
+        libelle: ASTRO 23
+        actif: 0
+        profils: [@profil_4, @profil_5, @profil_7]
+    support20:
+        id: 20
+        libelle: ASTRO 24
+        actif: 0
+        profils: [@profil_4, @profil_5, @profil_7]
+    support21:
+        id: 21
+        libelle: ASTRO 71
+        actif: 0
+        profils: [@profil_4, @profil_5, @profil_7]
+    support22:
+        id: 22
+        libelle: ASTRO 72
+        actif: 0
+        profils: [@profil_4, @profil_5, @profil_7]
+    support23:
+        id: 23
+        libelle: ASTRO 73
+        actif: 0
+        profils: [@profil_4, @profil_5, @profil_7]
+    support24:
+        id: 24
+        libelle: ASTRO 74
+        actif: 0
+        profils: [@profil_4, @profil_5, @profil_7]
+    support25:
+        id: 25
+        libelle: ASTRO 701
+        actif: 0
+        profils: [@profil_4, @profil_5, @profil_7]
+    support26:
+        id: 26
+        libelle: Tchat videodesk
+        actif: 0
+        profils: [@profil_2, @profil_5]
+    support27:
+        id: 27
+        libelle: Suivi Client
+        idcode: SUIVI_CLIENT
+        actif: 1
+        profils: [@profil_4, @profil_5, @profil_7, @profil_6]
+    support28:
+        id: 28
+        libelle: Appel entrant (04 37 45 45 32)
+        idtracker: 69
+        actif: 1
+        profils: [@profil_4, @profil_5, @profil_7]
+    support29:
+        id: 29
+        libelle: Mailing
+        actif: 1
+        profils: [@profil_4, @profil_5, @profil_7]
+    support30:
+        id: 30
+        libelle: SMS
+        actif: 1
+        profils: [@profil_4, @profil_5, @profil_7]
+    support31:
+        id: 31
+        libelle: Phoning camp.10
+        actif: 1
+        profils: [@profil_2, @profil_4]
+    support32:
+        id: 32
+        libelle: Phoning Base Client
+        actif: 1
+        profils: [@profil_2, @profil_4]

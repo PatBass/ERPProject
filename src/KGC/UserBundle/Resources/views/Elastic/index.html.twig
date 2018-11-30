@@ -1,0 +1,34 @@
+{# src/KGC/UserBundle/Resources/views/Elastic/index.html.twig #}
+{% extends not app.request.isXmlHttpRequest() ? '::layout.html.twig' : '::emptylayout.html.twig' %}
+
+{% block body %}
+    {% embed '::modallayout.html.twig' %}
+
+        {% block modal_title %}
+            Rechercher un prospect
+        {% endblock %}
+
+
+        {% block modal_body %}
+            <form id="form_search_prospect" method="post" action="{{ path('kgc_elastic_search_prospect') }}"
+                    class="form-horizontal form-search form-search-ajax ajax_load" id="elastic_search">
+            </form>
+        {% endblock modal_body %}
+
+        {% block modal_footer %}
+            <div class="modal-footer">
+                <div class="pull-left">
+                    <a class="btn btn-sm btn-danger pull-left" title="Fermer" data-dismiss=modal>
+                        <i class="icon-remove"></i> Fermer
+                    </a>
+                </div>
+                <div class="pull-right">
+                    <a class="btn btn-block btn-primary modal-load" href="{{ path('kgc_rdv_add',{'vue':'modal'}) }}" role="button" title="APPEL ENTRANT NON PROSPECT">
+                        APPEL ENTRANT NON PROSPECT
+                    </a>
+                </div>
+            </div>
+        {% endblock %}
+
+    {% endembed %}
+{% endblock body %}

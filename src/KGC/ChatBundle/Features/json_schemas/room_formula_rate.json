@@ -1,0 +1,14 @@
+{
+    "id": "room_formula_rate.json",
+    "title": "Room formula rate schema",
+    "type": "object",
+    "properties": {
+        "start_date": {
+            "type": "integer"
+        },
+        "end_date": {
+            "type": ["null", "integer"]
+        },
+    },
+    "required": ["start_date", "end_date"]
+}

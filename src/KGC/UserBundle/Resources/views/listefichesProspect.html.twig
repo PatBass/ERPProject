@@ -1,0 +1,316 @@
+{# src/KGC/RdvBundle/Ressources/views/listefichesProspect.html.twig #}
+
+{% block tableau_fiches %}
+    <table class="table table-striped table-hover valign-middle {{ class|default('') }} {{ datatable|default(false) ? 'dataTable' }}" id="table-{{ fiches|length }}">
+        {{ block('thead_fiches') }}
+        <tbody>
+            {% for prospect in fiches %}
+                <tr>{{ block('ligne_prospect') }}</tr>
+            {% else %}
+                <tr>
+                    <td colspan="4">Aucun résultat</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock tableau_fiches %}
+
+{% block tableau_fiches_similary %}
+    <table class="table table-striped table-hover valign-middle {{ class|default('') }} {{ datatable|default(false) ? 'dataTable' }}" id="table-{{ fiches|length }}">
+        <tbody>
+            {% for prospect in fiches %}
+                <tr data-id="{{ prospect.id }}">{{ block('ligne_prospect_similary') }}</tr>
+            {% else %}
+                <tr>
+                    <td colspan="4">Aucun résultat</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock tableau_fiches_similary %}
+
+{% block tableau_fiches_dri %}
+    <table class="table table-striped table-hover valign-middle {{ class|default('') }} {{ datatable|default(false) ? 'dataTable' }}" id="table-{{ fiches|length }}">
+        {{ block('thead_fiches_dri') }}
+        <tbody>
+            {% for prospect in fiches %}
+                <tr>{{ block('ligne_prospect_dri') }}</tr>
+            {% else %}
+                <tr>
+                    <td colspan="4">Aucun résultat</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock tableau_fiches_dri %}
+
+{% block tableau_fiches_export %}
+    <table class="table table-striped table-hover valign-middle {{ class|default('') }} {{ datatable|default(false) ? 'dataTable' }}" id="table-{{ fiches|length }}">
+        {{ block('thead_fiches_export') }}
+        <tbody>
+            {% for prospect in fiches %}
+                <tr>{{ block('ligne_prospect_export') }}</tr>
+            {% else %}
+                <tr>
+                    <td colspan="4">Aucun résultat</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock tableau_fiches_export %}
+
+{% block tableau_fiches_phonist %}
+    <table class="table table-striped table-hover valign-middle {{ class|default('') }} {{ datatable|default(false) ? 'dataTable' }}" id="table-{{ fiches|length }}">
+        {{ block('thead_fiches') }}
+        <tbody>
+            {% for prospect in fiches %}
+                <tr>{{ block('ligne_prospect_phonist') }}</tr>
+            {% else %}
+                <tr>
+                    <td colspan="4">Aucun résultat</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock tableau_fiches_phonist %}
+
+    {% block thead_fiches %}
+        <thead>
+            <tr>
+                <th class="center">ID astro</th>
+                <th class="center">Date d'inscription</th>
+                <th class="center">Prénom</th>
+                <th class="center">Date de naissance</th>
+                <th class="center">Email</th>
+                <th class="center">Site</th>
+                <th class="center">Source</th>
+                <th class="center">URL</th>
+                <th></th>
+            <tr>
+        </thead>
+    {% endblock thead_fiches %}
+
+    {% block thead_fiches_dri %}
+        <thead>
+            <tr>
+                <th></th>
+                <th class="center">Date d'inscription</th>
+                <th class="center">Date DRI</th>
+                <th class="center">Prénom</th>
+                <th class="center">Date de naissance</th>
+                <th class="center">Email</th>
+                <th class="center">Téléphone</th>
+                <th class="center">Site</th>
+                <th class="center">Etat</th>
+                <th class="center" colspan="2"></th>
+            <tr>
+        </thead>
+    {% endblock thead_fiches_dri %}
+
+    {% block thead_fiches_export %}
+        <thead>
+            <tr>
+                <th class="center">ID astro</th>
+                <th class="center">Date d'inscription</th>
+                <th class="center">Prénom</th>
+                <th class="center">Email</th>
+                <th class="center">Site</th>
+                <th class="center">Source</th>
+                <th class="center">URL</th>
+                <th></th>
+            <tr>
+        </thead>
+    {% endblock thead_fiches_export %}
+
+    {% block ligne_prospect %}
+        <td class="center">{{ prospect.myastroId }}</td>
+        <td class="center">{{ prospect.createdAt?prospect.createdAt|date("d/m/Y"):"" }}</td>
+        <td class="center">{{ prospect.firstname }}</td>
+        <td class="center">{{ prospect.birthday?prospect.birthday|date("d/m/Y"):"" }}</td>
+        <td class="center">{{ prospect.email }}</td>
+        <td class="center">{{ prospect.website?prospect.website.libelle:prospect.myastroWebsite }}</td>
+        <td class="center">{{ prospect.sourceConsult?prospect.sourceConsult.label:prospect.myastroSource }}</td>
+        <td class="center">{{ prospect.formurl?prospect.formurl.label:prospect.myastroUrl }}</td>
+        <td class="center">
+            <a href="{{ path('kgc_landinguser_consultation_fiche',{'id':prospect.id}) }}" class="btn btn-xs btn-grey tooltip-grey modal-load" role="button" title="" data-rel="tooltip" data-placement="right" data-original-title="voir la fiche prospect">
+                <i class="icon-file"></i>
+            </a>
+            {% if prospect.client is defined and prospect.client is not empty %}
+                {% if is_granted("ROLE_ADMIN") %}
+                    <a href="{{ path('kgc_client_fiche',{'id':prospect.client.id}) }}" class="btn btn-xs btn-success tooltip-success" role="button" title="" data-rel="tooltip" data-placement="right" data-original-title="voir la fiche client">
+                        <i class="icon-file"></i>
+                    </a>
+                {%  else %}
+                    <span class="btn btn-xs btn-success tooltip-success" role="button" title="" data-rel="tooltip" data-placement="right" data-original-title="voir la fiche client">
+                        <i class="icon-file"></i>
+                    </span>
+                {%  endif %}
+            {% endif %}
+        </td>
+    {% endblock ligne_prospect %}
+
+    {% block ligne_prospect_dri %}
+        <td>
+            <a href="{{ path('kgc_landinguser_consultation_fiche',{'id':prospect.id}) }}" class="btn btn-xs btn-grey tooltip-grey modal-load" role="button" title="" data-rel="tooltip" data-placement="right" data-original-title="voir la fiche">
+                <i class="icon-file"></i>
+            </a>
+        </td>
+        <td class="center">{{ prospect.createdAt?prospect.createdAt|date("d/m/Y H:i"):"" }}</td>
+        <td class="center">{{ prospect.createdAt?prospect.updatedAt|date("d/m/Y H:i"):"" }}</td>
+        <td class="center">{{ prospect.firstname }}</td>
+        <td class="center">{{ prospect.birthday?prospect.birthday|date("d/m/Y"):"" }}</td>
+        <td class="center">{{ prospect.email }}</td>
+        <td class="center">{{ prospect.phone }}</td>
+        <td class="center">{{ prospect.website?prospect.website.libelle:prospect.myastroWebsite }}</td>
+        <td class="center">
+            <select data-id="{{ prospect.id }}" id="stateOf{{ prospect.id }}" name="state" class="js-state-select form-control changeState" value="{{ prospect.state?prospect.state.id:'' }}" originally-disabled="1">
+                <option value="">...</option>
+                {% for landingState in landingStates %}
+                    <option value="{{ landingState.id }}" {% if prospect.state and landingState.id == prospect.state.id  %} selected="selected" {% endif %} data-has-calendar="{{ landingState.hasCalendarType }}">
+                        {{ landingState.name }}
+                    </option>
+                {% endfor %}
+            </select>
+            <input type="text" id="dateStateOf{{ prospect.id }}" value="{{ prospect.dateState?prospect.dateState|date("d/m/Y H:i"):"" }}" name="dateState" class="date-picker-hours form-control {{  prospect.state and prospect.state.hasCalendarType?'':'hide' }}">
+        </td>
+        <td colspan="">
+            <a href="#" data-url="{{ path('kgc_api_client_changestate',{'id':prospect.id}) }}" data-id="{{ prospect.id }}" class="btn btn-xs btn-success submit-row" role="button" title="Valider">
+                Valider
+            </a>
+        </td>
+
+    {% endblock ligne_prospect_dri %}
+
+    {% block ligne_prospect_export %}
+        <td class="center">{{ prospect.myastroId }}</td>
+        <td class="center">{{ prospect.createdAt?prospect.createdAt|date("d/m/Y"):"" }}</td>
+        <td class="center">{{ prospect.firstname }}</td>
+        <td class="center">{{ prospect.email }}</td>
+        <td class="center">{{ prospect.website?prospect.website.libelle:prospect.myastroWebsite }}</td>
+        <td class="center">{{ prospect.sourceConsult?prospect.sourceConsult.label:prospect.myastroSource }}</td>
+        <td class="center">{{ prospect.formurl?prospect.formurl.label:prospect.myastroUrl }}</td>
+        <td class="center">
+            <a href="{{ path('kgc_landinguser_consultation_fiche',{'id':prospect.id}) }}" class="btn btn-xs btn-grey tooltip-grey modal-load" role="button" title="" data-rel="tooltip" data-placement="right" data-original-title="voir la fiche prospect">
+                <i class="icon-file"></i>
+            </a>
+            {% if prospect.client is defined and prospect.client is not empty %}
+                <a href="{{ path('kgc_client_fiche',{'id':prospect.client.id}) }}" class="btn btn-xs btn-success tooltip-success" role="button" title="" data-rel="tooltip" data-placement="right" data-original-title="voir la fiche client">
+                    <i class="icon-file"></i>
+                </a>
+            {% endif %}
+        </td>
+    {% endblock ligne_prospect_export %}
+
+    {% block ligne_prospect_phonist %}
+        <td class="center">{{ prospect.myastroId }}</td>
+        <td class="center">{{ prospect.createdAt?prospect.createdAt|date("d/m/Y"):"" }}</td>
+        <td class="center">{{ prospect.firstname }}</td>
+        <td class="center">{{ prospect.birthday?prospect.birthday|date("d/m/Y"):"" }}</td>
+        <td class="center">{{ prospect.email }}</td>
+        <td class="center">{{ prospect.website ? prospect.website.libelle : prospect.myastroWebsite }}</td>
+        <td class="center">{{ prospect.sourceConsult ? prospect.sourceConsult.label : prospect.myastroSource }}</td>
+        <td class="center">{{ prospect.formurl ? prospect.formurl.label : prospect.myastroUrl }}</td>
+        <td class="center">
+            <a href="{{ path('kgc_dashboard_phoning2',{'id':prospect.id}) }}" class="btn btn-xs btn-grey tooltip-grey" role="button" title="" data-rel="tooltip" data-placement="right" data-original-title="voir la fiche prospect">
+                <i class="icon-file"></i>
+            </a>
+        </td>
+    {% endblock ligne_prospect_phonist %}
+
+    {% block ligne_prospect_similary %}
+        {% if prospect.client is defined and prospect.client is not empty %}
+            {% set client = prospect.client %}
+        {% else %}
+            {% set client = null %}
+        {% endif %}
+        <td>{% if client is defined and client is not empty %}<b>{{ client.nom }}</b> {% endif %}{{ prospect.firstname }}</td>
+        {% set similarity = similarity is defined ? similarity : false %}
+        {% if similarity %}
+            <td class="js-details">
+                <span class="js-similarity-field" data-field="idAstro_valeur">{{ prospect.myastroId }}</span>,
+                <span class="js-similarity-field" data-field="client_dateNaissance">{{ prospect.birthday | date('d/m/Y') }}</span>,
+                <span class="js-similarity-field" data-field="client_mail">{{ prospect.email }}</span>,
+                <span class="js-similarity-field" data-field="numtel1">{{ prospect.phone }}</span>,
+                <span class="" data-field="website">{{ prospect.myastroWebsite }}</span>,
+                <span class="" data-field="source">{{ prospect.myastroSource }}</span>,
+                <span class="" data-field="formurl">{{ prospect.myastroUrl }}</span>
+                {% if prospect.website is defined and prospect.website is not empty %}
+                    <span class="hidden js-similarity-field" data-field="website">{{ prospect.website.id }}</span>
+                {% else %}
+                    <span class="hidden js-similarity-field" data-field="website"></span>
+                {% endif %}
+                {% if prospect.sourceConsult is defined and prospect.sourceConsult is not empty %}
+                    <span class="hidden js-similarity-field" data-field="source">{{ prospect.sourceConsult.id }}</span>
+                {% else %}
+                    <span class="hidden js-similarity-field" data-field="source"></span>
+                {% endif %}
+                <span class="hidden js-similarity-field" data-field="client_prenom">{{ prospect.firstName }}</span>
+                <span class="hidden js-similarity-field" data-field="client_genre">{{ prospect.gender }}</span>
+                <span class="hidden js-similarity-field" data-field="adresse_pays">{{ prospect.country }}</span>
+                <span class="hidden js-similarity-field" data-field="questionSubject">{{ prospect.questionSubject }}</span>
+                <span class="hidden js-similarity-field" data-field="questionText">{{ prospect.questionText }}</span>
+                <span class="hidden js-similarity-field" data-field="questionContent">{{ prospect.questionContent }}</span>
+                <span class="hidden js-similarity-field" data-field="spouseName">{{ prospect.spouseName }}</span>
+                <span class="hidden js-similarity-field" data-field="gclid">{{ prospect.myastroGclid }}</span>
+                {% if prospect.spouseBirthday %}
+                    <span class="hidden js-similarity-field" data-field="spouseBirthday">{{ prospect.spouseBirthday | date('d/m/Y') }}</span>
+                {% else %}
+                    <span class="hidden js-similarity-field" data-field="spouseBirthday"></span>
+                {% endif %}
+                <span class="hidden js-similarity-field" data-field="spouseSign">{{ prospect.spouseSign }}</span>
+                {% if client is defined and client is not empty %}
+                    <span class="hidden js-similarity-field" data-field="numtel2">{{ client.numtel2 }}</span>
+                    <span class="hidden js-similarity-field" data-field="client_nom">{{ client.nom }}</span>
+                    {% if client.adresses|length %}
+                        <span class="hidden js-similarity-field" data-field="adresse_voie">{{ client.getAdresse().voie }}</span>
+                        <span class="hidden js-similarity-field" data-field="adresse_complement">{{ client.getAdresse().complement }}</span>
+                        <span class="hidden js-similarity-field" data-field="adresse_codepostal">{{ client.getAdresse().codepostal }}</span>
+                        <span class="hidden js-similarity-field" data-field="adresse_ville">{{ client.getAdresse().ville }}</span>
+                    {% endif %}
+                    {% if client.cartebancaires|length and app.user.getMainprofil().getRoleKey() != "phoniste" %}
+                        <span class="hidden js-similarity-field" data-field="cartebancaires___name___numero">{{ client.cartebancaires.last().numero }}</span>
+                        <span class="hidden js-similarity-field" data-field="cartebancaires___name___expiration">{{ client.cartebancaires.last().expiration }}</span>
+                        <span class="hidden js-similarity-field" data-field="cartebancaires___name___cryptogramme">{{ client.cartebancaires.last().cryptogramme }}</span>
+                    {% endif %}
+                {% endif %}
+                {% if prospect.formurl is defined and prospect.formurl is not empty %}
+                    <span class="hidden js-similarity-field" data-field="formurl">{{ prospect.formurl.id }}</span>
+                {% else %}
+                    <span class="hidden js-similarity-field" data-field="formurl"></span>
+                {% endif %}
+                {% if prospect.support is defined and prospect.support is not empty %}
+                    <span class="hidden js-similarity-field" data-field="support">{{ prospect.support.id }}</span>
+                {% else %}
+                    <span class="hidden js-similarity-field" data-field="support"></span>
+                {% endif %}
+                {% if prospect.voyant is defined and prospect.voyant is not empty %}
+                    <span class="hidden js-similarity-field" data-field="voyant">{{ prospect.voyant.id }}</span>
+                {% else %}
+                    <span class="hidden js-similarity-field" data-field="voyant"></span>
+                {% endif %}
+                {% if prospect.codePromo is defined and prospect.codePromo is not empty %}
+                    <span class="hidden js-similarity-field" data-field="codepromo">{{ prospect.codePromo.id }}</span>
+                {% else %}
+                    <span class="hidden js-similarity-field" data-field="codepromo"></span>
+                {% endif %}
+            </td>
+        {% endif %}
+        <td class="line-actions">
+            {% for btn in actions|default({1:1}) %}
+                {{ block('btn_action') }}
+            {% endfor %}
+        </td>
+    {% endblock ligne_prospect_similary %}
+
+    {% block btn_action %}
+        {% set route_action = btn.route_action|default('kgc_rdv_fiche') %}
+        {% set btn_color = btn.color|default('primary') %}
+        {% set load = btn.load|default('modal-load') %}
+        {% set icon = btn.icon|default('file') %}
+        {% set btn_disabled = btn.disabled|default(false) %}
+        {% set title = btn.title|default('Ouvrir la fiche') %}
+        {% set refresh = btn.refresh|default(false) %}
+        <a href="{{ route_action != 'none' ? path(route_action, {'id':prospect.id}) : 'javascript:void(0);' }}" class="btn btn-xs btn-{{ btn_color }} tooltip-{{ btn_color }} {{ load }}" {{ refresh ? 'data-refresh='~refresh }} role="button" {{ btn_disabled ? 'disabled':'' }} title="{{ title|default('') }}" data-rel="tooltip" data-placement="{{ btn.placement|default('right') }}">
+            <i class="icon-{{ icon }}"></i>
+        </a>
+    {% endblock btn_action %}

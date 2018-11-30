@@ -1,0 +1,16 @@
+web:
+    extends:
+        file: docker-compose-common.yml
+        service: web
+    links:
+        - db
+
+db:
+    extends:
+        file: docker-compose-common.yml
+        service: db
+
+composer:
+    extends:
+        file: .kgcomdev/kgcom-common/compose/common.yml
+        service: composer

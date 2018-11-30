@@ -1,0 +1,8 @@
+{
+    "id": "formulas.json",
+    "title": "Formulas schema",
+    "type": "array",
+    "items": {
+        "$ref": "formula.json"
+    }
+}

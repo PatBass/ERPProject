@@ -1,0 +1,23 @@
+{% block subject %}{{ 'email.payment.success.subject'|trans }}{% endblock %}
+
+{% block body_text %}
+{% autoescape false %}
+{{ 'email.payment.success.body_text'|trans({'%siteLabel%': "shared.#{user.origin}.email.siteLabel"|trans({}, 'KGCSharedBundle'), '%firstName%': user.prenom, '%redirectUrl%': "#{siteUrl}#{sitePrefix}/voyants"}) }}
+{% endautoescape %}
+{% endblock %}
+
+{% block body_html %}
+    {% set reference = user.origin %}
+    {% embed "KGCSharedBundle:#{reference|capitalize}:layout.email.twig" %}
+        {% block body %}
+        <h3 style="{{ h3Style }}">{{ 'email.payment.success.title'|trans({'%firstName%': app.user}) }}</h3>
+        {{ 'email.payment.success.description'|trans }}<br />
+        <br />
+        <p style="text-align :center">
+            <a class="button" style="{{ buttonStyle }}" href="{{ "#{siteUrl}#{sitePrefix}/voyants" }}">{{ 'email.payment.success.buttonText'|trans({'%siteLabel%': ("shared.#{reference}.email.siteLabel")|trans({}, 'KGCSharedBundle')}) }}</a>
+        </p>
+        <br />
+        {{ 'email.payment.success.seeYouSoon'|trans }}<br />
+        {% endblock %}
+    {% endembed %}
+{% endblock %}

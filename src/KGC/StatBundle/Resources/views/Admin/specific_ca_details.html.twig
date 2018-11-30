@@ -1,0 +1,40 @@
+{# src/KGC/StatBundle/Ressources/views/Admin/specific_rdv_details.html.twig #}
+
+{% extends not app.request.isXmlHttpRequest() ? '::layout.html.twig' : '::emptylayout.html.twig' %}
+
+{% block body %}
+    {% embed '::modallayout.html.twig' %}
+
+        {% block modal_title %}
+            Détails du chiffre d'affaire {{ title }}
+            {% set request_args = app.request.get('_route_params') | merge(app.request.query.all)  %}
+            <a title="Export Excel (.csv)" href="{{ path('kgc_stat_admin_specific_details', request_args | merge({ 'export': 1, 'ca_details' : 1 })) }}" >
+                <i class="icon-download-alt"></i>
+            </a>
+        {% endblock modal_title %}
+
+        {% block modal_body %}
+            <div class="row">
+                <div class="col-md-6">
+                    {% for value in details %}
+                    {% set limit = (value | length) / 2 | round %}
+                    {% if value['amount'] > 0 %}
+                    {{ value['nb'] }} x {{ (value['amount'] / 100 / value['nb']) | number_format(2, ',', ' ') }} €
+                    pour
+
+                    <a href="{{ path('kgc_rdv_fiche', app.request.get('_route_params') | merge(app.request.query.all) | merge({'id' : value['rdv'], 'specific_statistics' : 1} )) }}" class="modal-load">
+                        <strong>{{ value['user'] }}</strong>
+                    </a>
+
+                    <br />
+
+                    {% if loop.index > limit %}
+                </div><div class="col-md-6">
+                    {% endif %}
+                    {% endif %}
+                    {% endfor %}
+                </div>
+            </div>
+        {% endblock modal_body %}
+    {% endembed %}
+{% endblock body %}

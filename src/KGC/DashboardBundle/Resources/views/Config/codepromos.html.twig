@@ -1,0 +1,22 @@
+{# src/KGC/DashboardBundle/Resources/views/Config/codepromos.edit.html.twig #}
+
+{% extends "KGCDashboardBundle::layout.html.twig" %}
+
+{% block ariane %}
+    {% set fil = ['Réglages'] %}
+    {{ parent() }}
+{% endblock %}
+
+{% block page_header %}
+    {% set infos = { 'titre':'Réglages','desc':'Codes promo'} %}
+    {% set reload = { 'url':'#config_promo' } %}
+    {{ parent()}}
+{% endblock %}
+
+{% block dashboard_body %}
+    <div class="row">
+        <div class="col-md-12">
+            <form method="post" action="{{ path('kgc_config_codepromo_list') }}" class="ajax_load" id="config_promo"></form>
+        </div>
+    </div>
+{% endblock %}

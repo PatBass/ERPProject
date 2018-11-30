@@ -1,0 +1,79 @@
+imports:
+    - { resource: config_dev.yml }
+
+parameters:
+    elastic_enabled: false
+
+framework:
+    test: ~
+    session:
+        storage_id: session.storage.mock_file
+    profiler:
+        collect: true
+
+web_profiler:
+    toolbar: false
+    intercept_redirects: false
+
+swiftmailer:
+    disable_delivery: true
+
+swiftmailer:
+    mailers:
+        first_mailer:
+            disable_delivery: true
+        second_mailer:
+            disable_delivery: true
+
+atoum:
+    bundles:
+        KGCPaymentBundle:
+            directories: [Tests/Units]
+
+monolog:
+    handlers:
+        subscription:
+            type: "null"
+        unpaid:
+            type: "null"
+
+services:
+    kgc.payment.gateway.klikandpay:
+        class: KGC\PaymentBundle\Service\Payment\Gateway\Fake
+        arguments:
+            - @doctrine.orm.entity_manager
+            - @payum
+            - @payum.security.token_factory
+            - klikandpay
+        tags:
+            - { name: kgc.payment.gateway }
+
+    kgc.payment.gateway.be2bill:
+        class: KGC\PaymentBundle\Service\Payment\Gateway\Fake
+        arguments:
+            - @doctrine.orm.entity_manager
+            - @payum
+            - @payum.security.token_factory
+            - be2bill
+        tags:
+            - { name: kgc.payment.gateway }
+
+    kgc.payment.gateway.hipay:
+        class: KGC\PaymentBundle\Service\Payment\Gateway\Fake
+        arguments:
+            - @doctrine.orm.entity_manager
+            - @payum
+            - @payum.security.token_factory
+            - hipay
+        tags:
+            - { name: kgc.payment.gateway }
+
+    kgc.payment.gateway.hipay_tchat:
+        class: KGC\PaymentBundle\Service\Payment\Gateway\Fake
+        arguments:
+            - @doctrine.orm.entity_manager
+            - @payum
+            - @payum.security.token_factory
+            - hipay_tchat
+        tags:
+            - { name: kgc.payment.gateway }

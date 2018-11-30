@@ -1,0 +1,27 @@
+
+{% use 'KGCRdvBundle::listefichesRDV.html.twig' %}
+
+{% if paginator %}
+    {% set fiches = paginator.elements %}
+    {% set similarity = true %}
+    {% set actions = {
+        1 : {
+        'route_action' : 'kgc_rdv_fiche',
+        'load' : 'modal-load',
+        'color' : 'primary',
+        'icon' : 'file',
+        'disabled' : false,
+        'title' : "Fiche standard",
+        'placement': 'left'
+        },
+        2 : {
+        'route_action' : 'none',
+        'load' : 'js-similarity-use',
+        'title' : 'Réutiliser cette fiche',
+        'color' : 'pink',
+        'icon' : 'heart',
+        'placement': 'left'
+        }
+    } %}
+    {{ fiches|length > 0 ? block('tableau_fiches') : '<table class="table center"><tr><td>Aucun résultat</td></tr><table>' }}
+{% endif %}

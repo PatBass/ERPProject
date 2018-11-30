@@ -1,0 +1,24 @@
+{% extends not app.request.isXmlHttpRequest() ? '::layout.html.twig' : '::emptylayout.html.twig' %}
+
+{% block body %}
+   {% embed '::widgetlayout.html.twig' %}
+
+      {% use 'KGCRdvBundle::listefichesRDV.html.twig' %}
+
+      {% set widget_options = {
+      'titre' : 'Consultation téléphoniques',
+      'header_class' : 'widget-header-small',
+      'refresh' : '#client-consultations',
+      'collapse' : true,
+      'no_padding' : true,
+      } %}
+
+      {% block widget_main %}
+
+         {% set fiches = consultations %}
+         {{ fiches|length > 0 ? block('tableau_fiches') : '<table class="table"><tr><td>Aucun résultat</td></tr><table>' }}
+      {% endblock %}
+   {% endembed %}
+{% endblock body %}
+
+

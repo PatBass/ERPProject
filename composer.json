@@ -1,0 +1,107 @@
+{
+    "name": "kgcom/kgestion",
+    "license": "proprietary",
+    "type": "project",
+    "description": "The Kgestion application",
+    "autoload": {
+        "psr-0": { "": "src/"}
+    },
+    "repositories": [
+        {
+            "type": "composer",
+            "url": "http://satis.kg-com.fr"
+        }
+    ],
+    "require": {
+        "php": ">=5.3.3",
+        "symfony/symfony": "2.8.*",
+        "doctrine/common": "~2.3",
+        "twig/twig": "~1.0",
+        "psr/log": "~1.0",
+        "doctrine/orm": "~2.2,>=2.2.3",
+        "doctrine/doctrine-bundle": "~1.2",
+        "twig/extensions": "~1.0",
+        "symfony/assetic-bundle": "~2.3",
+        "symfony/swiftmailer-bundle": "~2.3",
+        "symfony/monolog-bundle": "~2.7",
+        "sensio/distribution-bundle": "~2.3",
+        "sensio/framework-extra-bundle": "~3.0",
+        "symfony/web-profiler-bundle": "2.6.*",
+        "incenteev/composer-parameter-handler": "2.1.*",
+        "jms/security-extra-bundle": "1.5.*",
+        "doctrine/doctrine-fixtures-bundle": "2.2.*",
+        "doctrine/migrations": "1.0.0",
+        "doctrine/doctrine-migrations-bundle": "1.0.0",
+        "jms/di-extra-bundle": "1.5.*",
+        "phpoffice/phpexcel": "1.8.0",
+        "hautelook/alice-bundle": "0.2.*",
+        "gedmo/doctrine-extensions": "~2.4",
+        "coresphere/console-bundle": "dev-master",
+        "setasign/fpdf": "1.8.1",
+        "friendsofsymfony/elastica-bundle": "3.1.*",
+        "pagerfanta/pagerfanta": "1.0.*",
+        "knplabs/knp-components": "1.2.2",
+        "jms/serializer-bundle": "0.13.*",
+        "beberlei/DoctrineExtensions": "1.0.*",
+        "knplabs/knp-paginator-bundle": "~2.4",
+        "knplabs/doctrine-behaviors": "1.0.1",
+        "kgcomdev/kgestion-common": "dev-master",
+        "kgcomdev/payum-be2bill-extended": "dev-master",
+        "payum/payum-bundle": "1.0.*",
+        "leafo/scssphp": "0.6.*",
+        "kgcomdev/payum-klikandpay": "dev-master",
+        "friendsofsymfony/user-bundle": "~2.0@dev",
+        "pugx/multi-user-bundle": "2.0.*@dev",
+        "lexik/jwt-authentication-bundle": "1.3.*",
+        "liuggio/excelbundle": "2.0.*",
+        "hipay/hipay-fullservice-sdk-php": "1.1.*",
+        "callr/sdk-php": "^0.9.2"
+    },
+    "require-dev": {
+        "m6web/coke": "dev-master",
+        "sensio/generator-bundle": "~2.5",
+        "atoum/atoum":  "2.2.*",
+        "atoum/reports-extension": "~1.0",
+        "atoum/stubs": "*",
+        "atoum/atoum-bundle":  "1.3.*",
+        "symfony/var-dumper": "2.6.*",
+        "fabpot/php-cs-fixer": "~1.10",
+        "behat/behat": "~3.0",
+        "behat/mink": "~1.7",
+        "behat/mink-extension": "~2.1",
+        "behat/mink-browserkit-driver": "~1.3",
+        "behat/symfony2-extension": "~2.1",
+        "justinrainbow/json-schema":"~1.3",
+        "guzzlehttp/guzzle":"~6.1",
+        "emuse/behat-html-formatter": "dev-master"
+    },
+    "minimum-stability":"stable",
+    "scripts": {
+        "post-install-cmd": [
+            "Incenteev\\ParameterHandler\\ScriptHandler::buildParameters",
+            "php vendor/sensio/distribution-bundle/Sensio/Bundle/DistributionBundle/Resources/bin/build_bootstrap.php",
+            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installRequirementsFile"
+        ],
+        "post-update-cmd": [
+            "Incenteev\\ParameterHandler\\ScriptHandler::buildParameters",
+            "php vendor/sensio/distribution-bundle/Sensio/Bundle/DistributionBundle/Resources/bin/build_bootstrap.php",
+            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installRequirementsFile"
+        ]
+    },
+    "config": {
+        "bin-dir": "bin",
+        "secure-http": false
+    },
+    "extra": {
+        "symfony-app-dir": "app",
+        "symfony-bin-dir": "bin",
+        "symfony-var-dir": "var",
+        "symfony-web-dir": "web",
+        "incenteev-parameters": {
+            "file": "app/config/parameters.yml"
+        },
+        "branch-alias": {
+            "dev-master": "2.4-dev"
+        }
+    }
+}

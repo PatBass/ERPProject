@@ -1,0 +1,158 @@
+{# src/KGC/ClientBundle/Ressources/views/historique/content.html.twig #}
+
+{% import _self as histo_macro %}
+
+{% macro histo_value(h, type, css_class) %}
+    {% if type == constant('KGC\\ClientBundle\\Entity\\Historique::BACKEND_TYPE_DRAW') %}
+        {% for draw in type | historique_value(h) %}
+            <li>
+                <strong>{{ draw.deck.label }}
+                {% if h[type] is defined and h[type].date | date('d/m/Y') != h.date | date('d/m/Y') %}
+                    <i class="icon-edit tooltip-top" data-rel="tooltip" title="modifié le {{ h[type].date | date('d/m/Y') }} par {{ h.consultant.username }}"></i>
+                {% endif %}
+                :
+                </strong>
+                {{ draw.card.label }}
+                <p class="well well-sm">{{ draw.card.description|raw }}</p>
+            </li>
+        {% else %}
+            Aucun Tirage
+        {% endfor %}
+    {% elseif type == constant('KGC\\ClientBundle\\Entity\\Historique::BACKEND_TYPE_PENDULUM') %}
+        {% for qa in  type | historique_value(h) %}
+            <li>
+                <strong>
+
+                {{ qa.question ? qa.question.label : qa.customQuestion }}
+                {% if  h[type] is defined and h[type].date | date('d/m/Y') != h.date | date('d/m/Y') %}
+                    <i class="icon-edit tooltip-top" data-rel="tooltip" title="modifié le {{ h[type].date | date('d/m/Y') }} par {{ h.consultant.username }}"></i>
+                {% endif %}
+                :
+                </strong>
+                {{ qa.answer ? 'Oui' : 'Non' }}
+                {% if qa.target %}
+                    - <strong>Cible : </strong>{{ qa.target }}
+                {% endif %}
+            </li>
+        {% else %}
+            Aucune question/réponse du pendule
+        {% endfor %}
+    {% else %}
+        <li class="{{ css_class|default('') }}">
+            <strong>
+                {{ type | historique_type_label }}
+                {% if  h[type] is defined and h[type].date | date('d/m/Y') != h.date | date('d/m/Y') %}
+                    <i class="icon-edit tooltip-top" data-rel="tooltip" title="modifié le {{ h[type].date | date('d/m/Y') }} par {{ h.consultant.username }}"></i>
+                {% endif %}
+                :
+            </strong>
+            {{ type | historique_value(h) | nl2br }}
+        </li>        
+    {% endif %}
+{% endmacro histo_value  %}
+
+<div class="historique-content">
+    {% for h in historique %}
+        <div class="row line {{ cycle(['even','odd'], loop.index) }}">
+            <div class="col-md-2 author">
+                <br />
+                <strong>Par</strong> {{ h.consultant.username }}<br />
+                <strong>le</strong> {{ h.date | date('d/m/Y') }}<br />
+                <strong>à</strong> {{ h.date | date('H:i') }}<br /><br />
+
+                {% if h.date | date('dmY') == "now"|date('dmY') %}
+                    <span class="label label-warning">
+                        Aujourd'hui
+                    </span>
+                {% endif %}
+                {% if h.date | date('dmY') == "yesterday"|date('dmY') %}
+                    <span class="label label-info">
+                        Hier
+                    </span>
+                {% endif %}
+            </div>
+            <div class="col-md-10">
+                {% set currentSection = constant('KGC\\ClientBundle\\Service\\HistoriqueManager::HISTORY_SECTION_NOTES') %}
+                {% if section == currentSection or section == '' %}
+                <div class="section-title">Prise de notes</div>
+                <ul>
+                    {% for f in fields_by_section(currentSection) %}
+                        {{ histo_macro.histo_value(h, f) }}
+                    {% endfor %}
+                </ul>
+                {% endif %}
+
+                {% set currentSection =  constant('KGC\\ClientBundle\\Service\\HistoriqueManager::HISTORY_SECTION_HISTORY') %}
+                {% if section == currentSection or section == '' %}
+                <div class="section-title">Historique de consultation</div>
+                <ul>
+                    {% for f in fields_by_section(currentSection) %}
+                        {{ histo_macro.histo_value(h, f, 'text') }}
+                    {% endfor %}
+                </ul>
+                {% endif %}
+
+                {% set currentSection =  constant('KGC\\ClientBundle\\Service\\HistoriqueManager::HISTORY_SECTION_PENDULUM') %}
+                {% if section == currentSection or section == '' %}
+                <div class="section-title">Questions du pendule</div>
+                <ul>
+                    {% for f in fields_by_section(currentSection) %}
+                        {{ histo_macro.histo_value(h, f) }}
+                    {% endfor %}
+                </ul>
+                {% endif %}
+
+                {% set currentSection =  constant('KGC\\ClientBundle\\Service\\HistoriqueManager::HISTORY_SECTION_DRAW') %}
+                {% if section == currentSection or section == '' %}
+                <div class="section-title">Tirages de cartes</div>
+                <ul>
+                    {% for f in fields_by_section(currentSection) %}
+                        {{ histo_macro.histo_value(h, f) }}
+                    {% endfor %}
+                </ul>
+                {% endif %}
+
+                {% set currentSection =  constant('KGC\\ClientBundle\\Service\\HistoriqueManager::HISTORY_SECTION_COM') %}
+                {% if section == currentSection or section == '' %}
+                <div class="section-title">Propositions commerciales</div>
+                <ul>
+                    {% for f in fields_by_section(currentSection) %}
+                        {{ histo_macro.histo_value(h, f) }}
+                    {% endfor %}
+                </ul>
+                {% endif %}
+
+                {% set currentSection =  constant('KGC\\ClientBundle\\Service\\HistoriqueManager::HISTORY_SECTION_ALERT') %}
+                {% if section == currentSection or section == '' %}
+                    <div class="section-title">Programmation alerte/rappel</div>
+                    <ul>
+                        {% for f in fields_by_section(currentSection) %}
+                            {{ histo_macro.histo_value(h, f) }}
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+            </div>
+        </div>
+        {% if loop.last %}
+            {% if paginator.hasMoreElements %}
+                <a href="{{ path('kgc_client_historique_content', {'id': client.id, 'page': paginator.currentPage + 1, 'section': section}) }}"
+                   class="view-more js-view-more ajax-load-history">
+                    Voir l'historique plus ancien...
+                </a>
+            {% else %}
+                <a href="javascript:void(0);" class="view-complete" disabled="disabled">
+                    L'historique est complet !
+                </a>
+            {% endif %}
+        {% endif %}
+
+    {% else %}
+        <div class="line empty">
+            Aucun historique disponible pour ce client
+            {% if section != '' %}
+                et pour cette section
+            {% endif %}
+        </div>
+    {% endfor %}
+
+</div>

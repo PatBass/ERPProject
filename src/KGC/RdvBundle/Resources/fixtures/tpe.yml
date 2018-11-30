@@ -1,0 +1,13 @@
+## src/KGC/RdvBundle/DataFixtures/ORM/tpe.yml
+
+KGC\RdvBundle\Entity\TPE:
+    tpe1:
+        libelle: KGCOM
+    tpe2:
+        libelle: BLUE PAID
+    tpe3:
+        libelle: KLIK AND PAYE
+    tpe4:
+        libelle: XSITE
+    tpe5:
+        libelle: SYSPAY

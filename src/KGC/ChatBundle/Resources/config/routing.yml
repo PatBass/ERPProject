@@ -1,0 +1,116 @@
+kgc_chat_api:
+    resource: "@KGCChatBundle/Resources/config/routing-api.yml"
+    prefix: /api
+
+kgc_chat_stats_users:
+    pattern: /widget-stats-users
+    defaults: { _controller: KGCChatBundle:Stat:statsDashboardUsers }
+
+kgc_chat_stats_chatter:
+    pattern: /widget-stats-chatter
+    defaults: { _controller: KGCChatBundle:Stat:statsDashboardChatter }
+
+kgc_chat_stats_general:
+    pattern: /widget-stats-general
+    defaults: { _controller: KGCChatBundle:Stat:statsDashboardGeneral }
+
+kgc_chat_stats_detail_turnover:
+    pattern:  /widget-stats-general/turnover-detail/{type}/{periode}
+    defaults: { _controller: KGCChatBundle:Stat:statsDetailTurnover }
+    requirements:
+        idconsultant: \d+
+        type: "turnover|turnover_formula_discover|turnover_formula_standard|turnover_formula_planned|turnover_recup|turnover_fna|turnover_oppo|turnover_refund|formula_standard|non_conversion"
+        periode: "month|day"
+
+kgc_chat_stats_detail_subscription:
+    pattern:  /widget-stats-general/subscription-detail/{type}/{periode}
+    defaults: { _controller: KGCChatBundle:Stat:statsDetailSubscription }
+    requirements:
+        idconsultant: \d+
+        type: "subscription|subscription_love|subscription_tchat|subscription_tarot|subscription_power|subscription_myastro|unsubscription"
+        periode: "month|day"
+
+kgc_chat_last_status:
+    pattern: /widget-status/{status}
+    defaults: { _controller: KGCChatBundle:Consultation:lastByStatus }
+
+kgc_chat_planning_widget:
+    pattern: /planning/widget
+    defaults: { _controller: KGCChatBundle:Consultation:planningWidget }
+
+kgc_clients_chat_show:
+    pattern: /show-client/{id}
+    defaults: { _controller: KGCChatBundle:Consultation:chatClientShow }
+
+kgc_clients_chat_show_website:
+    pattern: /show-client/{email}/website/{websiteId}
+    defaults: { _controller: KGCChatBundle:Consultation:chatClientWebsiteShow }
+
+kgc_clients_chat_show_messages:
+    pattern: /show-client-messages/{roomId}
+    defaults: { _controller: KGCChatBundle:Consultation:chatClientMessagesShow }
+
+kgc_clients_chat_show_single:
+    pattern: /show-client-single/{clientId}/{roomId}/{websiteId}
+    defaults: { _controller: KGCChatBundle:Consultation:chatClientSingleShow }
+
+kgc_clients_chat_payment_edit:
+    pattern: /payment/edit/{id}
+    defaults: { _controller: KGCChatBundle:Consultation:editChatPayment }
+    requirements: { method: POST}
+
+kgc_chat_prepare_mail:
+    pattern: /chat/prepare-mail/{id}
+    defaults: { _controller: KGCChatBundle:Consultation:PrepareMail }
+    requirements:
+        id: \d+
+
+kgc_chat_build_mail:
+    pattern: /chat/build-mail
+    defaults: { _controller: KGCChatBundle:Consultation:BuildMail }
+
+kgc_chat_build_sms:
+    pattern: /chat/build-sms
+    defaults: { _controller: KGCChatBundle:Consultation:BuildSms }
+
+kgc_chat_prepare_sms:
+    pattern: /chat/prepare-sms/{id}
+    defaults: { _controller: KGCChatBundle:Consultation:PrepareSms }
+    requirements:
+        id: \d+
+
+kgc_chat_formulas_list:
+    pattern: /chat-formules/list
+    defaults: { _controller: KGCChatBundle:Formula:list }
+
+kgc_chat_formulas_edit:
+    pattern: /chat-formules/edit/{id}
+    defaults: { _controller: KGCChatBundle:Formula:edit }
+    requirements:
+        id: \d+
+
+kgc_chat_formulas_offer:
+    pattern: /chat-formules/offer/{id}
+    defaults: { _controller: KGCChatBundle:Formula:offer }
+
+kgc_chat_formulas_manual_subscription:
+    pattern: /chat-formules/manual-subscription/{id}
+    defaults: { _controller: KGCChatBundle:Formula:manualSubscription }
+
+kgc_chat_formulas_promo_list:
+    pattern: /chat-formules/promos/list
+    defaults: { _controller: KGCChatBundle:Formula:listPromo }
+
+kgc_chat_formulas_promo_edit:
+    pattern: /chat-formules/promos/edit/{id}
+    defaults: { _controller: KGCChatBundle:Formula:editPromo }
+    requirements:
+        id: \d+
+
+kgc_chat_formulas_promo_new:
+    pattern: /chat-formules/promos/new
+    defaults: { _controller: KGCChatBundle:Formula:newPromo }
+
+kgc_abo_tchat_detail:
+    pattern: /abo-tchat/detail/{type}/{column}/{date}
+    defaults: { _controller: KGCDashboardBundle:Stat:aboTchatDetail }

@@ -1,0 +1,54 @@
+{# src/KGC/DashboardBundle/Resources/views/Config/etiquettes.list.html.twig #}
+
+{% extends not app.request.isXmlHttpRequest() ? '::layout.html.twig' : '::emptylayout.html.twig' %}
+
+{% block body %}
+      {% embed '::widgetlayout.html.twig' %}
+        {% set widget_options = {
+        'titre' : 'Étiquettes',
+        'refresh' : '#config_etiquettes',
+        'collapse' : true,
+        'no_padding' : true
+      } %}
+      {% block widget_main %}
+        <table class="table table-bordered table-striped table-hover valign-middle  " id="etiquettesTable">
+           <thead>
+               <tr>
+                   <th class="center">Nom</th>
+                   <th class="center">Description</th>
+                   <th class="center">Actions</th>
+               </tr>
+          </thead>
+           <tbody>
+             {% for etiquette in objects %}
+             <tr>
+               <td class="libelle">{{ etiquette.libelle }}</td>
+               <td class="desc">{{ etiquette.desc }}</td>
+               <td class="center">
+                 <a href="{{ path('kgc_config_etiquette_edit', {'id': etiquette.id}) }}" data-etiqutte="{{ etiquette.id }}" class="btn btn-xs btn-primary tooltip-primary modal-load"
+                         role="button" title="Éditer" data-rel="tooltip" data-placement="left">
+                     <i class="icon-pencil"></i>
+                 </a>
+                 {% if etiquette.active %}
+                   <a href="{{ path('kgc_config_etiquette_disable', {'id': etiquette.id}) }}" data-etiqutte="{{ etiquette.id }}" class="btn btn-xs btn-danger tooltip-danger" data-rel="tooltip" data-placement="right" title="Désactiver" role="button">
+                       <i class="icon-remove"></i>
+                   </a>
+                 {% else %}
+                    <a href="{{ path('kgc_config_etiquette_enable', {'id': etiquette.id}) }}" data-etiqutte="{{ etiquette.id }}" class="btn btn-xs btn-success tooltip-success" data-rel="tooltip" data-placement="right" title="Réactiver" role="button">
+                        <i class="icon-refresh"></i>
+                    </a>
+                 {% endif %}
+               </td>
+             </tr>
+             {% endfor %}
+
+           </tbody>
+        </table>
+      {% endblock widget_main %}
+        {% block widget_body_after %}
+          <a href="{{ path('kgc_config_etiquette_edit') }}" class="btn btn-block modal-load" role="button" title="Ajouter une étiquette">
+            <i class="icon-plus"></i> Ajouter une étiquette
+          </a>
+        {% endblock widget_body_after %}
+      {% endembed %}
+{% endblock body %}

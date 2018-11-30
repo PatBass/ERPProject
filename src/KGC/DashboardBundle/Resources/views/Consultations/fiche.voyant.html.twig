@@ -1,0 +1,22 @@
+{# src/KGC/DashboardBundle/Ressources/views/Consultations/fiche.voyant.html.twig #}
+
+{% extends "KGCDashboardBundle::layout.html.twig" %}
+
+{% block ariane %}
+    {% set fil = ['Consultations'] %}
+    {{ parent() }}
+{% endblock %}
+
+{% block page_header %}
+    {% set infos = { 'titre':'Consultations', 'desc':'Voir la fiche',} %}
+    {% set reload = { 'url':'#fiche_voyant' } %}
+    {{ parent()}}
+{% endblock %}
+
+{% block dashboard_body %}
+    <div class="row">
+        <div class="col-lg-12">
+            <form method="post" action="{{ path('kgc_rdv_fiche', {id:id}) }}" class="ajax_load form-horizontal" id="fiche_voyant"></form>
+        </div>
+    </div>
+{% endblock %}

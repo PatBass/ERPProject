@@ -1,0 +1,29 @@
+{
+    "id": "website.json",
+    "title": "Website schema",
+    "type": "object",
+    "properties": {
+        "id": {
+            "type": "integer"
+        },
+        "libelle": {
+            "type": "string"
+        },
+        "url": {
+            "type": "string"
+        },
+        "reference": {
+            "type": "string"
+        },
+        "slug": {
+            "type": "string"
+        },
+        "psychics": {
+            "type": "array",
+            "items": {
+                "$ref": "virtual_psychic.json"
+            }
+        }
+    },
+    "required": ["id", "slug", "psychics"]
+}

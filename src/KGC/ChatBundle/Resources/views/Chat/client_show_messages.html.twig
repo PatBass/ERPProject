@@ -1,0 +1,26 @@
+{% extends not app.request.isXmlHttpRequest() ? '::layout.html.twig' : '::emptylayout.html.twig' %}
+
+{% block body %}
+   {% embed '::widgetlayout.html.twig' %}
+
+      {% set widget_options = {
+      'titre' : 'Historique de la consultation par chat du '~ room.startDate | date('d/m/Y'),
+      'header_class' : 'widget-header-small header-color-blue',
+      'refresh' : null,
+      'collapse' : false,
+      'no_padding' : false,
+      } %}
+
+      {% block widget_main %}
+         {% for message in room.chatMessages %}
+            <div style="border:1px solid #ccc;padding:10px; margin-bottom:10px;">
+               <strong>{{ message.chatParticipant.participantName }}</strong><br />
+               <small>{{ message.dateCreated | date('d/m/Y H:i') }}</small>
+               <br />
+               {{ message.content }}
+            </div>
+         {% endfor %}
+
+      {% endblock %}
+   {% endembed %}
+{% endblock body %}

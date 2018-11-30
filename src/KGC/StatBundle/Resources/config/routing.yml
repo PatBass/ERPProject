@@ -1,0 +1,163 @@
+kgc_stat_phoniste_legend:
+    pattern:  /phoniste/legend
+    defaults: { _controller: KGCStatBundle:Stat:legendPhoniste }
+
+kgc_stat_phoniste_objective:
+    pattern:  /phoniste/objective
+    defaults: { _controller: KGCStatBundle:Stat:objectivePhoniste }
+
+kgc_stat_phoniste_circle_objectives:
+    pattern:  /phoniste/circle-objectives
+    defaults: { _controller: KGCStatBundle:Stat:circleObjectivesPhoniste }
+
+kgc_stat_phoniste_bonuses:
+    pattern:  /phoniste/bonuses
+    defaults: { _controller: KGCStatBundle:Stat:bonusesPhoniste }
+
+kgc_stat_phoniste_bonuses_recap:
+    pattern:  /phoniste/bonuses-recap
+    defaults: { _controller: KGCStatBundle:Stat:bonusesRecapPhoniste }
+
+kgc_stat_standard_users:
+    pattern:  /standard/users
+    defaults: { _controller: KGCStatBundle:Stat:usersStandard }
+
+kgc_stat_standard_stats:
+    pattern:  /standard/stats
+    defaults: { _controller: KGCStatBundle:Stat:statsStandard }
+
+kgc_stat_standard_stats_details:
+    pattern:  /standard/stats/details/{type}/{periode}
+    defaults: { _controller: KGCStatBundle:Stat:statsStandardTurnoverDetails }
+    requirements:
+        type: "turnover|turnover_recup|turnover_fna|oppo|refund|taken|taken_follow"
+        periode: "month|day"
+
+kgc_stat_standard_stats_details_rdv:
+    pattern:  /standard/stats/details/rdv/{type}/{periode}
+    defaults: { _controller: KGCStatBundle:Stat:statsStandardTurnoverDetailsRdv }
+    requirements:
+        type: "taken|taken_specific|taken_follow|taken_follow_specific|processing|processing_follow|pending|pending_follow|support_list|phoning_list"
+        periode: "month|day|today"
+
+kgc_stat_standard_support:
+    pattern:  /standard/support
+    defaults: { _controller: KGCStatBundle:Stat:supportStandard }
+
+kgc_stat_standard_phoning:
+    pattern:  /standard/phoning
+    defaults: { _controller: KGCStatBundle:Stat:phoningStandard }
+
+kgc_stat_admin_psychicAverages:
+    pattern:  /admin/psychic-averages/{idconsultant}
+    defaults: { _controller: KGCStatBundle:Stat:psychicAverages, idconsultant : 0 }
+    requirements:
+        idconsultant: \d+
+
+kgc_stat_admin_psychicProducts:
+    pattern:  /admin/psychic-products/{idconsultant}
+    defaults: { _controller: KGCStatBundle:Stat:psychicProducts, idconsultant : 0 }
+    requirements:
+        idconsultant: \d+
+
+kgc_stat_admin_psychicOppos:
+    pattern:  /admin/psychic-oppos/{idconsultant}
+    defaults: { _controller: KGCStatBundle:Stat:psychicOppositions, idconsultant : 0 }
+    requirements:
+        idconsultant: \d+
+
+kgc_stat_admin_psychicCA:
+    pattern:  /admin/psychic-ca/{idconsultant}
+    defaults: { _controller: KGCStatBundle:Stat:psychicCA, idconsultant : 0 }
+    requirements:
+        idconsultant: \d+
+
+kgc_stat_admin_psychicCATableDetails:
+    pattern:  /admin/psychic-ca-table-details/{idconsultant}
+    defaults: { _controller: KGCStatBundle:Stat:psychicCATableDetails, idconsultant : 0 }
+    requirements:
+        idconsultant: \d+
+
+kgc_stat_admin_psychicCounts:
+    pattern:  /admin/psychic-counts/{idconsultant}
+    defaults: { _controller: KGCStatBundle:Stat:psychicCounts, idconsultant : 0 }
+    requirements:
+        idconsultant: \d+
+
+kgc_stat_admin_psychicSalary:
+    pattern:  /admin/psychic-salary/{idconsultant}
+    defaults: { _controller: KGCStatBundle:Stat:psychicSalary, idconsultant : 0 }
+    requirements:
+        idconsultant: \d+
+
+kgc_stat_admin_psychicBonus:
+    pattern:  /admin/psychic-bonus/{idconsultant}
+    defaults: { _controller: KGCStatBundle:Stat:psychicBonus, idconsultant : 0 }
+    requirements:
+        idconsultant: \d+
+
+
+kgc_stat_admin_ca:
+    pattern:  /admin/stats/ca
+    defaults: { _controller: KGCStatBundle:Stat:pointageCAAdmin }
+
+kgc_stat_admin_ca_detail:
+    pattern:  /admin/stats/ca-details
+    defaults: { _controller: KGCStatBundle:Stat:pointageCADetailAdmin }
+
+
+kgc_stat_admin_unpaid:
+    pattern:  /admin/stats/unpaid
+    defaults: { _controller: KGCStatBundle:Stat:unpaidAdmin }
+
+kgc_stat_admin_phoning:
+    pattern:  /admin/stats/phoning
+    defaults: { _controller: KGCStatBundle:Stat:phoningAdmin }
+
+kgc_stat_admin_general_full:
+    pattern:  /admin/stats/general/full
+    defaults: { _controller: KGCStatBundle:Stat:generalFullAdmin }
+
+kgc_stat_admin_general_month:
+    pattern:  /admin/stats/general/month
+    defaults: { _controller: KGCStatBundle:Stat:generalMonthAdmin }
+
+kgc_stat_quality:
+    pattern:  /quality/stats/{idconsultant}
+    defaults: { _controller: KGCStatBundle:Stat:statsQualite, idconsultant : 0 }
+    requirements:
+        idconsultant: \d+
+
+kgc_stat_quality_details:
+    pattern:  /quality/details/{idconsultant}/{stat}/{periode}
+    defaults: { _controller: KGCStatBundle:Stat:statsQualiteDetails, idconsultant : 0 }
+    requirements:
+        idconsultant: \d+
+        stat: "detail_taken|detail_done"
+        periode: "month|day"
+
+
+kgc_stat_admin_general:
+    pattern:  /admin/stats/general/website-support
+    defaults: { _controller: KGCStatBundle:Stat:generalWebsiteSupportAdmin }
+
+kgc_stat_admin_specific:
+    pattern:  /admin/stats/specific
+    defaults: { _controller: KGCStatBundle:Stat:specificAdmin }
+
+kgc_stat_admin_specific_details:
+    pattern:  /admin/stats/specific-rdv-details
+    defaults: { _controller: KGCStatBundle:Stat:specificDetails }
+
+
+kgc_stat_admin_specific_sort_tab:
+    pattern:  /admin/stats/specific-sort
+    defaults: { _controller: KGCStatBundle:Stat:specificSortTabAdmin }
+
+kgc_stat_admin_specific_delete_tab:
+    pattern:  /admin/stats/specific-delete
+    defaults: { _controller: KGCStatBundle:Stat:specificDeleteTabAdmin }
+
+kgc_stat_admin_specific_form:
+    pattern:  /admin/stats/specificForm
+    defaults: { _controller: KGCStatBundle:Stat:specificFormAdmin }

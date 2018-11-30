@@ -1,0 +1,48 @@
+{# src/KGC/DashboardBundle/Resources/views/Config/sms.list.html.twig #}
+
+{% extends not app.request.isXmlHttpRequest() ? '::layout.html.twig' : '::emptylayout.html.twig' %}
+
+{% block body %}
+    {% embed '::widgetlayout.html.twig' %}
+        {% set widget_options = {
+            'titre' : 'Templates de sms',
+            'refresh' : '#config_sms',
+            'no_padding' : true
+        } %}
+
+        {% block widget_main %}
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Code</th>
+                        <th>Message</th>
+                        <th>Créé le</th>
+                        <th>Modifié le</th>
+                        <th>&nbsp;</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for m in sms %}
+                    <tr>
+                        <td>{{ m.code }}</td>
+                        <td>{{ m.text | truncate(500) | striptags }}</td>
+                        <td>{{ m.createdAt | date('d/m/Y H:i') }}</td>
+                        <td>{{ m.updatedAt | date('d/m/Y H:i') }}</td>
+                        <td class="line-actions">
+                            <a href="{{ path('kgc_config_sms_edit', {'id': m.id}) }}" class="btn btn-xs btn-primary tooltip-primary modal-load" role="button" title="" data-rel="tooltip" data-placement="left" data-original-title="Éditer le sms">
+                                <i class="icon-pencil"></i>
+                            </a>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        {% endblock widget_main %}
+
+        {% block widget_body_after %}
+        <a href="{{ path('kgc_config_sms_edit') }}" class="btn btn-block modal-load" role="button" title="Ajouter un template de sms">
+            <i class="icon-plus"></i> Ajouter un template de sms
+        </a>
+        {% endblock %}
+    {% endembed %}
+{% endblock body %}

@@ -1,0 +1,27 @@
+
+{% use 'KGCUserBundle::listefichesProspect.html.twig' %}
+
+{% if results %}
+    {% set fiches = results %}
+    {% set similarity = true %}
+    {% set actions = {
+        1 : {
+        'route_action' : 'kgc_landinguser_fiche',
+        'load' : 'modal-load',
+        'color' : 'grey',
+        'icon' : 'file',
+        'disabled' : false,
+        'title' : "Fiche prospect",
+        'placement': 'left'
+        },
+        2 : {
+        'route_action' : 'none',
+        'load' : 'js-similarity-use prospect-similary',
+        'title' : 'Réutiliser cette fiche',
+        'color' : 'pink',
+        'icon' : 'heart',
+        'placement': 'left'
+        }
+    } %}
+    {{ fiches|length > 0 ? block('tableau_fiches_similary') : '<table class="table center"><tr><td>Aucun résultat</td></tr><table>' }}
+{% endif %}

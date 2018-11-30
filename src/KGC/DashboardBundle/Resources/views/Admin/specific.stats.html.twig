@@ -1,0 +1,158 @@
+{# src/KGC/DashboardBundle/Ressources/views/Admin/general.stats.html.twig #}
+
+{% extends "KGCDashboardBundle::layout.html.twig" %}
+
+{% block ariane %}
+    {% set fil = ['Administration'] %}
+    {{ parent() }}
+{% endblock %}
+
+{% block page_header %}
+    <div class="page-header">
+        <div class="pull-right">
+            <a class="ajax_reload close" href="#admin_stats_general_full,#admin_stats_general_month,#admin_stats_general_website,#admin_stats_general_website2,#admin_stats_general_website3, #admin_stats_general_support, #admin_stats_general_support2, #admin_stats_general_support3" title="Recharger">
+                <i class="icon-refresh"></i>
+            </a>
+        </div>
+        <h1>
+            Statistiques spécifiques
+        </h1>
+    </div>
+{% endblock %}
+
+{% block dashboard_body %}
+
+    <div class="row">
+
+        {{ form_start(form, {'attr': {'id': 'table_generator_form', 'class' : 'col-md-12', 'method': 'POST'} } ) }}
+            {{ form_errors(form) }}
+            <div class="tabbable">
+                <ul class="nav nav-tabs padding-12">
+                    <li class="active"><a data-toggle="tab" href="#tab_general">1 - Général</a></li>
+                    <li><a data-toggle="tab" href="#tab_lignes">2 - Lignes</a></li>
+                    <li><a data-toggle="tab" href="#tab_colonnes">3 - Colonnes</a></li>
+                    <li>
+                        <button type="submit" class="btn btn-sm btn-success">
+                            <i class="icon-arrow-right"></i>Appliquer
+                        </button>
+                    </li>
+                    <li>
+                        <a href="{{ path('kgc_stat_admin_specific_delete_tab', {i : 'all'}) }}" class="btn btn-sm btn-danger"
+                           onclick="return confirm('Etes vous sûr de vouloir supprimer tout les tableaux précédemment générés ? Ceux-ci ne pourront être retrouvés.')">
+                            <i class="icon-remove"></i>Supprimer tout
+                        </a>
+                    </li>
+                </ul>
+
+                <div class="tab-content">
+                    <div id="tab_general" class="tab-pane in active">
+                        <div class="well">
+                            <p>Sélection de la période d'évaluation des données, filtres par support <strong>consultations/suivis</strong> et tri des données.</p>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-4 col-md-6">
+                                <label class="control-label width-100">Début de la période : </label>
+                                {{ form_widget(form.period_base.begin) }}
+                                <label class="control-label width-100">Fin de la période : </label>
+                                {{ form_widget(form.period_base.end) }}
+                            </div>
+                            <div class="col-lg-4 col-md-6">
+                                <label class="control-label width-100">Tri des données : </label>
+                                {{ form_widget(form.sorting_column.column.column) }}
+                                {{ form_widget(form.sorting_column.dir) }}
+                            </div>
+                            <div class="col-md-3 col-lg-3">
+                                <label class="control-label width-100">Consultations / Suivis : </label>
+                                {{ form_widget(form.statScope.statScope, {'attr' : {'id' : 'specific_statistics_scope' }}) }}
+                                <label class="control-label width-100">Date de la consultation : </label>
+                                {{ form_widget(form.dateType.dateType, {'attr' : {'id' : 'specific_statistics_scope' }}) }}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="tab_lignes" class="tab-pane">
+                        <div class="well">
+                            <p>Choix du filtre à appliquer. Si aucune valeur n'est sélectionnée pour un champ, aucun filtre ne sera appliqué. Le choix de la valeur <strong>tous</strong> engendrera une décomposition par valeur.</p>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-4 col-md-6">
+                                <label class="control-label width-100">Phonistes : </label>
+                                {{ form_widget(form.phonists) }}
+                            </div>
+                            <div class="col-lg-4 col-md-6">
+                                <label class="control-label width-100">Consultants : </label>
+                                {{ form_widget(form.consultants) }}
+                            </div>
+                            <div class="col-lg-4 col-md-6">
+                                <label class="control-label width-100">Sites web : </label>
+                                {{ form_widget(form.websites.websites) }}
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-4 col-md-6">
+                                <label class="control-label width-100">Sources : </label>
+                                {{ form_widget(form.sources.sources) }}
+                            </div>
+                            <div class="col-lg-4 col-md-6">
+                                <label class="control-label width-100">Urls : </label>
+                                {{ form_widget(form.urls.urls) }}
+                            </div>
+                            <div class="col-lg-4 col-md-6">
+                                <label class="control-label width-100">Codes promo : </label>
+                                {{ form_widget(form.codesPromo.codespromo) }}
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-4 col-md-6">
+                                <label class="control-label width-100">Supports : </label>
+                                {{ form_widget(form.supports.supports) }}
+                            </div>
+                            <div class="col-lg-4 col-md-6">
+                                <label class="control-label width-100">Propriétaires : </label>
+                                {{ form_widget(form.proprios) }}
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-4 col-md-6">
+                                <label class="control-label width-100">Affiliate (Reflex) : </label>
+                                {{ form_widget(form.reflex_affiliates) }}
+                            </div>
+                            <div class="col-lg-4 col-md-6">
+                                <label class="control-label width-100">Source (Reflex) : </label>
+                                {{ form_widget(form.reflex_sources) }}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="tab_colonnes" class="tab-pane">
+                        <div class="well">
+                            <p>Choix des statistiques à afficher. Les colonnes qui ne contiennent aucun résultat seront <strong>cachées</strong>.</p>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-4 col-sm-6 col-lg-offset-2">
+                                <label class="control-label width-100">Nombre de consultations : </label>
+                                {{ form_widget(form.columns.rdv) }}
+                            </div>
+                            <div class="col-lg-4 col-sm-6 ">
+                                <label class="control-label width-100">Chiffre d'affaire : </label>
+                                {{ form_widget(form.columns.ca) }}
+                            </div>
+                            {{ form_widget(form._token) }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {{ form_end(form) }}
+
+
+        {% if app.session.get('admin_specific_tabs') %}
+            {% for table_key, table in app.session.get('admin_specific_tabs') %}
+                <div class="col-md-12">
+                    <form method="post" action="{{ path('kgc_stat_admin_specific', { 'i' : table_key }) }}"
+                      class="ajax_load" id="admin_stats_specific_{{ table_key }}"></form>
+                </div>
+            {% endfor %}
+        {% endif %}
+    </div>
+
+{% endblock %}

@@ -1,0 +1,55 @@
+{# src/KGC/UserBundle/Resources/views/Utilisateurs/liste.html.twig #}
+
+{% extends not app.request.isXmlHttpRequest() ? '::layout.html.twig' : '::emptylayout.html.twig' %}
+
+{% block body %}
+    <div class="table-responsive">
+        <table class="dataTable table table-striped table-bordered table-hover valign-middle">
+            <thead>
+                <tr>
+                    <th><span>Identifiant en base</span></th>
+                    <th><span>Identifiant de connexion</span></th>
+                    <th><span>Profil du tableau de bord</span></th>
+                    <th><span>Tout les Profils</span></th>
+                    <th><span>Statut</span></th>
+                    <th><span>Actif</span></th>
+                    <th><span>Date désactivation</span></th>
+                    <th data-orderable="false"></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for utilisateur in listeUtils %}
+                    {% set state = utilisateur.actif %}
+                <tr>
+                    <td>{{ utilisateur.id }}</td>
+                    <td>{{ utilisateur.username }}</td>
+                    <td>{{ utilisateur.mainprofil.name }}</td>
+                    <td>
+                        {% for profil in utilisateur.profils %}
+                            {{ profil.name ~ (not loop.last ? ', ') }}
+                        {% endfor %}
+                    </td>
+                    <td>{{ utilisateur.statut }}</td>
+                    <td>
+                        <span class="label label-{{ state ? 'success' : 'danger' }}">{{ state ? 'OUI' : 'NON' }}</span>
+                    </td>
+                    <td>
+                        {{ utilisateur.disabledDate ? utilisateur.disabledDate|date('d/m/Y') }}
+                    </td>
+                    <td class="">
+                        <a href="{{ path('kgc_user_modal_add',{'id':utilisateur.id}) }}" role="button" class="btn btn-xs btn-primary modal-load tooltip-primary" title="Modifier" data-rel="tooltip" data-placement="left">
+                            <i class="icon-pencil bigger-120"></i> Modifier
+                        </a>
+                        <a href="{{ path('kgc_user_switch_state', {'id': utilisateur.id}) }}" class="btn btn-xs {{ state ? 'btn-default tooltip-default' : 'btn-info tooltip-info' }} gritter-load" role="button" title="{{ state ? 'Désactiver' : 'Activer' }}" data-rel="tooltip" data-placement="left" data-refresh="#users_list">
+                            <i class="icon-{{ state ? 'ban-circle' : 'circle-blank' }}"></i>
+                        </a>
+                        <a href="{{ path('kgc_user_modal_journal', {'id': utilisateur.id}) }}" role="button" class="btn btn-xs btn-warning modal-load tooltip-warning" title="Journal" data-rel="tooltip" data-placement="left" >
+                            <i class="icon-book bigger-120"></i> Journal
+                        </a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock body %}

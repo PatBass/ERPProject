@@ -1,0 +1,52 @@
+{# src/KGC/RdvBundle/Resources/views/Elastic/standard.html.twig #}
+
+{% extends 'KGCClientBundle:elastic:list.html.twig' %}
+
+{% set show_quality_info = 0 %}
+{% set compact = false %}
+{% set header_color ='header-color-blue2' %}
+{% set button_color ='btn-success' %}
+{% set title = 'Recherche par client' %}
+{% set export = true %}
+
+{% block search_form %}
+    <div class="row">
+        <div class="col-lg-3 col-md-3">
+            {{ form_widget(form.name, {'attr': {'placeholder':form.name.vars.label} }) }}
+        </div>
+        <div class="col-lg-3 col-md-3">
+            {{ form_widget(form.card, {'attr': {'placeholder':form.card.vars.label} }) }}
+        </div>
+        <div class="col-lg-2 col-md-2">
+            {{ form_widget(form.mail, {'attr': {'placeholder':form.mail.vars.label} }) }}
+        </div>
+        <div class="col-lg-2 col-md-2">
+            {{ form_widget(form.birthdate, {'attr': {'placeholder':form.birthdate.vars.label} }) }}
+        </div>
+        <div class="col-lg-2 col-md-2">
+            {{ form_widget(form.phones, {'attr': {'placeholder':form.phones.vars.label} }) }}
+        </div>
+    </div>
+    <div class="space-6"></div>
+    <div class="row form-horizontal">
+        <div class="col-lg-1 col-md-1 control-label">
+            <label>Tri :</label>
+        </div>
+        <div class="col-lg-3 col-md-3">
+            {{ form_widget(form.orderBy) }}
+        </div>
+        <div class="col-lg-2 col-md-2 control-label">
+            <label>Ordre :</label>
+        </div>
+        <div class="col-lg-2 col-md-2">
+            {{ form_widget(form.sortDirection) }}
+        </div>
+        <div class="col-lg-3 col-md-3 control-label">
+            <label>Résultats par page :</label>
+        </div>
+        <div class="col-lg-1 col-md-1">
+            {{ form_widget(form.pageRange) }}
+        </div>
+    </div>
+    <div class="space-6"></div>
+{% endblock search_form %}

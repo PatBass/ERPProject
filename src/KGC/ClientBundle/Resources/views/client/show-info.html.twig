@@ -1,0 +1,7 @@
+{% extends not app.request.isXmlHttpRequest() ? '::layout.html.twig' : '::emptylayout.html.twig' %}
+
+{% block body %}
+   Information client
+{% endblock body %}
+
+

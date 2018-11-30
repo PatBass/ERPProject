@@ -1,0 +1,59 @@
+
+{% extends not app.request.isXmlHttpRequest() ? '::layout.html.twig' : '::emptylayout.html.twig' %}
+
+{% block body %}
+
+  <div class="widget-box">
+    <div class="widget-header">
+      <h5>
+        <a href="#" data-action="collapse">
+          <i class="icon-chevron-up"></i>
+          Récapitulatif RDV pris et validés, Bonus, Prime<b></b>
+        </a>
+      </h5>
+      <div class="widget-toolbar">
+        <a class="ajax_reload" href="#phoniste_bonuses" title="Recharger">
+          <i class="icon-refresh"></i>
+        </a>
+      </div>
+    </div>
+    <div class="widget-body stat-phoniste-bonuses">
+      <div class="widget-main">
+          <table>
+              <thead>
+                <tr>
+                    <th>&nbsp;</th>
+                    <th>Jour</th>
+                    <th>Mois</th>
+                </tr>
+              </thead>
+              <tbody>
+              <tr>
+                  <td>Pris</td>
+                  <td>{{ done }}</td>
+                  <td>{{ done_month }}</td>
+              </tr>
+              <tr>
+                  <td>Validés</td>
+                  <td>{{ validated }}</td>
+                  <td>{{ validated_month }}</td>
+              </tr>
+              <tr>
+                  <td>Bonus</td>
+                  <td>
+                      {{ phoniste_current_bonus(params, done) }} &euro;
+                  </td>
+                  <td>{{ bonus_month }} &euro;</td>
+              </tr>
+              <tr>
+                  <td>Prime</td>
+                  <td>{{ validated * params.bonusSimple }} &euro;</td>
+                  <td>{{ validated_month * params.bonusSimple }} &euro;</td>
+              </tr>
+              </tbody>
+
+          </table>
+
+      </div>
+    </div>
+{% endblock body %}

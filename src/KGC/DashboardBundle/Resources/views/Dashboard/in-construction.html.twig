@@ -1,0 +1,23 @@
+{% extends "KGCDashboardBundle::layout.html.twig" %}
+
+{% block ariane %}
+    {% set fil = ['Administration'] %}
+    {{ parent() }}
+{% endblock %}
+
+
+{% block page_header %}
+    <div class="page-header">
+        <div class="pull-right">
+            <a class="ajax_reload close" href="" title="Recharger">
+                <i class="icon-refresh"></i>
+            </a>
+        </div>
+    </div>
+{% endblock %}
+
+{% block dashboard_body %}
+    <div class="well center text-muted">
+        <h1><i class="icon-wrench"></i> En construction</h1>
+    </div>
+{% endblock %}

@@ -1,0 +1,22 @@
+{# src/KGC/RdvBundle/Resources/views/Consultation/annuler.html.twig #}
+
+{% extends not app.request.isXmlHttpRequest() ? '::layout.html.twig' : '::emptylayout.html.twig' %}
+
+{% block body %}
+    {% embed '::modallayout.html.twig' %}
+
+        {% block modal_header %}
+            {% set link = {
+                'txt' : 'Historique de ' ~ client.fullName,
+                'url' : path('kgc_client_historique',{'id': client.id, 'section': section}),
+                'icon' : 'list'
+            } %}
+            {{ parent() }}
+        {% endblock %}
+        
+        {% block modal_body %}
+            {{ render(controller('KGCClientBundle:Client:historiqueContent', { 'id': client.id, 'page': 1, 'section': section })) }}
+        {% endblock modal_body %}
+
+    {% endembed %}
+{% endblock body %}

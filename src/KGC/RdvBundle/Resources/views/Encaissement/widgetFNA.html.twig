@@ -1,0 +1,28 @@
+{# src/KGC/RdvBundle/Resources/views/Encaissement/widgetFNA.html.twig #}
+
+{% extends not app.request.isXmlHttpRequest() ? '::layout.html.twig' : '::emptylayout.html.twig' %}
+
+{% block body %}
+    <div class="tabbable fna-widget">
+        <ul class="nav nav-tabs nav-tabs-large tab-color-blue background-blue">
+            {% for classement in list %}
+            <li {{ loop.first ? 'class="active"'}}>
+                <a href="#tab-classement-{{ classement.id }}" data-toggle="tab" class="ajax_reload">
+                    <i class="icon-{{ classement.icon }}"></i>
+                    {{ classement.libelle }}
+                </a>
+            </li>
+            {% endfor %}
+            <li class="pull-right"><a class="ajax_reload" href="#fna_list" title="Recharger">
+                <i class="icon-refresh"></i>
+            </a></li>
+        </ul>
+        <div class="tab-content">
+            {% for classement in list %}
+            <form method="post" class="tab-pane {{ loop.first ? 'active'}} ajax_load" id="tab-classement-{{ classement.id }}" action="{{ path('kgc_fna_tab_list',{'idclassement':classement.id}) }}">
+                <p>default tab{{ classement.libelle }}</p>
+            </form>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock body %}

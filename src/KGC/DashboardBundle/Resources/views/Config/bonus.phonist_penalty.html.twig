@@ -1,0 +1,65 @@
+{# src/KGC/DashboardBundle/Ressources/views/Config/bonus.phonist_penalty.html.twig #}
+
+{% extends not app.request.isXmlHttpRequest() ? '::layout.html.twig' : '::emptylayout.html.twig' %}
+
+{% block body %}
+    {% embed '::widgetlayout.html.twig' %}
+        {% set widget_options = {
+            'titre' : 'Pénalités phonistes',
+            'header_class' : 'header-color-blue2',
+            'collapse' : true,
+            'refresh' : '#config_phoniste_penalty',
+            'no_padding' : true,
+        } %}
+
+        {% block widget_body %}
+            <div class="widget-toolbox">
+                <div class="toolbar form-inline">
+                    <h5>Mois de :</h5>
+                    {{ form_widget(form.date) }}
+                    {{ form_widget(form._token) }}
+                    <button type="submit" class="btn btn-success btn-xs">
+                        <i class="icon-arrow-right"></i> Appliquer
+                    </button>
+                </div>
+            </div>                
+            {{ parent() }}
+        {% endblock %}
+        
+        {% block widget_main %}
+            <table class="table table-striped text-center valign-middle">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Phoniste</th>
+                        <th>Montant</th>
+                        <th>&nbsp;</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for item in list %}
+                    <tr>
+                        <td>{{ item.date | date('d/m/Y') }}</td>
+                        <td>{{ item.user.username }}</td>
+                        <td>{{ item.amount | number_format() }} MAD</td>
+                        <td>
+                            <span class="pull-right">
+                                <a href="{{ path('kgc_config_phoniste_penalty_edit', { 'id' : item.id }) }}" class="btn btn-xs btn-primary tooltip-primary modal-load" role="button" title="" data-rel="tooltip" data-placement="left" data-original-title="Éditer">
+                                    <i class="icon-pencil"></i>
+                                </a>
+                            </span>
+                        </td>
+                    </tr>
+                {% else %}
+                    <tr><td colspan="3">Aucun résultat</td></tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        {% endblock %}
+        {% block widget_body_after %}
+            <a href="{{ path('kgc_config_phoniste_penalty_edit') }}" class="btn btn-block modal-load" role="button" title="Ajouter un paramètre">
+                <i class="icon-plus"></i> Ajouter un paramètre
+            </a>
+        {% endblock %}
+    {% endembed %}
+{% endblock body %}

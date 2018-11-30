@@ -1,0 +1,27 @@
+{# src/KGC/DashboardBundle/Resources/views/Qualite/index.html.twig #}
+
+{% extends "KGCDashboardBundle::layout.html.twig" %}
+
+{% block ariane %}
+    {% set fil = ['Recherche par consultation'] %}
+    {{ parent() }}
+{% endblock %}
+
+{% block page_header %}
+    <div class="page-header">
+        <div class="pull-right">
+            <a class="ajax_reload close" href="#elastic_search" title="Recharger">
+                <i class="icon-refresh"></i>
+            </a>
+        </div>
+        <h1>Recherche avancée par consultation</h1>
+    </div>
+{% endblock %}
+
+{% block dashboard_body %}
+    <div class="row">
+        <div class="col-lg-12">
+            <form method="post" action="{{ path('kgc_elastic_search_rdv',{'request_view':'rdv.search'}) }}" class="form-search form-search-ajax ajax_load" id="elastic_search"></form>
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,110 @@
+# src/KGC/ClientBundle/Resources/config/routing.yml
+kgc_client_historique:
+    pattern:  /historique/{id}/section/{section}
+    defaults: { _controller: KGCClientBundle:Client:historique, section: '' }
+    requirements:
+        id: \d+
+
+kgc_client_historique_content:
+    pattern:  /historique-content/{id}/page/{page}/section/{section}
+    defaults: { _controller: KGCClientBundle:Client:historiqueContent, page: 1, section: '' }
+    requirements:
+        id: \d+
+
+kgc_client_historique_ajax_autofill_interpretation:
+    pattern:  /historique/ajax-autofill-interpretation
+    defaults: { _controller: KGCClientBundle:Client:ajaxAutoFillDrawInterpretation }
+
+kgc_client_fiche:
+    pattern:  /fiche/{id}
+    defaults: { _controller: KGCClientBundle:Client:fiche }
+    requirements:
+        id: \d+
+
+kgc_client_widget_fiche:
+    pattern:  /fiche/widget/{id}
+    defaults: { _controller: KGCClientBundle:Client:Voirfiche }
+    requirements:
+        id: \d+
+
+kgc_elastic_search_client:
+    pattern:  /search
+    defaults: { _controller: KGCClientBundle:Elastic:searchClient}
+
+kgc_elastic_search_client_widget:
+    pattern:  /search/widget
+    defaults: { _controller: KGCClientBundle:Elastic:searchClientWidget}
+
+kgc_elastic_export_client:
+    pattern:  /elastic/client/export/{format}
+    defaults: { _controller: KGCClientBundle:Elastic:exportClient}
+
+kgc_client_ajax_update_chat_info:
+    pattern: /update-chat-infos
+    defaults: {_controller: KGCClientBundle:Client:ajaxUpdateChatInfo }
+
+kgc_client_ajax_cancel_subscription:
+    pattern: /{idClient}/website/{referenceWebsite}/subscriptions/{idSubscription}/cancel
+    defaults: {_controller: KGCClientBundle:Client:ajaxCancelSubscription }
+    methods:  [POST]
+
+kgc_client_ajax_unsubscribe:
+    pattern: /{idClient}/website/{referenceWebsite}/subscriptions/{idSubscription}/unsubscribe
+    defaults: {_controller: KGCClientBundle:Client:ajaxUnsubscribe }
+    methods:  [POST]
+
+kgc_clients_show_consultations:
+    pattern: /clients-consultations/{id}
+    defaults: {_controller: KGCClientBundle:Client:showConsultations }
+    requirements:
+        id: \d+
+
+kgc_api_client_create:
+    pattern: /api/client
+    defaults: {_controller: KGCClientBundle:Api:create }
+    methods:  [POST]
+
+kgc_api_client_clicktocall:
+    pattern: /api/clicktocall
+    defaults: {_controller: KGCClientBundle:Api:clicktocall }
+
+kgc_api_client_changestate:
+    pattern: /api/changestate/{id}
+    defaults: {_controller: KGCClientBundle:Api:changeState }
+    methods:  [POST]
+
+kgc_api_client_update:
+    pattern: /api/client/{id}
+    defaults: {_controller: KGCClientBundle:Api:update }
+    methods:  [PATCH]
+
+kgc_api_client_dri_create:
+    pattern: /api/client/dri
+    defaults: {_controller: KGCClientBundle:Api:createDRI }
+    methods:  [POST]
+
+kgc_api_client_dri_update:
+    pattern: /api/client/dri/{id}
+    defaults: {_controller: KGCClientBundle:Api:updateDRI }
+    methods:  [PATCH]
+
+kgc_api_client_card_validateHash:
+    pattern: /api/card/validateHash/{hash}
+    defaults: {_controller: KGCClientBundle:Api:validateCardHash }
+    methods:  [GET]
+
+kgc_api_client_card_create:
+    pattern: /api/card/create/{hash}
+    defaults: {_controller: KGCClientBundle:Api:createCard }
+    methods:  [POST]
+    
+kgc_api_client_tracking:
+    pattern: /api/client/tracking/{id_user}
+    defaults: {_controller: KGCClientBundle:Api:getTracking }
+    methods:  [GET]
+
+kgc_client_makecall:
+    pattern: /makecall/{id}/{type}/{phone}
+    defaults: {_controller: KGCClientBundle:Client:makeCall }
+    requirements:
+        id: \d+

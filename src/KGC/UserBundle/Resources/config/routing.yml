@@ -1,0 +1,124 @@
+# src/KGC/UserBundle/Resources/config/routing.yml
+
+kgc_user_poste:
+    pattern: /poste
+    defaults: {_controller: KGCUserBundle:Utilisateur:poste}
+
+kgc_user_poste_widget:
+    pattern: /poste/widget
+    defaults: {_controller: KGCUserBundle:Utilisateur:posteWidget}
+
+kgc_user_alive:
+    pattern: /alive
+    defaults: {_controller: KGCUserBundle:Utilisateur:alive}
+
+kgc_user_widget_list:
+    pattern: /list
+    defaults: {_controller: KGCUserBundle:Utilisateur:widgetListe}
+
+kgc_user_modal_add:
+    pattern: /add/{id}
+    defaults: {_controller: KGCUserBundle:Utilisateur:modalAjouter, id: 0}
+    requirements:
+        id: \d+
+
+kgc_user_modal_delete:
+    pattern: /del/{id}
+    defaults: {_controller: KGCUserBundle:Utilisateur:modalSupprimer}
+
+kgc_user_modal_journal:
+    pattern: /log/{id}
+    defaults: {_controller: KGCUserBundle:Utilisateur:modalJournal}
+    requirements:
+        id: \d+
+
+kgc_user_switch_state:
+    pattern: /switch-enable/{id}
+    defaults:
+        _controller: KGCUserBundle:Utilisateur:switchEnable
+        id: null
+    requirements:
+        id: \d+
+
+kgc_landinguser_leads_modal_website_details:
+    pattern: /landing/leads/modal/website/details/{date}/{type}/{id}
+    defaults: {_controller: KGCUserBundle:LandingUser:leadsModalWebsiteDetails}
+
+kgc_landinguser_leads_modal_source_details:
+    pattern: /landing/leads/modal/source/details/{date}/{type}/{id}/{id2}
+    defaults: {_controller: KGCUserBundle:LandingUser:leadsModalSourceDetails}
+
+kgc_landinguser_leads_modal_global_details:
+    pattern: /landing/leads/modal/global/details/{date}/{type}
+    defaults: {_controller: KGCUserBundle:LandingUser:leadsModalGlobalDetails}
+
+kgc_landinguser_fiche:
+    pattern: /prospect/fiche/{id}
+    defaults: {_controller: KGCUserBundle:LandingUser:voirFiche}
+    requirements:
+        id: \d+
+
+kgc_landinguser_consultation_fiche:
+    pattern: /prospect/consultation/fiche/{id}
+    defaults: {_controller: KGCUserBundle:LandingUser:newConsultationProspectFiche}
+    requirements:
+        id: \d+
+
+kgc_elastic_search_prospect:
+    pattern:  /search/prospect/{vue}
+    defaults: { _controller: KGCUserBundle:Elastic:searchProspect, vue: standard}
+
+kgc_prospect_dri_form:
+    pattern:  /dri/form
+    defaults: { _controller: KGCUserBundle:LandingUser:driForm}
+
+kgc_elastic_export_prospect:
+    pattern:  /elastic/prospect/export/{format}
+    defaults: { _controller: KGCUserBundle:Elastic:exportProspect}
+
+kgc_search_prospect:
+    pattern: /search
+    defaults:
+        _controller: FrameworkBundle:Template:template
+        template: 'KGCUserBundle:Elastic:index.html.twig'
+
+kgc_prospect_dri_widget:
+    pattern: /prospect/dri/widget
+    defaults: { _controller: KGCUserBundle:LandingUser:driWidget }
+
+kgc_prospect_recall_widget:
+    pattern: /prospect/recall/widget
+    defaults: { _controller: KGCUserBundle:LandingUser:recallWidget }
+
+kgc_prospect_nrp_widget:
+    pattern: /prospect/nrp/widget
+    defaults: { _controller: KGCUserBundle:LandingUser:nrpWidget }
+
+kgc_prospect_nvp_widget:
+    pattern: /prospect/nvp/widget
+    defaults: { _controller: KGCUserBundle:LandingUser:nvpWidget }
+
+kgc_prospect_fn_widget:
+    pattern: /prospect/fn/widget
+    defaults: { _controller: KGCUserBundle:LandingUser:fnWidget }
+
+kgc_prospect_fna_widget:
+    pattern: /prospect/fna/widget
+    defaults: { _controller: KGCUserBundle:LandingUser:fnaWidget }
+
+kgc_prospect_hesitant_widget:
+    pattern: /prospect/hesitant/widget
+    defaults: { _controller: KGCUserBundle:LandingUser:hesitantWidget }
+
+kgc_prospect_sscb_widget:
+    pattern: /prospect/sscb/widget
+    defaults: { _controller: KGCUserBundle:LandingUser:ssCbWidget }
+
+kgc_prospect_mineur_widget:
+    pattern: /prospect/mineur/widget
+    defaults: { _controller: KGCUserBundle:LandingUser:mineurWidget }
+
+kgc_elastic_similarity_prospect:
+    pattern:  /elastic/similarity
+    defaults: { _controller: KGCUserBundle:Elastic:searchSimilarity}
+

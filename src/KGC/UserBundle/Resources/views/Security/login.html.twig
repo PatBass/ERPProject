@@ -1,0 +1,70 @@
+{# src/KGC/UserBundle/Resources/views/Security/login.html.twig #}
+
+{% extends "::htmllayout.html.twig" %}
+
+{# --- Changer les class css de la balise body ---
+{% block body_tag %}
+    {% set body_class='navbar-fixed' %}
+    {{ parent()}}
+{% endblock %}
+#}
+
+{% block body %}
+        <div class="row">
+            <div class="col-sm-10 col-sm-offset-1">
+                <div class="login-container widget-box">
+                    <div class="space-6"></div>
+
+                    <div class="position-relative">
+                        <div id="login-box" class="login-box visible widget-box no-border">
+                            <div class="widget-body">
+                                <div class="widget-main">
+                                    <h4 class="header blue lighter bigger">
+                                        <i class="icon-unlock-alt green"></i>
+                                        Identifiez-vous
+                                    </h4>
+
+                                    <div class="space-6"></div>
+
+                                    <form action="{{ path('login_check') }}" method="post">
+                                        <fieldset>
+                                            {# Affichage d'erreur #}
+                                            {% if error %}
+                                                <div class="alert alert-danger">
+                                                    {{ error.message|trans }}
+                                                </div>
+                                            {% endif %}
+
+                                            <label class="block clearfix">
+                                                <span class="block input-icon input-icon-right">
+                                                    <input type="text" id="username" name="_username" value="{{ last_username }}" class="form-control" placeholder="Identifiant" required />
+                                                    <i class="icon-user"></i>
+                                                </span>
+                                            </label>
+                                            <label class="block clearfix">
+                                                <span class="block input-icon input-icon-right">
+                                                    <input type="password" id="password" name="_password" class="form-control" placeholder="Mot de passe" required />
+                                                    <i class="icon-lock"></i>
+                                                </span>
+                                            </label>
+
+                                            <div class="space"></div>
+
+                                            <div class="clearfix">
+                                                <button type="submit" class="width-35 pull-right btn btn-sm btn-primary">
+                                                    <i class="icon-key"></i>
+                                                    Connexion
+                                                </button>
+                                            </div>
+
+                                            <div class="space-4"></div>
+                                        </fieldset>
+                                    </form>
+                                </div><!-- /widget-main -->
+                            </div><!-- /widget-body -->
+                        </div><!-- /login-box -->
+                    </div><!-- /position-relative -->
+                </div>
+            </div><!-- /.col -->
+        </div><!-- /.row -->
+{% endblock %}

@@ -1,0 +1,8 @@
+{
+    "id": "websites.json",
+    "title": "Websites schema",
+    "type": "array",
+    "items": {
+        "$ref": "website.json"
+    }
+}

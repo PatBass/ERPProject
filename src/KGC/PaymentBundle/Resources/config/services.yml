@@ -1,0 +1,111 @@
+services:
+    kgc.payment.gateway.klikandpay:
+        class: KGC\PaymentBundle\Service\Payment\Gateway\KlikAndPay
+        arguments:
+            - @doctrine.orm.entity_manager
+            - @payum
+            - @payum.security.token_factory
+            - @request_stack
+        tags:
+            - { name: kgc.payment.gateway }
+
+    kgc.payment.gateway.be2bill:
+        class: KGC\PaymentBundle\Service\Payment\Gateway\Be2Bill
+        arguments:
+            - @doctrine.orm.entity_manager
+            - @payum
+            - @payum.security.token_factory
+            - @request_stack
+        tags:
+            - { name: kgc.payment.gateway }
+
+    kgc.payment.gateway.hipay:
+        class: KGC\PaymentBundle\Service\Payment\Gateway\Hipay
+        arguments:
+            - "hipay"
+            - @doctrine.orm.entity_manager
+            - @kgc.payment.hipay.configuration
+            - @request_stack
+            - %hipay.account%
+            - %hipay.passphrase%
+            - true
+        tags:
+            - { name: kgc.payment.gateway }
+
+    kgc.payment.gateway.hipay_tchat:
+        class: KGC\PaymentBundle\Service\Payment\Gateway\Hipay
+        arguments:
+            - "hipay_tchat"
+            - @doctrine.orm.entity_manager
+            - @kgc.payment.hipay_tchat.configuration
+            - @request_stack
+            - %hipay_tchat.account%
+            - %hipay_tchat.passphrase%
+            - false
+        tags:
+            - { name: kgc.payment.gateway }
+
+    kgc.payment.gateway.hipay_moto2:
+        class: KGC\PaymentBundle\Service\Payment\Gateway\Hipay
+        arguments:
+            - "hipay_moto2"
+            - @doctrine.orm.entity_manager
+            - @kgc.payment.hipay_moto2.configuration
+            - @request_stack
+            - %hipay_moto2.account%
+            - %hipay_moto2.passphrase%
+            - false
+        tags:
+            - { name: kgc.payment.gateway }
+
+    kgc.payment.gateway.hipay_moto3:
+        class: KGC\PaymentBundle\Service\Payment\Gateway\Hipay
+        arguments:
+            - "hipay_moto3"
+            - @doctrine.orm.entity_manager
+            - @kgc.payment.hipay_moto3.configuration
+            - @request_stack
+            - %hipay_moto3.account%
+            - %hipay_moto3.passphrase%
+            - false
+        tags:
+            - { name: kgc.payment.gateway }
+
+    kgc.payment.hipay.configuration:
+        class: HiPay\Fullservice\HTTP\Configuration\Configuration
+        arguments:
+            - %hipay.username%
+            - %hipay.password%
+            - %hipay.env%
+
+    kgc.payment.hipay_tchat.configuration:
+        class: HiPay\Fullservice\HTTP\Configuration\Configuration
+        arguments:
+            - %hipay_tchat.username%
+            - %hipay_tchat.password%
+            - %hipay_tchat.env%
+
+    kgc.payment.hipay_moto2.configuration:
+        class: HiPay\Fullservice\HTTP\Configuration\Configuration
+        arguments:
+            - %hipay_moto2.username%
+            - %hipay_moto2.password%
+            - %hipay_moto2.env%
+
+    kgc.payment.hipay_moto3.configuration:
+        class: HiPay\Fullservice\HTTP\Configuration\Configuration
+        arguments:
+            - %hipay_moto3.username%
+            - %hipay_moto3.password%
+            - %hipay_moto3.env%
+
+    kgc.payment.factory:
+        class: KGC\PaymentBundle\Service\Payment\Factory
+        arguments:
+            - @doctrine.orm.entity_manager
+
+    kgc.payment.twig_utils:
+        class: KGC\PaymentBundle\Service\Payment\TwigUtils
+        arguments:
+            - @kgc.payment.factory
+            - @kgc.chat.calculator.pricing

@@ -1,0 +1,28 @@
+{# src/KGC/DashboardBundle/Resources/views/Tracking/index.html.twig #}
+
+{% extends "KGCDashboardBundle::layout.html.twig" %}
+
+{% block ariane %}
+    {% set fil = ['Tracking'] %}
+    {{ parent() }}
+{% endblock %}
+
+{% block page_header %}
+    {% set infos = { 'titre':'Tracking','desc':'Outils de Tracking et Statistiques'} %}
+    {% set reload = { 'url':'#missing-idastros,#gclid-export' } %}
+    {{ parent()}}
+{% endblock %}
+
+{% block dashboard_body %}
+    <div class="row">
+        {% if is_granted('ROLE_ADMIN') %}
+        <div class="col-lg-12">
+            <form method="post" action="{{ path('kgc_gclid_export_list') }}" class="form-search form-search-ajax ajax_load" id="gclid-export"></form>
+        </div>
+        {% endif %}
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+
+{% endblock %}

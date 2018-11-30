@@ -1,0 +1,142 @@
+# SecurityExtra Configuration
+jms_security_extra:
+    secure_all_services: false
+    expressions: true
+
+# Configuration Sécurité
+security:
+    encoders:
+        KGC\UserBundle\Entity\Utilisateur:
+            algorithm:            pbkdf2
+            hash_algorithm:       sha512
+            encode_as_base64:     true
+            iterations:           1000
+
+        KGC\Bundle\SharedBundle\Entity\Client:
+            algorithm:            pbkdf2
+            hash_algorithm:       sha512
+            encode_as_base64:     true
+            iterations:           1000
+
+    role_hierarchy:
+        ROLE_STD_DRI_J1: [ROLE_STANDARD, ROLE_J1, ROLE_DRI]
+        ROLE_MANAGER_STANDAR: [ROLE_STANDARD]
+        ROLE_ADMIN_PHONE: [ROLE_STANDARD, ROLE_MANAGER_PHONE, ROLE_MANAGER_PHONIST, ROLE_QUALITE]
+        ROLE_MANAGER_PHONE: [ROLE_VALIDATION, ROLE_J1, ROLE_DRI, ROLE_QUALITE]
+        ROLE_STANDARD: [ROLE_MANAGER_PHONE]
+        ROLE_UNPAID_SERVICE: [ROLE_MANAGER_PHONE]
+        ROLE_PHONING_TODAY: [ROLE_PHONISTE]
+        ROLE_ADMIN_CHAT:  ROLE_MANAGER_CHAT
+        ROLE_ADMIN:       [ROLE_ADMIN_PHONE, ROLE_ADMIN_CHAT, ROLE_MANAGER_STANDAR]
+        ROLE_SUPER_ADMIN: [ROLE_USER, ROLE_ADMIN, ROLE_ALLOWED_TO_SWITCH]
+
+    providers:
+        bdd:
+            entity: { class: KGC\UserBundle\Entity\Utilisateur, property: username }
+
+        client:
+            entity: { class: KGC\Bundle\SharedBundle\Entity\Client, property: mail }
+
+        psychic:
+            entity: { class: KGC\UserBundle\Entity\Utilisateur, property: username }
+
+        chatClient:
+            id: kgc.chat.client.provider
+
+    firewalls:
+        dev:
+            pattern:  ^/(_(profiler|wdt)|css|images|js)/
+            security: false
+        login:
+            pattern: ^/login$
+            anonymous: true
+
+        api_open:
+            pattern: /chat/api/open
+            anonymous: true
+
+        api_login:
+            pattern:  ^/chat/api/login
+            provider: chatClient
+            stateless: true
+            anonymous: true
+            simple_form:
+                authenticator: kgc.chat.client.registering_authenticator
+                login_path:    login
+                check_path: /chat/api/login_check
+                success_handler: kgc.chat.client.authentication_success_handler
+                failure_handler: lexik_jwt_authentication.handler.authentication_failure
+                require_previous_session: false
+
+        api_psychic:
+            pattern:   ^/chat/api/psychic
+            provider: psychic
+            stateless: true
+            lexik_jwt: ~
+
+        api:
+            pattern:   ^/chat/api
+            stateless: true
+            provider: chatClient
+            lexik_jwt:
+                throw_exceptions: true
+                authentication_provider: kgc.chat.jwt.provider
+
+        api_landing:
+            pattern: ^/client/api/create
+            stateless: true
+            simple_preauth:
+                authenticator: client.apikey.authenticator
+
+        api_clicktocall:
+            pattern: ^/client/api/clicktocall
+            anonymous: true
+
+        api_londres:
+            pattern: ^/api/londres
+            anonymous: true
+
+        api_landing_create:
+            pattern: ^/client/api/client
+            anonymous: true
+
+        api_landing_update:
+            pattern: ^/client/api/client/{id}
+            anonymous: true
+
+        api_card:
+            pattern: ^/client/api/card
+            anonymous: true
+
+        payment:
+            pattern: ^/payment/notify
+            anonymous: true
+
+        main:
+            pattern: ^/
+            anonymous: false
+            provider: bdd
+            form_login:
+                login_path: /login
+                check_path: /login_check
+                remember_me: true
+                require_previous_session: false
+            logout:
+                path: logout
+                target: /
+                handlers: [kgc.user.logout_handler]
+            remember_me:
+                always_remember_me: true
+                name: KGESTION_REMEMBERME
+                key: "%secret%"
+                path: /
+                domain: ~
+                secure: true
+                lifetime: 1296000
+
+    access_control:
+        - { path: ^/chat/api/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/chat/api/open, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/chat/api,       roles: IS_AUTHENTICATED_FULLY }
+        - { path: ^/search, roles: [ROLE_STANDARD, ROLE_ADMIN, ROLE_QUALITE, ROLE_IMPAYE, ROLE_MANAGER_CHAT, ROLE_UNPAID_SERVICE, ROLE_VALIDATION, ROLE_MANAGER_STANDAR, ROLE_MANAGER_PHONIST, ROLE_DRI, ROLE_J_1, ROLE_DRI, ROLE_J_1, ROLE_PHONISTE, ROLE_PHONING_TODAY] }
+        - { path: ^/, roles: IS_AUTHENTICATED_ANONYMOUSLY }

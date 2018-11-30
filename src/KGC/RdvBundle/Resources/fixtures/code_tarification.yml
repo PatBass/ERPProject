@@ -1,0 +1,18 @@
+## src/KGC/RdvBundle/DataFixtures/ORM/code_tarification.yml
+
+KGC\RdvBundle\Entity\CodeTarification:
+    cdt1:
+        libelle: 3,5€
+        multiplicateur: 3.5
+    cdt2:
+        libelle: 4€
+        multiplicateur: 4
+    cdt3:
+        libelle: 4,5€
+        multiplicateur: 4.5
+    cdt4:
+        libelle: 5,5€
+        multiplicateur: 5.5
+    cdt5:
+        libelle: 6,5€
+        multiplicateur: 6.5

@@ -1,0 +1,44 @@
+parameters:
+#    kgc_client.example.class: KGC\ClientBundle\Example
+
+services:
+#    kgc_client.example:
+#        class: %kgc_client.example.class%
+#        arguments: [@service_id, "plain_value", %parameter%]
+    kgc.elastic.client.transformer:
+        class: KGC\ClientBundle\Elastic\Transformer\ClientElasticaToModelTransformer
+        arguments:
+            - @doctrine
+            - 'KGCSharedBundle:Client'
+            - {}
+        calls:
+            - [ setPropertyAccessor, [@fos_elastica.property_accessor ] ]
+        tags:
+            - { name: fos_elastica.elastica_to_model_transformer, type: client, index: kgestion_idx }
+    kgc.elastic.client.refresh.listener:
+        class: KGC\ClientBundle\Elastic\Listener\ClientRefreshListener
+        public: true
+        arguments:
+            - @fos_elastica.object_persister.kgestion_idx.client
+            - @fos_elastica.indexable
+            - ['refresh']
+        calls:
+            - [ setContainer, [@service_container ] ]
+        tags:
+            - { name: kernel.event_subscriber, connection: default }
+
+    twig.extension.intl:
+        class: Twig_Extensions_Extension_Intl
+        tags:
+            - { name: twig.extension }
+
+    twig.extension.text:
+        class: Twig_Extensions_Extension_Text
+        tags:
+            - { name: twig.extension }
+
+    client.apikey.authenticator:
+        class:  KGC\ClientBundle\Security\ApiKeyAuthenticator
+        public: false
+        arguments:
+            - '%apikey%'

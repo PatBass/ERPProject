@@ -1,0 +1,53 @@
+{% extends not app.request.isXmlHttpRequest() ? '::layout.html.twig' : '::emptylayout.html.twig' %}
+
+{% block body %}
+    {% embed '::widgetlayout.html.twig' %}
+        {% set widget_options = {
+            'titre' : 'Formules'|trans,
+            'refresh' : '#config_formula',
+            'no_padding' : true
+        } %}
+
+        {% block widget_body %}
+            <div class="row center" style="padding: 6px 0; margin:0">
+                <div class="col-md-6">
+                    {{ form_widget(form.website) }}
+                </div>
+                <div class="col-md-6">
+                    <button type="submit" class="btn btn-success btn-block btn-sm">
+                        <i class="icon-arrow-right"></i> Appliquer
+                    </button>
+                </div>
+            </div>
+            {{ parent() }}
+        {% endblock widget_body %}
+
+        {% block widget_main %}
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Formule</th>
+                    <th>Site</th>
+                    <th>&nbsp;</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for key, o in formulas %}
+                <tr>
+                    <td>{{ o.id }}</td>
+                    <td>{{ o.advancedLibelle }}</td>
+                    <td>{{ o.chatFormula.website.libelle }}</td>
+                    <td class="line-actions">
+                        <a href="{{ path('kgc_chat_formulas_edit', {id: o.id}) }}" class="btn btn-xs btn-primary tooltip-primary modal-load"
+                           role="button" title="Éditer" data-rel="tooltip" data-placement="left">
+                            <i class="icon-pencil"></i>
+                        </a>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        {% endblock %}
+    {% endembed %}
+{% endblock body %}

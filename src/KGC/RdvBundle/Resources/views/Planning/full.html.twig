@@ -1,0 +1,60 @@
+{# src/KGC/RdvBundle/Resources/views/Planning/full.html.twig #}
+
+{% extends '::emptylayout.html.twig' %}
+
+{% block body %}
+
+    {% use 'KGCRdvBundle::listefichesRDV.html.twig' %}
+
+    <form id="rdv_planning">
+    {% for i in 0..10 %}
+    <div class="row">
+        {% for j in 1..3 %}
+        <div class="col-lg-4">
+            {% for horaire, liste_rdv in planning[i*3+j]|default({ '':[] }) %}
+                {% if liste_rdv is not empty %}
+            <table class="table table-striped valign-middle">
+                <tr>
+                    <th rowspan="{{ constant('KGC\\RdvBundle\\Service\\PlanningService::NB_PLAGES')}}" style="vertical-align: top !important;">{{ horaire }}</th>
+                    {% for rdv in liste_rdv %}
+                        {% if rdv is not null %}
+                            {% set date = false %}
+                            {% if is_granted(['ROLE_STANDARD','ROLE_ADMIN_PHONE','ROLE_QUALITE', 'ROLE_MANAGER_PHONE']) %}
+                                {% set actions = {
+                                    1 : {
+                                        'color' : 'primary',
+                                        'title' : "Fiche standard"
+                                    }
+                                } %}
+                            {% endif %}
+                            {% if is_granted(['ROLE_QUALITE']) %}
+                                {% set actions = actions|merge({
+                                    2 : {
+                                        'route_action' : 'kgc_qa_fiche',
+                                        'load' : 'nothing',
+                                        'title' : "Fiche voyant",
+                                        'color' : 'warning',
+                                        'placement': 'left'
+                                    }
+                                }) %}
+                            {% endif %}
+                            {{ block('ligne_rdv') }}
+                        {% else %}
+                        <td colspan="5" class="text-muted">libre
+                        {% endif %}
+                    </td>
+                </tr>
+                {% if not loop.last %}
+                <tr>
+                {% endif %}
+                    {% endfor %}
+            </table>
+                {% endif %}
+            {% endfor %}
+        </div>
+        {% endfor %}
+    </div>
+    {% endfor %}
+    </form>
+
+{% endblock body %}

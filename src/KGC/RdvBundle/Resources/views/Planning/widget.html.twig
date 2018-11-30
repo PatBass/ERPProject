@@ -1,0 +1,92 @@
+{# src/KGC/RdvBundle/Resources/views/Planning/widget.html.twig #}
+
+{% extends not app.request.isXmlHttpRequest() ? '::layout.html.twig' : '::emptylayout.html.twig' %}
+
+{% import _self as macros %}
+
+{% use 'KGCRdvBundle::listefichesRDV.html.twig' %}
+
+{% block body %}
+    {% embed '::widgetlayout.html.twig' %}
+        {% set widget_options = {
+            'titre' : 'Planning',
+            'header_class' : 'header-color-blue2',
+            'refresh' : is_granted('ROLE_VOYANT') ? '#planning_widget' : '#rdv_planning',
+            'no_padding' : true,
+            'body_extra_class' : 'planning'
+        } %}
+
+        {% block widget_main %}
+            <table class="table table-striped">
+                <thead style="border-bottom: 4px solid #B94A48" class="valign-middle">
+                    {{ macros.planning_table(alerte, true) }}
+                </thead>
+                <tbody>
+                    {{ macros.planning_table(planning) }}
+                </tbody>
+            </table>
+        {% endblock %}
+    {% endembed %}
+{% endblock body %}
+
+{% macro planning_table(setlist, danger) %}
+    {% for horaire, tranche in setlist %}
+            <tr {{ danger ? 'class="warning text-danger"' }}>
+                <th rowspan="{{tranche|length}}">{{ horaire }}</th>
+                {% for rdv in tranche %}
+                    {% if rdv is not null %}
+                        {% set date = false %}
+                        {% if is_granted(['ROLE_STANDARD','ROLE_ADMIN_PHONE', 'ROLE_MANAGER_PHONE']) %}
+                            {% if rdv.securisation == constant('SECU_PENDING', rdv) %}
+                                {% set color = 'danger' %}
+                                {% set icon = 'shield' %}
+                                {% set disabled = true %}
+                                {% set title = 'Sécurisation en attente' %}
+                            {% elseif rdv.miserelation is null %}
+                                {% set color = 'warning' %}
+                                {% set icon = 'exchange' %}
+                                {% set disabled = false %}
+                                {% set title = 'Faire la mise en relation' %}
+                            {% else %}
+                                {% set color = 'success' %}
+                                {% set icon = 'ok' %}
+                                {% set disabled = true %}
+                                {% set title = 'Consultation transmise' %}
+                            {% endif %}
+                            {% set actions = {
+                                1 : {
+                                    'route_action' : 'kgc_miserel',
+                                    'color' : color,
+                                    'icon' : icon,
+                                    'disabled' : disabled,
+                                    'title' : title
+                                },
+                                2 : {
+                                    'color' : 'primary'
+                                }
+                            } %}
+                        {% elseif is_granted('ROLE_VOYANT') %}
+                            {% set actions = {
+                                1 : {
+                                    'route_action' : 'kgc_priseencharge',
+                                    'load' : 'gritter-load',
+                                    'refresh' : '#prise_en_charge',
+                                    'color' : rdv.priseencharge ? 'success' : 'primary',
+                                    'icon' : rdv.priseencharge ? 'ok' : 'comments-alt',
+                                    'disabled' : rdv.miserelation and not rdv.priseencharge ? false : true,
+                                    'title' : rdv.priseencharge ? 'Prise en charge effectuée' : 'Prendre en charge'
+                                }
+                            } %}
+                        {% endif %}
+                        {{ block('ligne_rdv') }}
+                    {% else %}
+                    <td colspan="{{ constant('KGC\\RdvBundle\\Service\\PlanningService::NB_PLAGES')}}" class="text-muted">libre
+                    {% endif %}
+                </td>
+            </tr>
+            {% if not loop.last %}
+            <tr {{ danger ? 'class="warning text-danger"' }}>
+            {% endif %}
+                {% endfor %}
+        {% endfor %}
+{% endmacro planning_table %}

@@ -1,0 +1,44 @@
+{# src/KGC/DashboardBundle/Resources/views/Config/postes.list.html.twig #}
+
+{% extends not app.request.isXmlHttpRequest() ? '::layout.html.twig' : '::emptylayout.html.twig' %}
+
+{% block body %}
+    {% embed '::widgetlayout.html.twig' %}
+        {% set widget_options = {
+            'titre' : 'Poste téléphonique',
+            'refresh' : '#config_postes',
+            'no_padding' : true
+        } %}
+
+        {% block widget_main %}
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Poste</th>
+                        <th>Téléphone</th>
+                        <th>&nbsp;</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for m in postes %}
+                    <tr>
+                        <td>{{ m.name }}</td>
+                        <td>{{ m.phone }}</td>
+                        <td class="line-actions">
+                            <a href="{{ path('kgc_config_poste_edit', {'id': m.id}) }}" class="btn btn-xs btn-primary tooltip-primary modal-load" role="button" title="" data-rel="tooltip" data-placement="left" data-original-title="Éditer le poste">
+                                <i class="icon-pencil"></i>
+                            </a>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        {% endblock widget_main %}
+
+        {% block widget_body_after %}
+        <a href="{{ path('kgc_config_poste_edit') }}" class="btn btn-block modal-load" role="button" title="Ajouter un poste">
+            <i class="icon-plus"></i> Ajouter un poste
+        </a>
+        {% endblock %}
+    {% endembed %}
+{% endblock body %}

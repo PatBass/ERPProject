@@ -1,0 +1,81 @@
+
+{% extends not app.request.isXmlHttpRequest() ? '::layout.html.twig' : '::emptylayout.html.twig' %}
+
+{% block body %}
+    {% embed '::modallayout.html.twig' %}
+
+        {% block modal_title %}Conversation par tchat du {{ room.startDate | date('d/m/Y') }}{% endblock modal_title %}
+
+        {% block modal_body %}
+            <div class="row">
+                <div class="col-md-6">
+                    {% include 'KGCChatBundle:Chat:chat_client.html.twig' with {'client': client, 'website': website} only %}
+                </div>
+                <div class="col-md-6">
+                    <table class="table table-striped table-bordered">
+                        <tbody>
+                        <tr>
+                            <th>
+                                <span>Statut</span>
+                            </th>
+                            <td>
+                                {% include 'KGCChatBundle:Chat:chat_status.html.twig' with {'status': room.status} only %}
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>
+                                <span>Site</span>
+                            </th>
+                            <td>
+                                {{ room.website.libelle }}
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>
+                                <span>Début du tchat</span>
+                            </th>
+                            <td>
+                                {{ room.startDate ? room.startDate | date('d/m/Y H:i:s'): '-' }}
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>
+                                <span>Fin du tchat</span>
+                            </th>
+                            <td>
+                                {{ room.endDate ? room.endDate | date('d/m/Y H:i:s') : '-'}}
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>
+                                <span>Voyant</span>
+                            </th>
+                            <td>
+                                {{ room.psychicParticipant.virtualPsychicName }}
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>
+                                <span>Consultant</span>
+                            </th>
+                            <td>
+                                {{ room.psychicParticipant.physicalPsychicName }}
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>
+                                <span>UTM Source</span>
+                            </th>
+                            <td>
+                                {{ room.source }}
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    {% set title = 'Consommation pour le tchat' %}
+                    {% include 'KGCChatBundle:Chat:chat_pricings.html.twig' with {'title':title, 'pricings': pricings} only %}
+                </div>
+            </div>
+        {% endblock modal_body %}
+    {% endembed %}
+{% endblock body %}

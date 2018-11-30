@@ -1,0 +1,70 @@
+{# src/KGC/DashboardBundle/Resources/views/Config/salary.edit.html.twig #}
+
+{% extends not app.request.isXmlHttpRequest() ? '::layout.html.twig' : '::emptylayout.html.twig' %}
+
+{% block body %}
+    {% embed '::modallayout.html.twig' %}
+        {% block modal_header %}
+            {% set link = {
+                'txt' : upd ? 'Édition des paramètres de salaire' : 'Ajout d\'un paramètre de salaire',
+                'url' : path('kgc_config_salary_edit',{'id':object.id}),
+                'icon' : upd ? 'pencil' : 'plus'
+            } %}
+            {{ parent() }}
+        {% endblock %}
+
+        {% block modal_content %}
+            <form id="tpe_config_modal" method="post" action="{{ path('kgc_config_salary_edit', {'id': object.id, 'type': type, 'nature': nature}) }}" {{ form_enctype(form) }} data-close="1" data-refresh="#config_{{ type }}_{{ nature }}" class="ajax_modal_form form-horizontal">
+                {{ parent() }}
+                {{ form_widget(form._token) }}
+            </form>
+        {% endblock modal_content %}
+
+        {% block modal_body %}
+            <div class="row">
+                <div class="col-md-6">
+                    <strong>Type :</strong><br />
+                    {{ form_widget(form.type) }}
+                </div>
+                <div class="col-md-6">
+                    <strong>Nature :</strong><br />
+                    {{ form_widget(form.nature) }}
+                </div>
+                <div class="col-md-3">
+                    <strong>CA min :</strong><br />
+                    {{ form_widget(form.caMin) }}
+                </div>
+                <div class="col-md-3">
+                    <strong>CA max:</strong><br />
+                    {{ form_widget(form.caMax) }}
+                </div>
+                <div class="col-md-3">
+                    <strong>Valeur min :</strong><br />
+                    {{ form_widget(form.valueMin) }}
+                </div>
+                <div class="col-md-3">
+                    <strong>Valeur max :</strong><br />
+                    {{ form_widget(form.valueMax) }}
+                </div>
+
+                <div class="col-md-4 col-md-offset-4">
+                    <strong>Pourcentage :</strong><br />
+                    {{ form_widget(form.percentage) }}
+                </div>
+            </div>
+        {% endblock modal_body %}
+
+        {% block modal_footer %}
+            <div class="modal-footer">
+                <div class="pull-left">
+                    <button type="button" class="btn btn-sm btn-danger" data-dismiss="modal"><i class="icon-remove"></i> Fermer</button>
+                </div>
+                <div class="pull-right">
+                    <button type="submit" class="btn btn-success btn-block btn-sm">
+                        <i class="icon-arrow-right"></i> Enregistrer
+                    </button>
+                </div>
+            </div>
+        {% endblock modal_footer %}
+    {% endembed %}
+{% endblock body %}

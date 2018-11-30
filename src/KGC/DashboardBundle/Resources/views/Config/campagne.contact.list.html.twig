@@ -1,0 +1,51 @@
+{# src/KGC/DashboardBundle/Resources/views/Config/sms.list.html.twig #}
+
+{% extends not app.request.isXmlHttpRequest() ? '::layout.html.twig' : '::emptylayout.html.twig' %}
+
+{% block body %}
+    {% embed '::modallayout.html.twig' %}
+        {% block modal_header %}
+            {% set link = {
+            'txt' : 'Liste des contacts',
+            'url' : path('kgc_config_campagne_contact_list',{'id':list.id}),
+            'icon' : 'list'
+            } %}
+            {{ parent() }}
+        {% endblock %}
+
+        {% block modal_body %}
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Prenom</th>
+                        <th>Nom</th>
+                        <th>Téléphone</th>
+                        <th>&nbsp;</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for c in contact %}
+                        <tr>
+                            <td>{{ c.firstname }}</td>
+                            <td>{{ c.lastname }}</td>
+                            <td>{{ c.phone }}</td>
+                            <td class="line-actions">
+                                <a href="{{ path('kgc_config_campagne_contact_edit', {'list': list.id,'id': c.id}) }}" class="btn btn-xs btn-primary tooltip-primary modal-load" role="button" title="" data-rel="tooltip" data-placement="left" data-original-title="Éditer le contact">
+                                    <i class="icon-pencil"></i>
+                                </a>
+                                <a href="{{ path('kgc_config_campagne_contact_delete', {'list': list.id, 'id': c.id}) }}" class="btn btn-xs btn-danger tooltip-danger modal-load" role="button" title="" data-rel="tooltip" data-placement="left" data-original-title="Supprimer le contact"  data-close="1">
+                                    <i class="icon-trash"></i>
+                                </a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            <a href="{{ path('kgc_config_campagne_contact_edit', {'list': list.id}) }}" class="btn btn-block modal-load" role="button" title="Ajouter un contact">
+                <i class="icon-plus"></i> Ajouter un contact
+            </a>
+        {% endblock modal_body %}
+
+
+    {% endembed %}
+{% endblock body %}

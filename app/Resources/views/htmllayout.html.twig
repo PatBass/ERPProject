@@ -1,0 +1,113 @@
+{# app/Ressources/views/htmllayout.html.twig #}
+
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+        <title>{% block title %}Gestion KG COM{% endblock %}</title>
+
+    {% stylesheets '../app/Resources/public/css/*.css' output='css/assets.css'%}
+        <link href="{{ asset_url }}" type="text/css" rel="stylesheet" />
+    {% endstylesheets %}
+
+    {% stylesheets filter='scssphp' '../app/Resources/public/css/*.scss' output='css/main.css' %}
+        <link href="{{ asset_url }}" type="text/css" rel="stylesheet" />
+    {% endstylesheets %}
+        <script src="{{ asset('js/ace-extra.min.js') }}"></script>
+
+        <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}?v=1" />
+    </head>
+    {% block body_tag %}
+        {% set body_class = body_class|default('navbar-fixed breadcrumbs-fixed') %}
+        <body class="{{ body_class }}">
+    {% endblock %}
+        {# Génération des FlashBags #}
+        {{ render(controller("KGCDashboardBundle:Dashboard:renderFlashBag")) }}
+        <header id="navbar" class="navbar navbar-default navbar-fixed-top">
+            <div id="navbar-container" class="navbar-container">
+                <h1 class="navbar-header pull-left">
+                    <a href="{{ path('kgc_dashboard')}}" class="navbar-brand" title="Revenir à l'accueil">
+                        <i class="icon-rocket"></i>
+                        KGestion
+                        <small>
+                            <i class="icon-double-angle-right"></i>
+                            lʼapplication de gestion de consultations de voyance
+                        </small>
+                    </a>
+                </h1>
+            {% block navbar_right %}
+
+            {% endblock %}
+            </div>
+        </header>
+        <section id="main-container" class="main-container">
+            <div class="main-container-inner">
+    {% block body %}
+
+    {% endblock %}
+            </div><!-- main-container-inner -->
+            <a href="#" id="btn-scroll-up" class="btn-scroll-up btn btn-sm btn-inverse">
+                <i class="icon-double-angle-up icon-only bigger-110"></i>
+            </a>
+        </section><!-- main-container -->
+        <div id="modal-dialog" class="modal" tabindex="-1"></div>
+        <div id="default-modal-dialog" class="modal" tabindex="-1">
+            <div class="modal-dialog">
+                <div class="modal-content well center">
+                    <img src="{{ asset('img/loading.gif') }}" alt="Chargement en cours" class="loading-spinner" />
+                </div>
+            </div>
+        </div>
+        <div id="loading" style="display: none;">
+            <div class="well center">
+                <img src="{{ asset('img/loading.gif') }}" alt="Chargement en cours" class="loading-spinner" />
+            </div>
+        </div>
+        <div id="error-container-model" style="display: none;">
+            <div class="panel center">
+                <h1 class="red">
+                    <i class="icon-warning-sign"></i> Erreur
+                </h1>
+                <a class="ajax_reload btn btn-primary btn-sm" href="__href__" title="Recharger">
+                    <i class="icon-refresh"></i> Recharger
+                </a>
+                <a class="ajax_reload btn btn-grey btn-sm" href="__href__" target="_blank">
+                    <i class="icon-arrow-right"></i> Ouvrir dans un nouvel onglet
+                </a>
+                <p>__error__</p>
+            </div>
+        </div>
+        <div id="search-loading" style="display: none;">
+            <div class="well center">
+                <img src="{{ asset('img/loading.gif') }}" alt="Chargement en cours" class="loading-spinner" />
+            </div>
+        </div>
+        <div id="gritter-zone">
+            <a class="btn btn-block btn-sm btn-grey gritter-remove" href="#" title="Efface toutes les notifications">
+                <i class="icon-bell-alt"></i> Effacer les notifications
+            </a>
+            <div id="gritter-notice-wrapper"></div>
+        </div>
+    <!-- basic scripts -->
+    {% javascripts '../app/Resources/public/js/*' output='js/main.js'%}
+        <script type="text/javascript" src="{{ asset_url }}?20170426"></script>
+    {% endjavascripts %}
+    <!-- page specific scripts -->
+    {% block javascripts %}
+
+    {% endblock %}
+        <script type="text/javascript">
+            var alivePath = "{{ path('kgc_user_alive') }}";
+            var MinutesAmountCalcBaseUrl = "{{ path('kgc_rdv_calcmtmin') }}";
+            var BuildMailBaseUrl = "{{ path('kgc_rdv_build_mail') }}";
+            var BuildMailChatBaseUrl = "{{ path('kgc_chat_build_mail') }}";
+            var BuildSmsBaseUrl = "{{ path('kgc_rdv_build_sms') }}";
+            var BuildSmsChatBaseUrl = "{{ path('kgc_chat_build_sms') }}";
+            var ImagePath = "{{  app.request.getSchemeAndHttpHost() ~ img_path }}";
+            var AppEnvironment = "{{ app.environment }}";
+        </script>
+    </body>
+</html>

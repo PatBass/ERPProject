@@ -1,0 +1,86 @@
+KGC\UserBundle\Entity\Voyant:
+    voyant_1:
+        id: <identity(1)>
+        nom: 'Caroline'
+        codeTarification: @cdt5
+    voyant_2:
+        nom: 'Valérie'
+        codeTarification: @cdt3
+    voyant_3:
+        nom: 'Viktor'
+        codeTarification: @cdt4
+    voyant_4:
+        nom: 'Gregory'
+        codeTarification: @cdt4
+    voyant_5:
+        nom: 'Alexis'
+        codeTarification: @cdt5
+    voyant_6:
+        nom: 'Emmanuel'
+    voyant_7:
+        nom: 'Georges'
+        codeTarification: @cdt4
+    voyant_8:
+        nom: 'Christophe'
+        codeTarification: @cdt1
+    voyant_9:
+        nom: 'Cécile'
+        codeTarification: @cdt2
+    voyant_10:
+        nom: 'Kathy'
+        codeTarification: @cdt1
+    voyant_11:
+        nom: 'Linda'
+        codeTarification: @cdt4
+    voyant_12:
+        nom: 'Laurent'
+        codeTarification: @cdt3
+    voyant_13:
+        nom: 'Stéphane'
+        codeTarification: @cdt2
+    voyant_14:
+        nom: 'Benoit'
+        codeTarification: @cdt1
+    voyant_15:
+        nom: 'Gilles'
+        codeTarification: @cdt2
+    voyant_16:
+        nom: 'Laurence'
+        codeTarification: @cdt2
+    voyant_17:
+        nom: 'Frédéric'
+        codeTarification: @cdt1
+    voyant_18:
+        nom: 'Bruno'
+        codeTarification: @cdt2
+    voyant_19:
+        nom: 'Alix'
+        codeTarification: @cdt2
+    voyant_20:
+        nom: 'Carine'
+        codeTarification: @cdt2
+    voyant_21:
+        nom: 'Anna'
+    voyant_22:
+        nom: 'Joseph'
+    voyant_23:
+        nom: 'Lucie'
+        codeTarification: @cdt2
+    voyant_24:
+        nom: 'Léna'
+        codeTarification: @cdt2
+    voyant_25:
+        nom: 'Jean'
+        codeTarification: @cdt4
+    voyant_26:
+        nom: 'Robert'
+        codeTarification: @cdt2
+    voyant_27:
+        nom: 'Béatrice'
+        codeTarification: @cdt4
+    voyant_28:
+        nom: 'Axelle'
+        codeTarification: @cdt3
+    voyant_29:
+        nom: 'Marie-Anne'
+        codeTarification: @cdt1

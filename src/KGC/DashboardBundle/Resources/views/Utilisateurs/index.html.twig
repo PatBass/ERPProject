@@ -1,0 +1,37 @@
+{# src/KGC/DashboardBundle/Resources/views/Utilisateurs/index.html.twig #}
+
+{% extends "KGCDashboardBundle::layout.html.twig" %}
+
+{% block ariane %}
+    {% set fil = ['Utilisateurs'] %}
+    {{ parent() }}
+{% endblock %}
+
+{% block page_header %}
+    {% set infos = { 'titre':'Utilisateurs','desc':'Gestion des accès à l&#039;application'} %}
+    {% set reload = { 'url':'#users_list' } %}
+    {{ parent()}}
+{% endblock %}
+
+{% block dashboard_body %}
+<div class="row">
+    <div class="col-xs-10">
+        <form method="post" action="{{ path('kgc_user_widget_list') }}" class="ajax_load" id="users_list"></form>
+    </div>
+    <div class="col-xs-2 widget-container">
+        <div class="widget-box">
+            <div class="widget-header">
+                <h5></h5>
+            </div>
+            <div class="widget-body">
+                <div class="widget-main">
+                    <a href="{{ path('kgc_user_modal_add') }}" role="button" class="btn btn-lg btn-success btn-block" data-toggle="modal" data-target="#modal-dialog">
+                        <i class="icon-plus"></i>
+                        Ajouter
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,9 @@
+# src/KGC/DashboardBundle/Resources/translations/messages.fr.yml
+
+Symfony2 is great: Ce texte à été traduit.
+Bad credentials: Identifiants incorrects.
+Your session has timed out, or you have disabled cookies. : Votre session a expiré ou les cookies sont désactivés.
+sites:
+  type:
+    phone: Sites de voyance téléphonique
+    chat: Sites de voyance par chat 

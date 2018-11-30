@@ -1,0 +1,8 @@
+{
+    "id": "conversations.json",
+    "title": "Conversations schema",
+    "type": "array",
+    "items": {
+        "$ref": "conversation.json"
+    }
+}

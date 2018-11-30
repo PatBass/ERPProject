@@ -1,0 +1,8 @@
+{
+    "id": "aliases.json",
+    "title": "Aliases schema",
+    "type": "array",
+    "items": {
+        "$ref": "alias.json"
+    }
+}

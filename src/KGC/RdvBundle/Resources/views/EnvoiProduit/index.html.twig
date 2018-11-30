@@ -1,0 +1,142 @@
+{# src/KGC/RdvBundle/Resources/views/EnvoiProduit/index.html.twig #}
+
+{% extends "KGCDashboardBundle::layout.html.twig" %}
+
+{% import _self as macro %}
+{% import '::macros.html.twig' as common_macros %}
+{% import 'KGCRdvBundle::interfacedata.html.twig' as interface %}
+
+{% block ariane %}
+    {% set fil = ['Envoi des produits'] %}
+    {{ parent() }}
+{% endblock %}
+
+{% block page_header %}
+    {% set infos = { 'titre':'Envoi des produits','desc':'Tableau de suivi'} %}
+    {% set reload = { 'no_ajax':true, 'url':path('kgc_products_page') } %}
+    {{ parent()}}
+{% endblock %}
+
+{% block dashboard_body %}
+    <form method="post" action="">
+    <div class="row">
+        <div class="col-lg-7 form-inline">
+            <h5>Période :</h5>
+            {{ form_widget(form.period.begin) }}
+            {{ form_widget(form.period.end) }}
+            {{ form_widget(form._token) }}
+            <button type="submit" class="btn btn-success btn-xs">
+                <i class="icon-arrow-right"></i> Appliquer
+            </button>
+            <button type="button" class="btn btn-warning btn-xs js-reset-empty" data-reset-targets="#form_period_begin,#form_period_end">
+                <i class="icon-ban-circle"></i> Réinitialiser
+            </button>
+            <br />
+            <h5>État de l'envoi :</h5>
+            {{ form_widget(form.etat, {'attr': { 'class':'inline-choices'} }) }}
+        </div>
+        <div class="col-lg-5">
+            {{ common_macros.pagination_select(paginator, {'url' : 'kgc_products_page'}) }}
+        </div>
+    </div>
+    </form>
+    <div class="row">
+        <div class="col-lg-12">
+            <table id="envoie-de-produit" class="table table-striped table-bordered valign-middle" style="margin-bottom: 0">
+                <thead>
+                    <tr class="align-center">
+                        <th>Client</th>
+                        <th>Date de la consultation</th>
+                        <th>Voyant</th>
+                        <th>Consultant</th>
+                        <th>Montant de la consultation</th>
+                        <th colspan="2">Montant encaissé à ce jour</th>
+                        <th>Produit</th>
+                        <th>Montant du produit</th>
+                        <th>État de l'envoi</th>
+                        <th>Date d'envoi</th>
+                        <th>Allumage</th>
+                        <th>Commentaire</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for envoi in liste %}
+                    <tr>
+                        <td><b>{{ envoi.cli_nom }}</b> {{ envoi.cli_prenom }}</td>
+                        <td>{{ envoi.rdv_date_consultation | date('d/m/Y H:i') }}</td>
+                        <td>{{ envoi.voyant }}</td>
+                        <td>{{ envoi.consultant }}</td>
+                        <td data-sort="{{ envoi.montant_total }}">{{ envoi.montant_total | number_format(2, ',', ' ') }} &euro;</td>
+                        {% set montant_encaisse = envoi.montant_encaisse %}
+                        {% set montant_total = (envoi.montant_total == 0 ? 1 : envoi.montant_total) %}
+                        {% set pct_encaisse = montant_encaisse / montant_total * 100 %}
+                        <td>{{ envoi.montant_encaisse | number_format(2, ',', ' ') }} &euro;</td>
+                        <td class="{{ macro.percentage_class(pct_encaisse) }}">{{ pct_encaisse | number_format(0) }} %</td>
+                        <td>{{ envoi.vpr_quantite_envoi ~ ' ' ~ envoi.pro_nom }}</td>
+                        <td data-sort="{{ envoi.montant_produit  }}">{{ envoi.montant_produit | number_format(2, ',', ' ') }} &euro;</td>
+                        <td>{{ interface.render_evp_etat(envoi.evp_etat) }}</td>
+                        <td>{{ envoi.evp_date is not null ? envoi.evp_date | date('d/m/Y') : 'Aucune' }}</td>
+                        <td>{{ interface.render_evp_allumage(envoi.evp_allumage, envoi.evp_allumage_consultation, {'show_label':true}) }}</td>
+                        <td>
+                            {% if envoi.evp_commentaire is not null %}
+                            <span class="commentaire">{{ envoi.evp_commentaire }}</span>
+                            {% endif %}
+                        </td>
+                        <td class="line-actions">
+                            <a href="{{ path('kgc_rdv_fiche',{'id':envoi.rdv_id})}}" class="modal-load btn btn-xs btn-primary tooltip-primary" tile="Fiche standard" data-rel="tooltip">
+                                <i class="icon-file"></i>
+                            </a>
+                            {% if app.user.isQualite() %}
+                            <a href="{{ path('kgc_qa_fiche',{'id':envoi.rdv_id})}}" class="btn btn-xs btn-warning tooltip-warning" tile="Fiche voyant" data-rel="tooltip">
+                                <i class="icon-file"></i>
+                            </a>
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="12">Aucun résultat.</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-12">
+            {{ common_macros.pagination_select(paginator, {'url' : 'kgc_products_page'}) }}
+        </div>
+    </div>
+{% endblock %}
+
+{% macro percentage_class(pct) %}
+{% spaceless %}
+    {% if pct == 0 %}
+        text-muted
+    {% elseif pct == 100 %}
+        bolder
+    {% endif %}
+{% endspaceless %}
+{% endmacro %}
+
+{% macro get_widget_title(filtre_etats, nresults, begin, end) %}
+    {% if filtre_etats is empty %}
+        Tous les envois de produits
+    {% else %}
+        {% set constbase = 'KGC\\RdvBundle\\Entity\\EnvoiProduit::' %}
+        Envois de produits
+        {% spaceless %}
+            {% for etat in filtre_etats %}
+                {% if etat == constant(constbase ~ 'PLANNED') %}prévus{% endif %}
+                {% if etat == constant(constbase ~ 'DONE') %}faits{% endif %}
+                {% if etat == constant(constbase ~ 'CANCELLED') %}annulés{% endif %}
+                {% if not loop.last %}, {% endif %}
+            {% endfor %}
+        {% endspaceless %}
+    {% endif %}
+    {% if not begin is null %}
+    pour les consultations du {{ begin |date('d/m/Y') }} au {{ end |date('d/m/Y') }}
+    {% endif %}
+    - <b>{{ nresults }} résultats</b>
+{% endmacro %}

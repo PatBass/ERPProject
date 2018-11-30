@@ -1,0 +1,68 @@
+{# src/KGC/RdvBundle/Resources/views/Consultation/classer.html.twig #}
+
+{% extends not app.request.isXmlHttpRequest() ? '::layout.html.twig' : '::emptylayout.html.twig' %}
+
+{% block body %}
+    {% embed '::modallayout.html.twig' %}
+        {% import 'KGCRdvBundle::blocsficheRDV.html.twig' as fiche %}
+
+        {% block modal_header %}
+            {% set small = true %}
+            {% set link = {
+                'txt' : 'Classer la consultation de ' ~ rdv.client.fullName,
+                'url' : path('kgc_rdv_classer',{'id':rdv.id}),
+                'icon' : 'folder-open'
+            } %}
+            {{ parent() }}
+        {% endblock %}
+
+        {% block modal_content %}
+        <form id="classer_rdv_modal" method="post" action="{{ path('kgc_rdv_classer',{'id':rdv.id}) }}" {{ form_enctype(form) }} class="ajax_modal_form form-horizontal" {{ form.vars.valid ? 'data-close="1" data-refresh="prise_en_charge"' }}>
+            {{ parent() }}
+            {{ form_widget(form.mainaction) }}
+            {{ form_widget(form._token) }}
+        </form>
+        {% endblock modal_content %}
+
+        {% block modal_body %}
+            {% if not form.vars.valid %}
+            <p class="alert alert-block alert-danger">
+                La consultation n&#039;a pu être enregistrée.<br/>
+                {{ form_errors(form)}}
+            </p>
+            {% endif %}
+            {% set label_size = 'col-lg-4 col-xs-5' %}
+            {% set input_size = 'col-lg-7 col-xs-3' %}
+            <div class="form-group row">
+                <div class="">
+                    <label class="{{ label_size }} control-label">Tiroir actuel</label>
+                    <div class="controls {{ input_size }}">
+                        <div>
+                            <input type="text" class=" form-control" value="{{ rdv.classement.tiroir.libelle }}" readonly >
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {{ form_row(form.classement, {'label':'Choisir le dossier','label_attr':{'class':label_size},'controls_size':'col-lg-7'}) }}
+            <div class="form-group row">
+                <div class="">
+                    <label class="control-label col-lg-5 col-xs-7">Marquer la fiche en « Abandon définitif »</label>
+                    <div class="controls col-lg-5 col-xs-2" style="padding-top: 4px;">
+                        <div>
+                            {{ form_widget(form.litige) }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        {% endblock modal_body %}
+
+        {% block modal_footer %}
+            {% if not form %}
+                {{ parent() }}
+            {% else %}
+                {{ fiche.rdv_form_footer({'form':form,'rdv':rdv,'retour':true}) }}
+            {% endif %}
+        {% endblock modal_footer %}
+    {% endembed %}
+{% endblock body %}

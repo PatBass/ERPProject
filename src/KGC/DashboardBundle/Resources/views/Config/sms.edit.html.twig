@@ -1,0 +1,61 @@
+{# src/KGC/DashboardBundle/Resources/views/Config/sms.edit.list.html.twig #}
+
+{% extends not app.request.isXmlHttpRequest() ? '::layout.html.twig' : '::emptylayout.html.twig' %}
+
+{% block body %}
+    {% embed '::modallayout.html.twig' %}
+        {% block modal_header %}
+            {% set link = {
+                'txt' : (upd ? 'Édition' : 'Ajout') ~ ' de template de sms',
+                'url' : path('kgc_config_sms_edit',{'id':sms.id}),
+                'icon' : upd ? 'pencil' : 'plus'
+            } %}
+            {{ parent() }}
+        {% endblock %}
+
+        {% block modal_content %}
+            <form id="sms_template_modal" method="post" action="{{ path('kgc_config_sms_edit', {'id': sms.id}) }}" {{ form_enctype(form) }} data-close="1" data-refresh="#config_sms" class="ajax_modal_form form-horizontal">
+                {{ parent() }}
+                {{ form_widget(form._token) }}
+            </form>
+        {% endblock modal_content %}
+
+        {% block modal_body %}
+            <div class="row">
+                <div class="col-md-12">
+                    <strong>Remplacements :</strong><br />
+                    {% if tchat is defined and tchat == 1 %}
+                        [AUJOURDHUI], [PRENOM], [NOM], [ADRESSE1], [ADRESSE2], [TELEPHONE], [SITE], [LOGO]
+                    {% else %}
+                        [AUJOURDHUI], [DATE_CONSULTATION], [PRENOM], [NOM], [ADRESSE1], [ADRESSE2], [MONTANT], [MONTANT-TEXT], [MONTANTD], [MONTANTD-TEXT], [MONTANTDF], [MONTANTDF-TEXT], [MOYEN_PAIEMENT], [ARRANGEMENTS], [TELEPHONE], [LOGO], [IMAGE_PAIEMENT], [SITE], [VOYANT]
+                    {% endif %}
+                    <br /><br />
+                </div>
+
+                <div class="col-md-6">
+                    <strong>Code :</strong><br />
+                    {{ form_widget(form.code) }}
+                </div>
+
+                <div class="col-md-12">
+                    <strong>Message :</strong><br />
+                    {{ form_widget(form.text) }}
+                    {{ form_rest(form) }}
+                </div>
+            </div>
+        {% endblock modal_body %}
+
+        {% block modal_footer %}
+            <div class="modal-footer">
+                <div class="pull-left">
+                    <button type="button" class="btn btn-sm btn-danger" data-dismiss="modal"><i class="icon-remove"></i> Fermer</button>
+                </div>
+                <div class="pull-right">
+                    <button type="submit" class="btn btn-success btn-block btn-sm js-wysiwyg-btn">
+                        <i class="icon-arrow-right"></i> Enregistrer
+                    </button>
+                </div>
+            </div>
+        {% endblock modal_footer %}
+    {% endembed %}
+{% endblock body %}

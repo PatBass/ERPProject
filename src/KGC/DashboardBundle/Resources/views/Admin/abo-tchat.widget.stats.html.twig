@@ -1,0 +1,79 @@
+{# src/KGC/RdvBundle/Ressources/views/Qualite/veille.liste.html.twig #}
+
+{% extends not app.request.isXmlHttpRequest() ? '::layout.html.twig' : '::emptylayout.html.twig' %}
+
+{% block body %}
+    {% embed '::widgetlayout.html.twig' %}
+
+        {% set titre %}
+            Abonnement
+        {% endset %}
+        {% set widget_options = {
+        'titre' : titre,
+        'header_class' : 'header-color-blue3',
+        'collapse' : true,
+        'no_padding' : true,
+        } %}
+
+        {% block widget_body %}
+            <div class="row center" style="padding: 6px 0; margin:0">
+                <div class="col-md-3">
+                    {{ form_widget(form.date) }}
+                    {{ form_widget(form._token) }}
+                </div>
+                <div class="col-md-5 form-inline">
+                    {{ form_widget(form.columns, {'attr': { 'class':'inline-choices'} }) }}
+                </div>
+                <div class="col-md-4">
+                    <button type="submit" class="btn btn-success btn-block btn-sm">
+                        <i class="icon-arrow-right"></i> Appliquer
+                    </button>
+                </div>
+            </div>
+
+            {{ parent() }}
+        {% endblock %}
+
+        {% block widget_main %}
+            <div class="stat-admin-abo">
+                <table class="table table-striped table-condensed table-bordered">
+                    <thead>
+                        <tr>
+                            <th>&nbsp</th>
+                            {%  for headers,values in list['HEADER'] %}
+                                <th colspan="{{ values['colspan'] }}" class="center">{%  if values['date'] != 'TOTAL' %}{{ values['date']|date('m/Y') }}{% else %}{{ values['date'] }}{% endif %}</th>
+                            {% endfor %}
+                        </tr>
+                        <tr>
+                            <th>&nbsp</th>
+                            {%  for headers,values in list['HEADER'] %}
+                                {%  for headers_sub,values_sub in values['sub_columns'] %}
+                                    <th class="center">{% if columns_name[values_sub] is defined %}{{ columns_name[values_sub] }}{% else %}{{ values_sub }}{% endif %}</th>
+                                {% endfor %}
+                            {% endfor %}
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {%  for name, dates in list %}
+                            {% if name != 'HEADER' %}
+                                <tr>
+                                    <td class="current vertical-center" nowrap>{{ name }}</td>
+                                    {%  for date, arr in dates %}
+                                        <td class="vertical-center center" nowrap><a  href="{{ path('kgc_abo_tchat_detail', arr['PARAMS']) }}" class="modal-load">{{ arr['NB'] }}</a></td>
+                                        {%  for idx_sub, values_sub in columns %}
+                                            {% if arr['PARAMS_'~values_sub] is defined %}
+                                                <td class="vertical-center center" nowrap><a  href="{{ path('kgc_abo_tchat_detail', arr['PARAMS_'~values_sub]) }}" class="modal-load">{{ arr[values_sub] }}</a></td>
+                                            {% else %}
+                                                <td class="vertical-center center" nowrap>{{ arr[values_sub] }} </td>
+                                            {% endif %}
+                                        {% endfor %}
+                                    {% endfor %}
+                                </tr>
+                            {% endif %}
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% endblock %}
+    {% endembed %}
+{% endblock body %}

@@ -1,0 +1,15 @@
+## src/KGC/RdvBundle/DataFixtures/ORM/moyen_paiement.yml
+
+KGC\RdvBundle\Entity\MoyenPaiement:
+    tpe1:
+        idcode: DEBIT_CARD
+        libelle: CB
+    tpe2:
+        idcode: CHEQUE
+        libelle: Chèque
+    tpe3:
+        idcode: TRANSFER
+        libelle: Virement
+    tpe4:
+        idcode: MONEY_ORDER
+        libelle: MandatCash

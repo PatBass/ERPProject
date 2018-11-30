@@ -1,0 +1,139 @@
+{# src/KGC/RdvBundle/Resources/views/Consultation/prepare_sms.html.twig #}
+
+{% extends not app.request.isXmlHttpRequest() ? '::layout.html.twig' : '::emptylayout.html.twig' %}
+
+{% block body %}
+
+    {% set billing_code = constant('KGC\\ClientBundle\\Entity\\Mail::BILL') %}
+    {% embed '::modallayout.html.twig' %}
+        {% import 'KGCRdvBundle::blocsficheRDV.html.twig' as fiche %}
+
+        {% block modal_dialog_head %}
+            {% if not form.vars.valid %}
+                <p class="alert alert-danger">{{ form_errors(form) }}</p>
+            {% endif %}
+        {% endblock modal_dialog_head %}
+
+        {% block modal_header %}
+            {% set link = {
+                'txt' : 'Envoyer un sms à ' ~ rdv.client.fullName,
+                'url' : path('kgc_rdv_prepare_sms',{'id':rdv.id}),
+                'icon' : 'envelope'
+            } %}
+            {{ parent() }}
+        {% endblock %}
+
+        {% block modal_content %}
+            <form id="prepare_sms_rdv_modal" method="post" action="{{ path('kgc_rdv_prepare_sms',{'id':rdv.id}) }}" {{ form_enctype(form) }} class="ajax_modal_form form-horizontal">
+                {{ parent() }}
+                {{ form_widget(form.mainaction) }}
+                {{ form_widget(form._token) }}
+            </form>
+        {% endblock modal_content %}
+
+        {% block modal_body %}
+            <div class="row sent-sms">
+                <div class="col-sm-12">
+                    {% embed '::widgetlayout.html.twig' %}
+                        {% set widget_options = {
+                            'titre' : 'Sms envoyés',
+                            'header_class' : 'widget-header-small',
+                            'collapse' : true,
+                            'collapsed' : form.vars.valid,
+                            'no_padding' : true
+                        } %}
+
+                        {% block widget_main %}
+                            {% if sms |length %}
+                            <table class="table table-striped table-condensed sms-list">
+                                <thead>
+                                <tr>
+                                    <th>Id</th>
+                                    <th>Par</th>
+                                    <th>Date</th>
+                                    <th>Téléphone</th>
+                                    <th>Code</th>
+                                    <th>Envoi</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {%  for history in sms %}
+                                    <tr>
+                                        <td>{{ history.sms.id }}</td>
+                                        <td>{{ history.consultant }}</td>
+                                        <td>{{ history.createdAt | date('d/m/Y H:i') }}</td>
+                                        <td>{{ history.sms.phone }}</td>
+                                        <td>{{ history.sms.sms is not null ? history.sms.sms.code : '-' }}</td>
+                                        <td>
+                                            <span class="hidden sms-id">{{ history.sms.sms is not null ? history.sms.sms.id }}</span>
+                                            <span class="hidden sms-text">{{ history.sms.text | raw }}</span>
+                                        </td>
+                                        <td>
+                                            {% if history.sms.status == "error" %}
+                                                <span class="label label-danger ">Erreur</span>
+                                            {% else %}
+                                                <span class="label label-success ">OK</span>
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                            {% else %}
+                                <div style="padding:20px;">Aucun sms envoyé pour le moment...</div>
+                            {% endif %}
+                        {% endblock widget_main %}
+                    {% endembed %}
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-sm-12">
+                    {% embed '::widgetlayout.html.twig' %}
+                        {% set widget_options = {
+                            'titre' : 'Nouveau sms',
+                            'header_class' : 'widget-header-small header-color-blue2',
+                            'collapse' : true,
+                            'collapsed' : false,
+                            'body_extra_class' : 'sms'
+                        } %}
+                        {% block widget_main %}
+                            <div style="margin:5px 15px;">
+                                <div class="row">
+                                    <span class="hidden billing-sms-code">{{ billing_code }}</span>
+                                    <div class="col-md-6">
+                                        <strong>Sms :</strong><br />
+                                        {{ form_widget(form.sms_sent.children.sms, {'attr':{'data-rdv' : rdv.id}}) }}
+                                    </div>
+                                    <div class="col-md-6">
+                                        <strong>Téléphone :</strong><br />
+                                        {{ form_widget(form.sms_sent.children.phone) }}
+                                    </div>
+                                </div>
+                                <div class="space-6"></div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <strong>Message :</strong><br />
+                                        <div style="border: 1px solid #D5D5D5">
+                                            {{ form_widget(form.sms_sent.children.text) }}
+                                            {{ form_rest(form.sms_sent) }}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div id="showNbCount" class="pull-right"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endblock %}
+                    {% endembed %}
+                </div>
+            </div>
+        {% endblock modal_body %}
+
+        {% block modal_footer %}
+            {{ fiche.rdv_form_footer({'form':form,'rdv':rdv,'retour': true, 'submit_color': 'success', 'submit_txt':'Envoyer'}) }}
+        {% endblock modal_footer %}
+    {% endembed %}
+{% endblock body %}

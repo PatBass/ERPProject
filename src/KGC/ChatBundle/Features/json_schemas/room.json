@@ -1,0 +1,54 @@
+{
+    "id": "room.json",
+    "title": "Room schema",
+    "type": "object",
+    "properties": {
+        "id": {
+            "type": "integer"
+        },
+        "entitled": {
+            "type": "string"
+        },
+        "status": {
+            "type": "integer"
+        },
+        "date_created": {
+            "type": "integer"
+        },
+        "remaining_credit": {
+            "type": "integer"
+        },
+        "start_date": {
+            "type": ["null", "integer"]
+        },
+        "end_date": {
+            "type": ["null", "integer"]
+        },
+        "users": {
+            "type": "array",
+            "items": {
+                "$ref": "user.json"
+            }
+        },
+        "messages": {
+            "type": "array",
+            "items": {
+                "$ref": "message.json"
+            }
+        },
+        "room_formula_rates": {
+            "type": "array",
+            "items": {
+                "$ref": "room_formula_rate.json"
+            }
+        },
+        "chat_type": {
+            "type": "object",
+            "$ref": "chat_type.json"
+        },
+        "now": {
+            "type": "integer"
+        }
+    },
+    "required": ["id", "entitled", "status", "date_created", "users", "messages", "chat_type", "room_formula_rates", "now"]
+}

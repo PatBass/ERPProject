@@ -1,0 +1,39 @@
+{# src/KGC/StatBundle/Ressources/views/Admin/roi.details.html.twig #}
+
+{% extends not app.request.isXmlHttpRequest() ? '::layout.html.twig' : '::emptylayout.html.twig' %}
+
+{% block body %}
+    {% embed '::modallayout.html.twig' %}
+        {% block modal_title %}
+            Détail CA ({{ select_date }} - {{ select_tpe }})
+            <a title="Export Excel (.csv)" href="{{ path('kgc_stat_admin_ca_detail', {'select_date': app.request.query.get('select_date'), 'select_tpe': app.request.query.get('select_tpe'), 'export' : 1 }) }}">
+                <i class="icon-download-alt"></i>
+            </a>
+        {% endblock modal_title %}
+        {% block modal_body %}
+            <div class="row">
+                <div class="col-md-6">
+                {% set selectDate = app.request.query.get('select_date') %}
+                {% set selectTpe = app.request.query.get('select_tpe') %}
+                {% for enc in details %}
+                    {% for line in enc %}
+                        {% set limit = (line | length) / 2 | round %}
+                        {% for value in line %}
+                            {{ value['nb'] }} x {{ (value['amount'] / 100 / value['nb']) | number_format(2, ',', ' ') }} €
+                            pour
+
+                            <a href="{{ path('kgc_rdv_fiche', {id : value['rdv'], 'select_date': selectDate, 'select_tpe':selectTpe}) }}" class="modal-load">
+                                <strong>{{ value['user'] }}</strong>
+                            </a>
+                            <br />
+                            {% if loop.index > limit %}
+                                </div><div class="col-md-6">
+                            {% endif %}
+                        {% endfor %}
+                    {% endfor %}
+                {% endfor %}
+                </div>
+            </div>
+        {% endblock modal_body %}
+    {% endembed %}
+{% endblock body %}

@@ -1,0 +1,21 @@
+{# src/KGC/RdvBundle/Resources/views/Consultation/fiche.modal.html.twig #}
+{% extends "KGCDashboardBundle::layout.html.twig" %}
+
+{% block ariane %}
+    {% set fil = ['Fiche client'] %}
+    {{ parent() }}
+{% endblock %}
+
+{% block page_header %}
+    {% set infos = { 'titre':'Fiche client','desc':client.mail} %}
+    {% set reload = { 'url':'#client_fiche' } %}
+    {{ parent() }}
+{% endblock %}
+
+{% block dashboard_body %}
+    <div class="row">
+        <div class="col-xs-12">
+            <form method="post" action="{{ path('kgc_client_widget_fiche',{'id':client.id}) }}" data-close="1" class="ajax_load" id="client_fiche"></form>
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,22 @@
+{# src/KGC/DashboardBundle/Resources/views/Config/sms.html.twig #}
+
+{% extends "KGCDashboardBundle::layout.html.twig" %}
+
+{% block ariane %}
+    {% set fil = ['Réglages'] %}
+    {{ parent() }}
+{% endblock %}
+
+{% block page_header %}
+    {% set infos = { 'titre':'Réglages','desc':'Liste de contact'} %}
+    {% set reload = { 'url':'#config_list' } %}
+    {{ parent()}}
+{% endblock %}
+
+{% block dashboard_body %}
+    <div class="row">
+        <div class="col-md-12">
+            <form method="post" action="{{ path('kgc_config_campagne_list_contact') }}" class="ajax_load" id="config_list"></form>
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,21 @@
+parameters:
+#    kgc_user.example.class: KGC\UserBundle\Example
+
+services:
+#    kgc_user.example:
+#        class: %kgc_user.example.class%
+#        arguments: [@service_id, "plain_value", %parameter%]
+    kgc.elastic.prospect.transformer:
+        class: KGC\UserBundle\Elastic\Transformer\ProspectElasticaToModelTransformer
+        arguments:
+            - @doctrine
+            - 'KGCSharedBundle:LandingUser'
+            - {}
+        calls:
+            - [ setPropertyAccessor, [@fos_elastica.property_accessor ] ]
+        tags:
+            - { name: fos_elastica.elastica_to_model_transformer, type: prospect, index: kgestion_idx }
+    kgc.utilisateur.repository.classmetadata:
+            class: Doctrine\ORM\Mapping\ClassMetadata
+            arguments:
+                - KGC\UserBundle\Entity\Utilisateur

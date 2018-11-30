@@ -1,0 +1,43 @@
+{% extends "KGCDashboardBundle::layout.html.twig" %}
+
+{% block ariane %}
+    {% set fil = ['Tableau de bord Voyant'] %}
+    {{ parent() }}
+{% endblock %}
+
+{% block page_header %}
+    {% set reload = { 'url':'#planning_widget, #rdv_pause, #qa_reminders_list' } %}
+    {{ parent()}}
+{% endblock %}
+
+{% block dashboard_body %}
+    <div class="row">
+        <div class="col-lg-5">
+            <form method="post" action="{{ path('kgc_planning_widget') }}" class="ajax_load form-horizontal" id="planning_widget"></form>
+        </div>
+        <div class="col-lg-7">
+            <form method="post" action="{{ path('kgc_rdv_voyant_search') }}" class="form-search form-search-ajax ajax_load" id="rdv_recherche"></form>
+            <div class="space-6"></div>
+            <form method="post" action="{{ path('kgc_rdv_date_search') }}" class="form-search form-search-ajax ajax_load" id="rdv_date_recherche"></form>
+            <div class="space-6"></div>
+            <form method="post" action="{{ path('kgc_rdv_pause_widget') }}" class="ajax_load" id="rdv_pause"></form>
+            {#
+            <div class="space-6"></div>
+            <form method="post" action="{{ path('kgc_today_reminders_list_psychic') }}" class="form-search form-search-ajax ajax_load" id="qa_reminders_list"></form>
+            #}
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+
+    {% if app.user.chatType is not null %}
+        {% include 'KGCChatBundle::chat_init.html.twig' with {
+            'env': app.environment,
+            'psychic_id': app.user.id,
+            'token': get_chat_token(app.user),
+            'socketio_url': socketio_url
+        } only %}
+    {% endif %}
+{% endblock %}

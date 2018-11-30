@@ -1,0 +1,239 @@
+## src/KGC/RdvBundle/Ressources/fixtures/Version20150402164046/actionsuivi.yml
+
+KGC\RdvBundle\Entity\ActionSuivi:
+    action1:
+        idcode: ADD_CONSULT
+        libelle: Ajout du rendez-vous de consultation.
+        typeDonnee:
+        event:
+        compact: false
+        groupe: @groupeaction4
+    action2:
+        idcode: SECURE_BANKDETAILS
+        libelle: Sécurisation des coordonnées bancaires.
+        typeDonnee:
+        event: onSecurisation
+        compact: false
+        groupe: @groupeaction5
+    action3:
+        idcode: CONNECTING_PSYCHIC
+        libelle: Mise en relation.
+        typeDonnee:
+        event: onMiserelation
+        compact: true
+    action4:
+        idcode: UPDATE_BANKDETAILS
+        libelle: Coordonnées bancaires
+        typeDonnee:
+        event:
+        compact: true
+        groupe: @groupeaction1
+    action5:
+        idcode: UPDATE_SURNAME
+        libelle: Nom
+        typeDonnee:
+        event:
+        compact: true
+        groupe: @groupeaction1
+    action6:
+        idcode: UPDATE_NAME
+        libelle: Prénom
+        typeDonnee:
+        event:
+        compact: true
+        groupe: @groupeaction1
+    action7:
+        idcode: UPDATE_BIRTHDATE
+        libelle: Date de naissance
+        typeDonnee:
+        event:
+        compact: true
+        groupe: @groupeaction1
+    action8:
+        idcode: UPDATE_PHONE
+        libelle: Téléphone
+        typeDonnee:
+        event:
+        compact: true
+        groupe: @groupeaction1
+    action9:
+        idcode: UPDATE_MAIL
+        libelle: Adresse mail
+        typeDonnee:
+        event:
+        compact: true
+        groupe: @groupeaction1
+    action10:
+        idcode: UPDATE_ADDRESS
+        libelle: Adresse postale
+        typeDonnee:
+        event:
+        compact: true
+        groupe: @groupeaction1
+    action11:
+        idcode: TAKE_CONSULT
+        libelle: Prise en charge de la consultation.
+        typeDonnee:
+        event: onPriseenCharge
+        compact: false
+        groupe:
+    action12:
+        idcode: ADD_BILLING
+        libelle: Ajout des données de facturation.
+        typeDonnee:
+        event:
+        compact: true
+        groupe: @groupeaction4
+    action13:
+        idcode: POSTPONE_CONSULT
+        libelle: Report du rendez-vous de consultation.
+        typeDonnee:
+        event: onReportConsult
+        compact: true
+        groupe: @groupeaction2
+    action14:
+        idcode: CANCEL_CONSULT
+        libelle: Annulation de la consultation.
+        typeDonnee:
+        event: onCancel
+        compact: false
+        groupe: @groupeaction3
+    action15:
+        idcode: PROCEED_PAYMENT
+        libelle: Traitement d'un encaissement
+        typeDonnee:
+        event: onValidEncaissement
+        compact: true
+        groupe: @groupeaction6
+    action16:
+        idcode: UPDATE_BILLING
+        libelle: Données de facturation
+        typeDonnee:
+        event: onUpdateFacturation
+        compact: true
+        groupe: @groupeaction1
+    action17:
+        idcode: PAUSE_CONSULT
+        libelle: Consultation reconduite
+        typeDonnee:
+        event: onPauseConsult
+        compact: false
+        groupe:
+    action18:
+        idcode: UPDATE_PRICERANGE
+        libelle: Données de tarification
+        typeDonnee:
+        event: onUpdateTarification
+        compact: true
+        groupe: @groupeaction1
+    action19:
+        idcode: UPDATE_IDASTRO
+        libelle: ID myastro
+        typeDonnee:
+        event: onUpdateIdmyastro
+        compact: true
+        groupe: @groupeaction1
+    action20:
+        idcode: CLOSE_CONSULT
+        libelle: Clôture de la fiche
+        typeDonnee:
+        event:
+        compact: false
+        groupe: @groupeaction7
+    action21:
+        idcode: IMPORT_CONSULT
+        libelle: Import de la fiche Excel.
+        typeDonnee:
+        event:
+        compact: false
+        groupe: @groupeaction8
+    action22:
+        idcode: SORT_CONSULT
+        libelle: Classement
+        typeDonnee:
+        event: onUpdateClassement
+        compact: false
+        groupe: @groupeaction1
+    action23:
+        idcode: CANCEL_PAYMENT
+        libelle: Opposition
+        typeDonnee:
+        event: onCancelPayment
+        compact: false
+        groupe: @groupeaction6
+    action24:
+        idcode: REACTIVATE_CONSULT
+        libelle: Réactivation
+        typeDonnee:
+        event: onReactivation
+        compact: false
+        groupe: @groupeaction2
+    action25:
+        idcode: DO_CONSULT
+        libelle: Consultation effectuée.
+        typeDonnee:
+        event: onConsultationEffectuee
+        compact: false
+        groupe:
+    action26:
+        idcode: UPDATE_CODEPROMO
+        libelle: Code promotionnel
+        typeDonnee:
+        event:
+        compact: true
+        groupe: @groupeaction1
+    action27:
+        idcode: UPDATE_WEBSITE
+        libelle: Site web de provenance
+        typeDonnee:
+        event: onUpdateWebsite
+        compact: true
+        groupe: @groupeaction1
+    action28:
+        idcode: UPDATE_PROPRIO
+        libelle: Propriétaire
+        typeDonnee:
+        event:
+        compact: false
+        groupe: @groupeaction1
+    action29:
+        idcode: UPDATE_VOYANT
+        libelle: Voyant
+        typeDonnee:
+        event:
+        compact: false
+        groupe: @groupeaction1
+    action30:
+        idcode: UPDATE_CONSULTANT
+        libelle: Consultant
+        typeDonnee:
+        event:
+        compact: false
+        groupe: @groupeaction1
+    action31:
+        idcode: UPDATE_SUPPORT
+        libelle: Support
+        typeDonnee:
+        event:
+        compact: false
+        groupe: @groupeaction1
+    action32:
+        idcode: UPDATE_PRODUCT_SENDING
+        libelle: Envoi des produits
+        compact: false
+        groupe: @groupeaction1
+    action33:
+        idcode: UPDATE_GENDER
+        libelle: Genre
+        compact: true
+        groupe: @groupeaction1
+    action34:
+        idcode: UPDATE_SECURISATION
+        libelle: Sécurisation
+        compact: false
+        groupe: @groupeaction1
+    action35:
+        idcode: UNCLOSE_CONSULT
+        libelle: Réouverture de la fiche
+        compact: false
+        groupe: @groupeaction7

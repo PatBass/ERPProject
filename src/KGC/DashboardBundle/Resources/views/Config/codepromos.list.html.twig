@@ -1,0 +1,69 @@
+{# src/KGC/DashboardBundle/Resources/views/Config/codepromos.list.html.twig #}
+
+{% extends not app.request.isXmlHttpRequest() ? '::layout.html.twig' : '::emptylayout.html.twig' %}
+
+{% block body %}
+    {% embed '::widgetlayout.html.twig' %}
+        {% set widget_options = {
+            'titre' : 'Codes promo',
+            'refresh' : '#config_promo',
+            'collapse' : true,
+            'no_padding' : true
+        } %}
+
+        {% block widget_main %}
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>Code</th>
+                        <th>Description</th>
+                        <th>Site</th>
+                        <th>Actif</th>
+                        <th>Inactif depuis</th>
+                        <th>Création</th>
+                        <th>Modification</th>
+                        <th>&nbsp;</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for o in objects %}
+                    {% set state = o.enabled %}
+                    <tr>
+                        <td>{{ o.id }}</td>
+                        <td>{{ o.code }}</td>
+                        <td>{{ o.desc }}</td>
+                        <td>{{ o.website and o.website.id > 0 ? o.website.libelle : '-' }}</td>
+                        <td>
+                            {% if state %}
+                                <span class="label label-success">Oui</span>
+                            {% else %}
+                                <span class="label label-danger">Non</span>
+                            {% endif %}
+                        </td>
+                        <td>{{ o.disabledDate != null ? o.disabledDate | date('d/m/Y') }}</td>
+                        <td>{{ o.createdAt | date('d/m/Y H:i')}}</td>
+                        <td>{{ o.updatedAt | date('d/m/Y H:i') }}</td>
+                        <td class="line-actions">
+                            <a href="{{ path('kgc_config_codepromo_edit', {'id': o.id}) }}" class="btn btn-xs btn-primary tooltip-primary modal-load"
+                               role="button" title="Éditer" data-rel="tooltip" data-placement="left">
+                                <i class="icon-pencil"></i>
+                            </a>
+                            <a href="{{ path('kgc_config_codepromo_state', {'id': o.id}) }}" class="btn btn-xs {{ state ? 'btn-purple tooltip-purple' : 'btn-info tooltip-info' }} gritter-load"
+                               role="button" title="{{ state ? 'Désactiver' : 'Activer' }}" data-rel="tooltip" data-placement="left">
+                                <i class="icon-{{ state ? 'ban-circle' : 'circle-blank' }}"></i>
+                            </a>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        {% endblock widget_main %}
+        
+        {% block widget_body_after %}
+            <a href="{{ path('kgc_config_codepromo_edit') }}" class="btn btn-block modal-load" role="button" title="Ajouter un code promo">
+                <i class="icon-plus"></i> Ajouter un code promo
+            </a>
+        {% endblock widget_body_after %}
+    {% endembed %}
+{% endblock body %}

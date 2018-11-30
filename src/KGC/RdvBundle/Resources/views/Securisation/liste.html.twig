@@ -1,0 +1,62 @@
+{# src/KGC/RdvBundle/Ressources/views/Securisation/liste.html.twig #}
+
+{% extends '::emptylayout.html.twig' %}
+
+{% block body %}
+    {% embed '::widgetlayout.html.twig' %}
+
+        {% use 'KGCRdvBundle::listefichesRDV.html.twig' %}
+
+        {% set widget_options = {
+            'titre' : 'Sécurisations',
+            'header_class' : 'widget-header-small header-color-orange',
+            'refresh' : '#rdv_securisation',
+            'collapse' : true,
+            'no_padding' : true,
+            'compact' : true,
+            'compacted' : true
+        } %}
+
+        {% block widget_main %}
+            {% set actions_securiser = {
+                1 : {
+                    'route_action' : 'kgc_secu',
+                    'color' : 'yellow',
+                    'icon' : 'shield',
+                    'title' : 'Sécuriser la consultation'
+                }
+            } %}
+            {% set actions_fiche = {
+                1 : {
+                    'route_action' : 'kgc_rdv_fiche',
+                    'color' : 'pink-light',
+                    'icon' : 'file',
+                    'title' : 'Ouvrir la fiche'
+                }
+            } %}
+            {% set fiches = display %}
+                <table class="table table-striped table-hover valign-middle {{ class|default('') }} {{ datatable|default(false) ? 'dataTable' }}" id="table-{{ fiches|length }}">
+                    {{ datatable|default(false) ? block('thead_fiches') }}
+                    <tbody>
+                        {% for rdv in fiches %}
+                            {% set actions = rdv.cartebancaires|length > 0 ? actions_securiser : actions_fiche %}
+                            <tr>{{ block('ligne_rdv') }}</tr>
+                        {% else %}
+                        <tr><td colspan="4">Aucun résultat</td></tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            {% set fiches = compact %}
+            {% set class = 'compactit' %}
+            <table class="table table-striped table-hover valign-middle {{ class|default('') }} {{ datatable|default(false) ? 'dataTable' }}" id="table-{{ fiches|length }}">
+                {{ datatable|default(false) ? block('thead_fiches') }}
+                <tbody>
+                    {% for rdv in fiches %}
+                        {% set actions = rdv.cartebancaires|length > 0 ? actions_securiser : actions_fiche %}
+                        <tr>{{ block('ligne_rdv') }}</tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% endblock %}
+    {% endembed %}
+{% endblock body %}

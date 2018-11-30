@@ -1,0 +1,63 @@
+{# src/KGC/StatBundle/Resources/views/Standard/support.html.twig #}
+
+{% extends not app.request.isXmlHttpRequest() ? '::layout.html.twig' : '::emptylayout.html.twig' %}
+
+{% block body %}
+    {% embed '::widgetlayout.html.twig' %}
+
+        {% set widget_options = {
+            'titre' : 'Support - Nombre de RDV pris',
+            'header_class' : 'widget-header-small header-color-blue3',
+            'refresh' : '#standard_support',
+            'collapse' : true,
+            'no_padding' : true,
+            'body_extra_class' : 'stat-standard-support'
+        } %}
+
+        {% block widget_body %}
+            <div class="row center" style="padding: 6px 0; margin:0">
+                <div class="col-md-6">
+                    {{ form_widget(form.past_date) }}
+                </div>
+                <div class="col-md-6">
+                    <button type="submit" class="btn btn-success btn-block btn-sm">
+                        <i class="icon-arrow-right"></i> Appliquer
+                    </button>
+                </div>
+            </div>
+            {{ parent() }}
+        {% endblock widget_body %}
+
+        {% block widget_main %}
+            {% set total_day = 0 %}
+            {% set total_month = 0 %}
+            <table class="table table-striped table-condensed">
+                <thead>
+                <tr>
+                    <th>&nbsp;</th>
+                    <th>Jour <small>({{ date | date('d/m/Y') }})</small></th>
+                    <th>Mois <small>({{ date | date('m/Y') }})</small></th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for s, v in support %}
+                    <tr>
+                        <td>{{ s }}</td>
+                        <td><a href="{{ path('kgc_stat_standard_stats_details_rdv', {'type': 'support_list', 'periode': 'day', 'support': v.support_id}) }}" class="modal-load">{{ v.count_day | default(0) }}</a></td>
+                        <td><a href="{{ path('kgc_stat_standard_stats_details_rdv', {'type': 'support_list', 'periode': 'month', 'support': v.support_id}) }}" class="modal-load">{{ v.count_month | default(0) }}</a></td>
+                    </tr>
+                    {% set total_day = total_day + v.count_day | default(0) %}
+                    {% set total_month = total_month + v.count_month | default(0) %}
+                {% endfor %}
+                </tbody>
+                <tfooter>
+                    <tr>
+                        <td>TOTAL</td>
+                        <th>{{ total_day }}</th>
+                        <th>{{ total_month }}</th>
+                    </tr>
+                </tfooter>
+            </table>
+        {% endblock %}
+    {% endembed %}
+{% endblock body %}

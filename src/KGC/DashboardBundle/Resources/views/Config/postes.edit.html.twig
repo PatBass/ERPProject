@@ -1,0 +1,49 @@
+{# src/KGC/DashboardBundle/Resources/views/Config/postes.edit.list.html.twig #}
+
+{% extends not app.request.isXmlHttpRequest() ? '::layout.html.twig' : '::emptylayout.html.twig' %}
+
+{% block body %}
+    {% embed '::modallayout.html.twig' %}
+        {% block modal_header %}
+            {% set link = {
+                'txt' : (upd ? 'Édition' : 'Ajout') ~ ' d\'un poste',
+                'url' : path('kgc_config_poste_edit',{'id':poste.id}),
+                'icon' : upd ? 'pencil' : 'plus'
+            } %}
+            {{ parent() }}
+        {% endblock %}
+
+        {% block modal_content %}
+            <form id="mail_template_modal" method="post" action="{{ path('kgc_config_poste_edit', {'id': poste.id}) }}" {{ form_enctype(form) }} data-close="1" data-refresh="#config_postes" class="ajax_modal_form form-horizontal">
+                {{ parent() }}
+                {{ form_widget(form._token) }}
+            </form>
+        {% endblock modal_content %}
+
+        {% block modal_body %}
+            <div class="row">
+                <div class="col-md-6">
+                    <strong>Nom du poste :</strong><br />
+                    {{ form_widget(form.name) }}
+                </div>
+                <div class="col-md-6">
+                    <strong>Téléphone :</strong><br />
+                    {{ form_widget(form.phone) }}
+                </div>
+            </div>
+        {% endblock modal_body %}
+
+        {% block modal_footer %}
+            <div class="modal-footer">
+                <div class="pull-left">
+                    <button type="button" class="btn btn-sm btn-danger" data-dismiss="modal"><i class="icon-remove"></i> Fermer</button>
+                </div>
+                <div class="pull-right">
+                    <button type="submit" class="btn btn-success btn-block btn-sm js-wysiwyg-btn">
+                        <i class="icon-arrow-right"></i> Enregistrer
+                    </button>
+                </div>
+            </div>
+        {% endblock modal_footer %}
+    {% endembed %}
+{% endblock body %}

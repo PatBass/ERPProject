@@ -1,0 +1,199 @@
+# src/KGC/ChatBundle/Resources/config/routing-api.yml
+
+##################################
+# Routes with client token needed
+##################################
+
+kgc_api_client_check_authentication:
+    pattern:  /client/check-authentication
+    defaults: { _controller: KGCChatBundle:Api:checkUserAuthentication }
+
+kgc_api_client_info:
+    pattern:  /client/info
+    defaults: { _controller: KGCChatBundle:Api:info }
+
+kgc_api_client_room_enter:
+    pattern:  /client/room/enter/{id}
+    defaults: { _controller: KGCChatBundle:Api:enterRoom }
+    requirements:
+        id: \d+
+
+kgc_api_client_room_exit:
+    pattern:  /client/room/leave/{id}
+    defaults: { _controller: KGCChatBundle:Api:leaveRoom }
+    requirements:
+        id: \d+
+
+kgc_api_client_decrement:
+    pattern:  /client/room/decrement/{id}
+    defaults: { _controller: KGCChatBundle:Api:decrementRoom }
+    requirements:
+        id: \d+
+
+kgc_api_client_room_reopen:
+    pattern:  /client/room/reopen/{id}
+    defaults: { _controller: KGCChatBundle:Api:reopenRoom }
+    requirements:
+        id: \d+
+
+kgc_api_client_room_resume:
+    pattern:  /client/room/resume/{id}
+    defaults: { _controller: KGCChatBundle:Api:resumeRoom }
+    requirements:
+        id: \d+
+
+kgc_api_client_room_message:
+    pattern:  /client/room/message/{id}
+    defaults: { _controller: KGCChatBundle:Api:addMessage }
+    requirements:
+        id: \d+
+
+kgc_api_client_room_get:
+    pattern:  /client/room/get
+    defaults: { _controller: KGCChatBundle:Api:getRooms }
+
+
+kgc_api_client_get_available_psychics:
+    pattern:  /client/get-available-psychics/{website_slug}
+    defaults: { _controller: KGCChatBundle:Api:getAvailableVirtualPsychics, website_slug: null }
+
+kgc_api_client_room_ask:
+    pattern:  /client/room/ask/{virtual_psychic_id}
+    defaults: { _controller: KGCChatBundle:Api:askRoom }
+    requirements:
+        virtual_psychic_id: \d+
+
+kgc_api_client_formula_choose:
+    pattern:  /client/{website_slug}/formula/buy/{id}
+    defaults: { _controller: KGCChatBundle:Api:buyFormulaRate }
+    requirements:
+        id: \d+
+
+kgc_api_client_promotionCode_use:
+    pattern:  /client/promotionCode/use
+    defaults: { _controller: KGCChatBundle:Api:usePromotionCode }
+
+kgc_api_client_website_get_formulas:
+    pattern:  /client/{website_slug}/get-formulas
+    defaults: { _controller: KGCChatBundle:Api:getFormulasByWebsite, client_restricted: 1 }
+    requirements:
+        website_slug: "[a-z-]+"
+
+kgc_api_client_card_delete:
+    pattern:  /client/card/{id}/delete
+    defaults: { _controller: KGCChatBundle:Api:deleteCreditCard }
+
+kgc_api_client_subscription_get:
+    pattern:  /client/{website_slug}/subscription/get
+    defaults: { _controller: KGCChatBundle:Api:getSubscriptions }
+
+kgc_api_client_subscription_cancel:
+    pattern:  /client/{website_slug}/subscription/cancel/{id}
+    defaults: { _controller: KGCChatBundle:Api:cancelSubscription }
+    requirements:
+        id: \d+
+
+kgc_api_client_history_chat:
+    pattern:  /client/{website_slug}/history/chat
+    defaults: { _controller: KGCChatBundle:Api:getChatHistory }
+
+kgc_api_client_remaining_credit:
+    pattern:  /client/{website_slug}/remaining-credit
+    defaults: { _controller: KGCChatBundle:Api:getChatRemainingCredit }
+
+##################################
+# Routes with psychic token needed
+##################################
+
+kgc_api_psychic_check_authentication:
+    pattern:  /psychic/check-authentication
+    defaults: { _controller: KGCChatBundle:Api:checkUserAuthentication }
+
+kgc_api_psychic_set_availability:
+    pattern:  /psychic/set-availability/{is_available}
+    defaults: { _controller: KGCChatBundle:Api:setAvailability }
+    requirements:
+        is_available: \d+
+
+# Create room is did with psychic token
+kgc_api_psychic_room_create:
+    pattern:  /psychic/room/create
+    defaults: { _controller: KGCChatBundle:Api:createRoom }
+
+kgc_api_psychic_room_enter:
+    pattern:  /psychic/room/enter/{id}
+    defaults: { _controller: KGCChatBundle:Api:enterRoom }
+    requirements:
+        id: \d+
+
+kgc_api_psychic_room_exit:
+    pattern:  /psychic/room/leave/{id}
+    defaults: { _controller: KGCChatBundle:Api:leaveRoom }
+    requirements:
+        id: \d+
+
+kgc_api_psychic_decrement:
+    pattern:  /psychic/room/decrement/{id}
+    defaults: { _controller: KGCChatBundle:Api:decrementRoom }
+    requirements:
+        id: \d+
+
+kgc_api_psychic_room_restart:
+    pattern:  /psychic/room/restart/{id}
+    defaults: { _controller: KGCChatBundle:Api:restartRoom }
+    requirements:
+        id: \d+
+
+kgc_api_psychic_room_message:
+    pattern:  /psychic/room/message/{id}
+    defaults: { _controller: KGCChatBundle:Api:addMessage }
+    requirements:
+        id: \d+
+
+kgc_api_psychic_room_answer:
+    pattern:  /psychic/room/answer/{id}/{decision}
+    defaults: { _controller: KGCChatBundle:Api:answerRoom }
+    requirements:
+        id: \d+
+        decision: \d+
+
+kgc_api_psychic_room_get:
+    pattern:  /psychic/room/get
+    defaults: { _controller: KGCChatBundle:Api:getRooms }
+
+kgc_api_psychic_get_available_psychics:
+    pattern:  /psychic/get-available-psychics/{website_slug}
+    defaults: { _controller: KGCChatBundle:Api:getAvailableVirtualPsychics, website_slug: null }
+
+
+##################################
+# Routes without token needed
+##################################
+
+kgc_api_open_website_get_formulas:
+    pattern:  /open/website/{website_slug}/get-formulas
+    defaults: { _controller: KGCChatBundle:Api:getFormulasByWebsite }
+    requirements:
+        website_slug: "[a-z-]+"
+
+kgc_api_open_website_get_discovery_formula_rate:
+    pattern:  /open/website/{website_slug}/get-discovery-formula-rate
+    defaults: { _controller: KGCChatBundle:Api:getDiscoveryFormulaRateByWebsite }
+    requirements:
+        website_slug: "[a-z-]+"
+
+kgc_api_open_website_get_free_offer_formula_rate:
+    pattern:  /open/website/{website_slug}/get-free-offer-formula-rate
+    defaults: { _controller: KGCChatBundle:Api:getFreeOfferFormulaRateByWebsite }
+    requirements:
+        website_slug: "[a-z-]+"
+
+kgc_api_open_website_get_available_psychics:
+    pattern:  /open/website/{website_slug}/get-available-psychics
+    defaults: { _controller: KGCChatBundle:Api:getAvailableVirtualPsychicsByWebsite }
+    requirements:
+        website_slug: "[a-z-]+"
+
+kgc_api_open_node_get_configuration:
+    pattern:  /open/node/get-configuration
+    defaults: { _controller: KGCChatBundle:Api:getConfiguration }

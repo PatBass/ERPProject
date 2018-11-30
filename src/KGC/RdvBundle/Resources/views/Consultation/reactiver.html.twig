@@ -1,0 +1,54 @@
+{# src/KGC/RdvBundle/Resources/views/Consultation/reactiver.html.twig #}
+
+{% extends not app.request.isXmlHttpRequest() ? '::layout.html.twig' : '::emptylayout.html.twig' %}
+
+{% block body %}
+    {% embed '::modallayout.html.twig' %}
+        {% import 'KGCRdvBundle::blocsficheRDV.html.twig' as fiche %}
+
+        {% block modal_title %}Réactiver la consultation de {{ rdv.client.nom ~ " " ~ rdv.client.prenom }}{% endblock modal_title %}
+
+        {% block modal_content %}
+             {% if form %}
+                <form id="report_rdv_modal" method="post" action="{{ path('kgc_rdv_reactiver',{'id':rdv.id}) }}" {{ form_enctype(form) }} class="{{ app.request.isXmlHttpRequest() ? 'ajax_modal_form'}} form-horizontal">
+                    {{ parent() }}
+                    {{ form_widget(form.mainaction) }}
+                    {{ form_widget(form._token) }}
+                </form>
+            {% else %}
+                {{ parent() }}
+            {% endif %}
+        {% endblock modal_content %}
+
+        {% block modal_body %}
+            {% if form %}
+            <div class="form-group row">
+                <label class="col-lg-4 col-xs-5 control-label required" for="kgc_RdvBundle_rdv_dateConsultation">Date prévue</label>
+                <div class="controls col-lg-7 col-xs-3">
+                    <input class="form-control" type="text" value="{{ rdv.dateConsultation|date('d/m/Y H:i') }}" disabled />
+                </div>
+            </div>
+            {{ form_row(form.dateConsultation, {'label':'Nouvelle date','label_attr':{'class':'col-lg-4 col-xs-5 text-orange'},'controls_size':'col-lg-7 col-xs-3'}) }}
+            <div class="row">
+                <div class="col-sm-10 col-sm-offset-1">
+                    <div class="well" id="planning_selection">
+                        {{ render(controller("KGCRdvBundle:Planning:widgetSelection")) }}
+                    </div>
+                </div>
+            </div>
+            {% elseif rdv %}
+                <p class="alert alert-info">Cette fiche nʼest pas réactivable car la date initialement prévue ({{ rdv.dateConsultation|date('d/m/Y H:i') }}) est passée depuis plus de 5 jours.</p>
+            {% else %}
+                <p class="alert alert-danger">La fiche demandée nʼa pas été trouvée. Il sʼagit sûrement dʼun lien erroné.</p>
+            {% endif %}
+        {% endblock modal_body %}
+
+        {% block modal_footer %}
+            {% if not form %}
+                {{ fiche.rdv_form_footer({'rdv':rdv,'retour': true}) }}
+            {% else %}
+                {{ fiche.rdv_form_footer({'form':form,'rdv':rdv,'retour':true}) }}
+            {% endif %}
+        {% endblock modal_footer %}
+    {% endembed %}
+{% endblock body %}

@@ -1,0 +1,137 @@
+{# src/KGC/RdvBundle/Resources/views/Consultation/fiche.modal.html.twig #}
+
+{% extends not app.request.isXmlHttpRequest() and not forceEmpty ? '::layout.html.twig' : '::emptylayout.html.twig' %}
+
+{% block body %}
+    {% embed '::modallayout.html.twig' %}
+        {% import 'KGCRdvBundle::blocsficheRDV.html.twig' as fiche %}
+        {% import 'KGCRdvBundle::interfacedata.html.twig' as interface %}
+
+        {% block modal_dialog_head %}
+            {% if rdv.warnings is not null %}
+                {% for alert in rdv.warnings %}
+                    <p class="gritter hidden" data-class="gritter-{{ alert.style }}" data-title="{{ rdv.client.fullname }}" data-image="{{ app.request.getSchemeAndHttpHost() ~ asset(img_path ~ 'warning-sign.png') }}">
+                        {{ alert.msg|raw }}
+                    </p>
+                    <p class="alert alert-{{ alert.style }}">{{ alert.msg|raw }}</p>
+                {% endfor %}
+            {% endif %}
+        {% endblock modal_dialog_head %}
+
+        {% block modal_header %}
+            {% if not dont_close|default(false) %}
+                <div class="modal-menu">
+                    <ul>
+                        {{ interface.consultation_menu(rdv) }}
+                    </ul>
+                </div>
+            {% endif %}
+            {{ fiche.rdv_form_header(rdv, true) }}
+        {% endblock %}
+
+        {% block modal_main %}
+            {% if form %}
+                <form id="form_fiche_rdv" method="post" action="{{ path('kgc_rdv_fiche', {'id':rdv.id}) }}" {{ form_enctype(form) }}
+                        class="{{ app.request.isXmlHttpRequest() ? 'ajax_modal_form' }} form-horizontal" {{ close ? 'data-close="1"' }}>
+                    {% set modal_body_class = 'fiche' %}
+                    {{ parent() }}
+                    {{ form_widget(form._token) }}
+                    {{ form_edit ? form_widget(form_edit._token) }}
+                </form>
+                {# les flashbags sont générés dans le layout général (empty ou html) #}
+            {% else %}
+                {{ parent() }}
+            {% endif %}
+        {% endblock modal_main %}
+
+        {% block modal_body %}
+            {% if form %}
+                {% if not form.vars.valid %}
+                    <p class="alert alert-danger">{{ form_errors(form) }}</p>
+                {% endif %}
+                {% set options_consult = { 'rdv':rdv, 'form':form, 'form_edit':form_edit } %}
+                {% if rdv.etat.idcode == constant('ADDED', rdv.etat) %}{# Enregistrée #}
+                    <div class="row">
+                        <div class="col-lg-7">
+                            {{ fiche.client({'form':form, 'form_edit':form_edit, 'rdv':rdv}, true) }}
+                            {{ fiche.questions(options_consult) }}
+                            {{ fiche.historique(rdv) }}
+                        </div>
+                        <div class="col-lg-5">
+                            {{ fiche.consultation(options_consult) }}
+                            {{ fiche.coordonneesbancaires({'form':form, 'form_edit':form_edit}) }}
+                            {{ fiche.securisation({'rdv': rdv}) }}
+                        </div>
+                    </div>
+                {% elseif rdv.etat.idcode == constant('CONFIRMED', rdv.etat) %}{# Confirmée (post-sécurisation) #}
+                    <div class="row">
+                        <div class="col-lg-7">
+                            {{ fiche.client({'form':form, 'form_edit':form_edit, 'rdv':rdv}, true) }}
+                            {{ fiche.historique(rdv) }}
+                        </div>
+                        <div class="col-lg-5">
+                            {{ fiche.consultation(options_consult) }}
+                            {{ fiche.coordonneesbancaires({'form':form, 'form_edit':form_edit}) }}
+                            {{ fiche.securisation({'rdv': rdv, 'form':form, 'form_edit':(rdv.isConfirmedSecurisationEditable() ? form_edit : false)}) }}
+                        </div>
+                    </div>
+                {% elseif rdv.etat.idcode == constant('CANCELLED', rdv.etat) %}{# Annulée #}
+                    <div class="row">
+                        <div class="col-lg-7">
+                            {{ fiche.client({'form':form, 'form_edit':form_edit, 'rdv':rdv}, true) }}
+                            {{ fiche.historique(rdv) }}
+                        </div>
+                        <div class="col-lg-5">
+                            {{ fiche.consultation(options_consult) }}
+                            {{ fiche.coordonneesbancaires({'form':form}) }}
+                            {{ fiche.securisation({'rdv': rdv, 'form':form}) }}
+                        </div>
+                    </div>
+                {% elseif rdv.etat.idcode == constant('INPROGRESS', rdv.etat) %}{# En cours #}
+                    <div class="row">
+                        <div class="col-lg-7">
+                            {{ fiche.client({'form':form, 'form_edit':form_edit, 'rdv':rdv}, true) }}
+                            {{ fiche.historique(rdv) }}
+                        </div>
+                        <div class="col-lg-5">
+                            {{ fiche.consultation(options_consult|merge({'nomenu':true})) }}
+                            {{ fiche.coordonneesbancaires({'form':form, 'form_edit':form_edit}) }}
+                            {{ fiche.securisation({'rdv': rdv, 'form':form, 'form_edit':(rdv.isConfirmedSecurisationEditable() ? form_edit : false)}) }}
+                        </div>
+                    </div>
+                {% else %}{# Effectuée ou Litige ou Cloturée #}
+                    <div class="row">
+                        <div class="col-lg-6">
+                            {{ fiche.client({'form':form, 'form_edit':form_edit, 'rdv':rdv}, true) }}
+                            {{ fiche.coordonneesbancaires({'form':form, 'form_edit':form_edit}) }}
+                            {{ fiche.historique(rdv) }}
+                        </div>
+                        <div class="col-lg-6">
+                            {{ fiche.consultation(options_consult) }}
+                            {{ fiche.allumage({ 'rdv':rdv, 'form':form }) }}
+                            {{ fiche.securisation({'rdv': rdv, 'form':form, 'form_edit':(rdv.isConfirmedSecurisationEditable() ? form_edit : false), 'collapsed':true}) }}
+                            {{ fiche.tarification({'form':form,'form_edit':form_edit}) }}
+                            {{ fiche.recap_facturation({'rdv':rdv}) }}
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-12">
+                            {{ fiche.encaissements({ 'rdv':rdv,'form':form, 'editable':form_edit}) }}
+                            {{ fiche.envoi_produits({'form':form, 'form_edit':form_edit, 'user':app.user}) }}
+                        </div>
+                    </div>
+                {% endif %}
+            {% else %}
+                <p class="alert alert-danger">La fiche demandée nʼa pas été trouvée. Il s'agit sûrement dʼun lien erroné.</p>
+            {% endif %}
+        {% endblock modal_body %}
+
+        {% block modal_footer %}
+            {% if not form %}
+                {{ parent() }}
+            {% else %}
+                {{ fiche.rdv_form_footer({'form':form,'no_close':dont_close|default(false),'cochefermeture':true}) }}
+            {% endif %}
+        {% endblock %}
+    {% endembed %}
+{% endblock %}

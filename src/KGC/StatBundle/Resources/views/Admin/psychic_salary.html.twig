@@ -1,0 +1,50 @@
+{# src/KGC/StatBundle/Ressources/views/Admin/psychic_salary.html.twig #}
+
+{% extends not app.request.isXmlHttpRequest() ? '::layout.html.twig' : '::emptylayout.html.twig' %}
+
+{% block body %}
+    {% embed '::widgetlayout.html.twig' %}
+        {% set widget_options = {
+            'titre' : 'SALAIRE',
+            'refresh' : '#psychic_Salary'
+        } %}
+
+        {% block widget_body %}
+            {% if consultant and salary is not empty %}
+            <table class="table table-striped" style="margin-bottom: 0px;">
+                <tbody>
+                    <tr>
+                        <td>PAIE S/CONSULT</td>
+                        <td>{{ salary.consult | number_format(2, ',', ' ') }} €</td>
+                    </tr>
+                    <tr>
+                        <td>PAIE S/RAPPEL</td>
+                        <td>{{ salary.follow | number_format(2, ',', ' ') }} €</td>
+                    </tr>
+                    <tr>
+                        <td>SALAIRE TOTAL</td>
+                        <td>{{ salary.total | number_format(2, ',', ' ') }} €</td>
+                    </tr>
+                    <tr>
+                        <td>ABSENCES</td>
+                        <td>{{ salary.absences }}</td>
+                    </tr>
+                    <tr>
+                        <td>RETARDS</td>
+                        <td>{{ salary.lateness }}</td>
+                    </tr>
+                    <tr>
+                        <td colspan ="2">
+                            <a href="{{ path('kgc_user_modal_journal', {'id': consultant.id}) }}" role="button" class="btn btn-xs btn-primary modal-load pull-right" title="Journal" >
+                                <i class="icon-book bigger-120"></i> Ouvrir le Journal
+                            </a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            {% else %}
+            <h2 class="center text-muted">Aucun consultant sélectionné.</h2>
+            {% endif %}
+        {% endblock %}
+    {% endembed %}
+{% endblock body %}

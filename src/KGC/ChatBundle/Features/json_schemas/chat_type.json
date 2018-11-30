@@ -1,0 +1,23 @@
+{
+    "id": "chat_type.json",
+    "title": "Chat type schema",
+    "type": "object",
+    "properties": {
+        "type": {
+            "type": "integer"
+        },
+        "entitled": {
+            "type": "string"
+        },
+        "is_minute": {
+            "type": "boolean"
+        },
+        "is_question": {
+            "type": "boolean"
+        },
+        "max_chars": {
+            "type": "integer"
+        },
+    },
+    "required": ["type", "entitled", "is_minute", "is_question", "max_chars"]
+}

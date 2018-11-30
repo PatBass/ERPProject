@@ -1,0 +1,336 @@
+{# src/KGC/RdvBundle/Resources/views/interfacedata.html.twig #}
+
+{% macro encaissement_etat(encaissement) %}
+    {% if encaissement is defined %}
+        {% if encaissement.etat == constant('PLANNED', encaissement) %}
+            <span class="label label-lg label-warning arrowed-right">Prévu</span>
+        {% elseif encaissement.etat == constant('DONE', encaissement) %}
+            <span class="label label-lg label-success arrowed-right">Fait</span>
+        {% elseif encaissement.etat == constant('DENIED', encaissement) %}
+            <span class="label label-lg label-danger arrowed-right">Refusé</span>
+        {% elseif encaissement.etat == constant('CANCELLED', encaissement) %}
+            <span class="label label-lg label-purple arrowed-right">Oppo</span>
+        {% elseif encaissement.etat == constant('REFUNDED', encaissement) %}
+            <span class="label label-lg label-purple arrowed-right">Remboursé</span>
+        {% else %}
+        {% endif %}
+    {% endif %}
+{% endmacro encaissement_etat %}
+
+{% macro render_evp_etat(evp_etat) %}
+    {% if evp_etat is defined %}
+        {% set state_render = {
+        'STATE_PLANNED' : {
+        'label' : 'Prévu',
+        'color' : 'warning'
+        }, 'STATE_DONE' : {
+        'label' : 'Fait',
+        'color' : 'success'
+        }, 'STATE_DENIED' : {
+        'label' : 'Annulé',
+        'color' : 'danger'
+        }
+        } %}
+        <span class="label label-lg label-{{ state_render[evp_etat].color|default('') }}">
+            <i class="icon-truck bigger-120"></i> {{ state_render[evp_etat].label|default('') }}
+        </span>
+    {% endif %}
+{% endmacro render_evp_etat %}
+
+{% macro render_evp_allumage(etat, allumage_rdv_id, options) %}
+
+    {% set render_ref = {
+    'IGNITION_PLANNED' : {
+    'label' : 'En attente',
+    'color' : 'warning'
+    }, 'IGNITION_DONE' : {
+    'label' : 'Fait',
+    'color' : 'success'
+    }, 'IGNITION_NONE' : {
+    'label' : 'Pas dʼallumage',
+    'color' : 'light'
+    }
+    } %}
+
+    {% set result_render = {
+    'url' : allumage_rdv_id ? path('kgc_rdv_fiche', {'id':allumage_rdv_id}) : 'disabled',
+    'load' : app.user.isVoyant ? '' : 'modal-load',
+    'id' : allumage_rdv_id ~ '_light',
+    'color' : render_ref[etat].color,
+    'label' : render_ref[etat].label
+    } %}
+
+    <a href="{{ result_render.url }}" {{ allumage_rdv_id is null ? 'disabled' }} data-enableable="0" id="{{ result_render.id }}"
+            class="{{ result_render.load }} btn btn-xs btn-{{ result_render.color }} tooltip-{{ result_render.color }}" style="color: white"
+            title="Ouvrir la fiche de l'allumage" data-toogle="tooltip" data-rel="tooltip">
+        <i class="icon-fire"></i>{{ options.show_label|default(false) ? ' ' ~ result_render.label }}
+    </a>
+{% endmacro render_evp_allumage %}
+
+{% macro stateline(rdv) %}
+    {% set securisation = {
+    'label_color' : 'light',
+    'icon' : 'shield',
+    'title' : ''
+    } %}
+    {% set consultation = {
+    'label_color' : 'light',
+    'icon' : 'comments-alt',
+    'title' : ''
+    } %}
+    {% set encaissement = {
+    'label_color' : 'light',
+    'icon' : 'euro',
+    'title' : ''
+    } %}
+
+    {% if rdv.etat is not null %}
+        {% if rdv.securisation == constant('SECU_PENDING', rdv) %}
+            {% if rdv.etat.idcode != constant('CANCELLED', rdv.etat) %}
+                {% if rdv.cartebancaires|length > 0 %}
+                    {% set securisation = securisation | merge({
+                    'label_color' : 'warning',
+                    'title' : 'consultation.stateline.secure.waiting' | trans
+                    }) %}
+                {% else %}
+                    {% set securisation = securisation | merge({
+                    'label_color' : 'pink',
+                    'title' : 'consultation.stateline.secure.waiting_card' | trans
+                    }) %}
+                {% endif %}
+            {% endif %}
+        {% else %}
+            {% if rdv.securisation == constant('SECU_DONE', rdv) %}
+                {% set securisation = securisation | merge({
+                'label_color' : 'success',
+                'title' : 'consultation.stateline.secure.done' | trans
+                }) %}
+            {% elseif rdv.securisation == constant('SECU_SKIPPED', rdv) %}
+                {% set securisation = securisation | merge({
+                'label_color' : 'grey',
+                'title' : 'consultation.stateline.secure.skipped' | trans
+                }) %}
+            {% else %}
+                {% set securisation = securisation | merge({
+                'label_color' : 'danger',
+                'title' : 'consultation.stateline.secure.refused' | trans
+                }) %}
+            {% endif %}
+            {% if rdv.miserelation is null %}
+                {% if rdv.etat.idcode == constant('CANCELLED', rdv.etat) %}
+                    {% if rdv.securisation != constant('SECU_DENIED', rdv) %}
+                        {% set consultation = consultation | merge({
+                        'label_color' : 'danger',
+                        'title' : 'consultation.stateline.life.cancelled' | trans
+                        }) %}
+                    {% endif %}
+                {% else %}
+                    {% set consultation = consultation | merge({
+                    'label_color' : 'warning',
+                    'title' : 'consultation.stateline.life.waiting_link' | trans
+                    }) %}
+                {% endif %}
+            {% elseif rdv.miserelation %}
+                {% if rdv.consultation is null %}
+                    {% set consultation = consultation | merge({
+                    'label_color' : 'purple',
+                    'title' : 'consultation.stateline.life.waiting_take' | trans
+                    }) %}
+                    {% if rdv.priseencharge %}
+                        {% set consultation = consultation | merge({
+                        'label_color' : 'info',
+                        'title' : 'consultation.stateline.life.taken' | trans
+                        }) %}
+                    {% elseif rdv.etat.idcode == constant('PAUSED', rdv.etat) %}
+                        {% set consultation = consultation | merge({
+                        'label_color' : 'grey',
+                        'title' : 'consultation.stateline.life.paused' | trans
+                        }) %}
+                    {% endif %}
+                {% elseif rdv.consultation %}
+                    {% set consultation = consultation | merge({
+                    'label_color' : 'success',
+                    'title' : 'consultation.stateline.life.done' | trans
+                    }) %}
+                    {% set encaissement = encaissement | merge({'blink' : not rdv.balance}) %}
+                    {% if rdv.cloture is null %}
+                        {% if rdv.MontantEncaisse == 0 %}
+                            {% set encaissement = encaissement | merge({
+                            'label_color' : 'danger',
+                            'title' : 'consultation.stateline.receipt.unpaid' | trans
+                            }) %}
+                        {% else %}
+                            {% set encaissement = encaissement | merge({
+                            'label_color' : 'warning',
+                            'title' : 'consultation.stateline.receipt.partial' | trans
+                            }) %}
+                        {% endif %}
+                    {% elseif rdv.cloture %}
+                        {% if rdv.tarification.montantTotal == 0 %}
+                            {% set encaissement = encaissement | merge({
+                            'label_color' : 'grey',
+                            'title' : 'consultation.stateline.receipt.free' | trans
+                            }) %}
+                            {% if rdv.is10MIN %}
+                                {% set encaissement = encaissement | merge({
+                                'icon' : 'time'
+                                }) %}
+                            {% endif %}
+                        {% else %}
+                            {% set encaissement = encaissement | merge({
+                            'label_color' : 'success',
+                            'title' : 'consultation.stateline.receipt.done' | trans
+                            }) %}
+                        {% endif %}
+                    {% else %}
+                        {% set encaissement = encaissement | merge({
+                        'label_color' : 'inverse',
+                        'title' : 'consultation.stateline.receipt.abandonned' | trans,
+                        'blink' : false
+                        }) %}
+                        {% if rdv.MontantEncaisse > 0 %}
+                            {% set encaissement = encaissement | merge({
+                            'label_color' : 'purple'
+                            }) %}
+                        {% endif %}
+                    {% endif %}
+                {% else %}
+                    {% set consultation = consultation | merge({
+                    'label_color' : 'danger',
+                    'title' : 'consultation.stateline.life.cancelled' | trans
+                    }) %}
+                {% endif %}
+            {% else %}
+                {% set consultation = consultation | merge({
+                'label_color' : 'danger',
+                'title' : 'consultation.stateline.life.cancelled' | trans
+                }) %}
+            {% endif %}
+        {% endif %}
+    {% endif %}
+    <span class="label label-lg label-{{ securisation.label_color }} arrowed-right tooltip-{{ securisation.label_color }}" title="{{ securisation.title }}" data-rel="tooltip">
+        <i class="icon-{{ securisation.icon }} bigger-120"></i>
+    </span><!--
+ --><span class="label label-lg label-{{ consultation.label_color }} arrowed-in arrowed-right tooltip-{{ consultation.label_color }}" title="{{ consultation.title }}" data-rel="tooltip">
+    <i class="icon-{{ consultation.icon }} bigger-120"></i>
+</span><!--
+ --><span class="label label-lg label-{{ encaissement.label_color }} arrowed-in tooltip-{{ encaissement.label_color }} {{ encaissement.blink|default(false) ? 'blink_me' }}" title="{{ encaissement.title }}" data-rel="tooltip">
+    <i class="icon-{{ encaissement.icon }} bigger-120"></i>
+</span>
+{% endmacro stateline %}
+
+{% macro consultation_etat(etat) %}
+    <span class="label label-{{ etat.couleur|default('dark') }}">{{ etat.libelle|default('Non renseigné') }}</span>
+{% endmacro %}
+
+{% macro consultation_classement(classement) %}
+    {% if classement is not null %}
+        {% set classement = classement.viewData %}
+        <span class="label {{ classement.tiroir.couleur is not null ? "label-" ~ classement.tiroir.couleur ~ " tooltip-" ~ classement.tiroir.couleur }} arrowed-right" title="{{ classement.tiroir.desc }}" data-rel="tooltip">
+            <i class="icon-{{ classement.tiroir.icon }}"></i> {{ classement.tiroir.libelle }}
+        </span><!--
+    {% if classement.dossier is defined %}
+    --><span class="label {{ classement.dossier.couleur is not null ? "label-" ~ classement.dossier.couleur ~ " tooltip-" ~ classement.tiroir.couleur }} arrowed-in" title="{{ classement.dossier.desc }}" data-rel="tooltip">
+        {{ classement.dossier.libelle }}
+    </span>
+    {% else %}
+        -->
+    {% endif %}
+    {% endif %}
+{% endmacro %}
+
+{% macro consultation_menu(rdv) %}{# construction du menu du bloc consultation en fonction de l'etat du rdv #}
+    {# creation des liens #}
+    {% set securiser %}
+        <a title="Sécuriser la consultation" class="modal-load light-orange tooltip-warning" href="{{ path('kgc_secu',{'id':rdv.id}) }}" data-rel="tooltip" data-placement="right">
+            <i class="icon-shield bigger-120"></i> &nbsp;{{ 'consultation.menu.secure' | trans }}
+        </a>
+    {% endset %}
+    {% set mer %}
+        <a title="Mettre en relation" class="modal-load light-orange tooltip-warning" href="{{ path('kgc_miserel',{'id':rdv.id}) }}" data-rel="tooltip" data-placement="right">
+            <i class="icon-exchange bigger-120"></i> &nbsp;{{ 'consultation.menu.connecting' | trans }}
+        </a>
+    {% endset %}
+    {% set annuler %}
+        <a title="Annuler la consultation" class="modal-load red tooltip-danger" href="{{ path('kgc_rdv_annuler',{'id':rdv.id}) }}" data-rel="tooltip" data-placement="right">
+            <i class="icon-remove bigger-120"></i> &nbsp;{{ 'consultation.menu.cancel' | trans }}
+        </a>
+    {% endset %}
+    {% set reporter %}
+        <a title="Reporter la consultation" class="modal-load blue tooltip-info" href="{{ path('kgc_rdv_reporter',{'id':rdv.id}) }}" data-rel="tooltip" data-placement="right">
+            <i class="icon-reply bigger-120"></i> &nbsp;{{ 'consultation.menu.postpone' | trans }}
+        </a>
+    {% endset %}
+    {% set reactiver %}
+        <a title="Réactiver la consultation" class="modal-load blue tooltip-info" href="{{ path('kgc_rdv_reactiver',{'id':rdv.id}) }}" data-rel="tooltip" data-placement="right">
+            <i class="icon-reply bigger-120"></i> &nbsp;{{ 'consultation.menu.reactivate' | trans }}
+        </a>
+    {% endset %}
+    {% set dupliquer %}
+        <a title="Créer une nouvelle consultation à partir de cette fiche" class="modal-load purple tooltip-purple" href="{{ path('kgc_rdv_dupliquer',{'id':rdv.id}) }}" data-rel="tooltip" data-placement="right">
+            <i class="icon-copy bigger-120"></i> &nbsp;{{ 'consultation.menu.duplicate' | trans }}
+        </a>
+    {% endset %}
+    {% set facture %}
+        <a title="Générer la facture" class="modal-load pink tooltip-pink" href="{{ path('kgc_rdv_facture',{'id':rdv.id}) }}" data-rel="tooltip" data-placement="right">
+            <i class="icon-file-text bigger-120"></i> &nbsp;{{ 'consultation.menu.bill' | trans }}
+        </a>
+    {% endset %}
+    {% set classer %}
+        <a title="Déplacer la fiche" class="modal-load grey tooltip-grey" href="{{ path('kgc_rdv_classer',{'id':rdv.id}) }}" data-rel="tooltip" data-placement="right">
+            <i class="icon-folder-open-alt bigger-120"></i> &nbsp;{{ 'consultation.menu.classify' | trans }}
+        </a>
+    {% endset %}
+    {% set client %}
+        <a title="Voir la fiche client" class="green tooltip-success" href="{{ path('kgc_client_fiche',{'id':rdv.client.id}) }}" data-rel="tooltip" data-placement="right">
+            <i class="icon-file-text-alt bigger-120"></i> &nbsp;{{ 'consultation.menu.client_card' | trans }}
+        </a>
+    {% endset %}
+    {# établissement des droits #}
+    {% if is_granted(['ROLE_QUALITE']) and not is_granted(['ROLE_ADMIN_PHONE']) and not is_granted(['ROLE_MANAGER_PHONE']) and not is_granted(['ROLE_ADMIN']) %}
+        {% set affectations = {
+        'ADDED': [reporter, annuler, dupliquer],
+        'CONFIRMED': [reporter, annuler, dupliquer],
+        'CANCELLED': [reactiver, dupliquer],
+        'INPROGRESS': [dupliquer],
+        'COMPLETED': [dupliquer],
+        'CLOSED': [dupliquer],
+        'UNPAID': [dupliquer],
+        'PAUSED': [dupliquer]
+        } %}
+    {% else %}
+        {% if rdv.cartebancaires|length > 0 %}
+            {% set affectationsAdded = [securiser, reporter, annuler, client, classer, dupliquer] %}
+        {% else %}
+            {% set affectationsAdded = [reporter, annuler, client, classer, dupliquer] %}
+        {% endif %}
+        {% if rdv.preAuthorization is not null and rdv.preAuthorization.isCancelled and false %}
+            {% set affectationsConfirmed = [securiser, mer, reporter, annuler, client, classer, dupliquer] %}
+        {% else %}
+            {% set affectationsConfirmed = [mer, reporter, annuler, client, classer, dupliquer] %}
+        {% endif %}
+        {% set affectations = {
+        'ADDED': affectationsAdded,
+        'CONFIRMED': affectationsConfirmed,
+        'CANCELLED': [reactiver, client, classer, dupliquer],
+        'INPROGRESS': [client, classer, dupliquer],
+        'COMPLETED': [client, classer, dupliquer, facture],
+        'CLOSED': [client, classer, dupliquer, facture],
+        'UNPAID': [client, classer, dupliquer, facture],
+        'PAUSED': [annuler, client, classer, dupliquer]
+        } %}
+    {% endif %}
+    {# génération du menu #}
+    {% for lien in affectations[rdv.etat.idcode] %}
+        <li>{{ lien }}</li>
+    {% endfor %}
+{% endmacro consultation_menu %}
+
+{% macro historique_action(action) %}
+    {% if action is not null %}
+        {% if action.groupe is not null %}
+            <i class="icon-{{ action.groupe.icon }}" title="{{ action.groupe.libelle }}"></i>&nbsp;
+        {% endif %}
+        {{ action.libelle }}<br/>
+    {% endif %}
+{% endmacro %}

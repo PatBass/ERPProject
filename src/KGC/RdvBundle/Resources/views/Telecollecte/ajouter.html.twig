@@ -1,0 +1,57 @@
+{# src/KGC/RdvBundle/Resources/views/Telecollecte/ajouter.html.twig #}
+
+{% extends not app.request.isXmlHttpRequest() ? '::layout.html.twig' : '::emptylayout.html.twig' %}
+
+{% block body %}
+    {% embed '::modallayout.html.twig' %}
+        
+        {% block modal_header %}
+            {% set link = {
+                'txt' : (modif ? 'Modifier' : 'Ajouter') ~ ' une télécollecte',
+                'url' : path('kgc_telecollecte_ajouter', { 'id': tlc.id }),
+                'icon' : 'credit-card'
+            } %}
+            {{ parent() }}
+        {% endblock %}
+
+        {% block modal_main %}
+            <form id="form_add_tlc" method="post" action="{{ path('kgc_telecollecte_ajouter', { 'id': tlc.id }) }}" {{ form_enctype(form) }} class="ajax_modal_form form-horizontal" data-refresh="#admin_telecollectes" {{ close ? 'data-close="1"'}}>
+                {{ parent() }}
+                {{ form_widget(form._token) }}
+            </form>
+        {% endblock modal_main %}
+
+        {% block modal_body %}
+            <div class="row">
+                <div class="col-xs-12">
+                {% if not close and app.session.flashbag.get('info') is defined %}
+                    {% for message in app.session.flashbag.get('success') %}
+                        <p class="alert alert-success">{{ message|raw }}</p>
+                    {% endfor %}
+                {% endif %}
+                {% if not form.vars.valid %}
+                    <p class="alert alert-danger">Les télécollectes n&#039;ont pas été enregistrées.</p>
+                {% endif %}
+                </div>
+            </div>
+            <div class="auto_amount_calc">
+            {% set label_col_size = 'col-xs-3' %}
+            {% set field_col_size = 'col-xs-6' %}
+            {{ form_row(form.date, {'label':'Date','label_attr':{'class':label_col_size},'controls_size':field_col_size}) }}
+            {{ form_row(form.tpe, {'label':'TPE','label_attr':{'class':label_col_size},'controls_size':field_col_size}) }}
+            {{ form_row(form.amountOne, {'label':'Télécollecte 1','label_attr':{'class':label_col_size},'controls_size':field_col_size}) }}
+            {{ form_row(form.amountTwo, {'label':'Télécollecte 2','label_attr':{'class':label_col_size},'controls_size':field_col_size}) }}
+            {{ form_row(form.amountThree, {'label':'Télécollecte 3','label_attr':{'class':label_col_size},'controls_size':field_col_size}) }}
+            {{ form_row(form.total, {'label':'Total','label_attr':{'class':label_col_size},'controls_size':field_col_size}) }}
+            </div>
+        {% endblock %}
+
+        {% block modal_footer %}
+            <div class="modal-footer">
+                <button type="button" class="btn btn-sm" data-dismiss="modal"><i class="icon-remove"></i> Annuler</button>
+                <button type="submit" class="btn btn-sm btn-primary"><i class="icon-ok"></i> Enregistrer</button>
+                {{ form_widget(form.fermeture, {'label':" Fermer automatiquement la fiche sʼil n'y a pas d'erreur", 'attr':{'style':'float: left; font-size: 80%'} }) }}
+            </div>
+        {% endblock %}
+    {% endembed %}
+{% endblock body %}

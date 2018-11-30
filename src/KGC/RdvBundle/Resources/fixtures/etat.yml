@@ -1,0 +1,35 @@
+## src/KGC/RdvBundle/Ressources/fixtures/etat.yml
+
+KGC\RdvBundle\Entity\Etat:
+    etat1:
+        idcode: ADDED
+        libelle: Enregistrée
+        couleur: purple
+    etat2:
+        idcode: CONFIRMED
+        libelle: Confirmée
+        couleur: pink
+    etat3:
+        idcode: CANCELLED
+        libelle: Annulée
+        couleur: danger
+    etat4:
+        idcode: INPROGRESS
+        libelle: En cours
+        couleur: default
+    etat5:
+        idcode: COMPLETED
+        libelle: Effectuée
+        couleur: info
+    etat6:
+        idcode: CLOSED
+        libelle: Clôturée
+        couleur: success
+    etat7:
+        idcode: UNPAID
+        libelle: Impayée
+        couleur: warning
+    etat8:
+        idcode: PAUSED
+        libelle: En pause
+        couleur: inverse

@@ -1,0 +1,62 @@
+{# src/KGC/RdvBundle/Resources/views/Consultation/rechercher.widget.html.twig #}
+
+{% extends '::emptylayout.html.twig' %}
+
+{% block body %}
+    {% use 'KGCRdvBundle::listefichesRDV.html.twig' %}
+
+    <div class="widget-box {{ resultats|length == 0 and compact|default(true) ? 'collapsed' }}"  style="height:100%;">
+        <div class="widget-header header-color-purple">
+            <h5>
+                <a href="#" data-action="collapse">
+                    <i class="icon-chevron-up"></i>
+                    Recherche de fiche {% block search_type %} {% endblock search_type %} - <b>{{ resultats|length }} résultats</b>
+                </a>
+            </h5>
+            <div class="widget-toolbar">
+                <a class="ajax_reload" href="{% block search_target %}#rdv_recherche{% endblock search_target %}" title="Recharger">
+                    <i class="icon-refresh"></i>
+                </a>
+            </div>
+        </div>
+        <div class="widget-body ">
+            <div class="widget-main no-padding">
+                {% block search_form %}
+                <div class="input-group">
+                    <!--<input class="form-control search-query" type="text" placeholder="Type your query">-->
+                    {{ form_widget(form.recherche, {'attr': {'class':'form-control search-query', 'placeholder':'Nom ou prénom, ou mail,...'} }) }}
+                    <span class="input-group-btn">
+                        <button class="btn btn-purple btn-sm" type="submit">
+                            <i class="icon-search icon-on-right bigger-110"></i>
+                            Rechercher
+                        </button>
+                    </span>
+                    {{ form_rest(form) }}
+                </div>
+                {% endblock search_form %}
+
+                <div class="clearfix search-results">
+                    {% if resultats is not null %}
+                        {% set fiches = resultats %}
+                        {% set actions = {
+                            1 : {'color' : 'purple'}
+                        } %}
+
+                        {% if app.user.isVoyant() %}
+                            {% set quality_info = true %}
+                            {% set actions = {
+                                1 : {
+                                    'route_action' : 'kgc_consultations_fichevoyant',
+                                    'load' : 'nothing',
+                                    'color' : 'purple'
+                                }
+                            } %}
+                        {% endif %}
+
+                        {{ block('tableau_fiches') }}
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock body %}

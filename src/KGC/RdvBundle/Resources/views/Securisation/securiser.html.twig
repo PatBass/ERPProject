@@ -1,0 +1,82 @@
+{# src/KGC/RdvBundle/Resources/views/Securisation/securiser.html.twig #}
+
+{% extends not app.request.isXmlHttpRequest() ? '::layout.html.twig' : '::emptylayout.html.twig' %}
+
+{% block body %}
+    {% embed '::modallayout.html.twig' %}
+
+        {% import 'KGCRdvBundle::blocsficheRDV.html.twig' as fiche %}
+
+        {% block modal_dialog_head %}
+            {% if form %}
+                {% if paymentFailed %}
+                    <p class="alert alert-block alert-danger">
+                        Le paiement de la sécurisation a été refusé{% if errorMessage is not empty %} ({{ errorMessage }}){% endif %}.
+                    </p>
+                {% elseif not form.vars.valid %}
+                    <p class="alert alert-block alert-danger">
+                        La sécurisation n&#039;a pu être enregistrée. Attention au motif d&#039;annulation ou au TPE.
+                    </p>
+                {% endif %}
+            {% endif %}
+        {% endblock %}
+
+        {% block modal_header %}
+            {% set small = true %}
+            {% set link = {
+            'txt' : 'Sécurisation',
+            'url' : path('kgc_secu',{'id':rdv.id|default(0)}),
+            'icon' : 'shield'
+            } %}
+            {{ parent() }}
+        {% endblock %}
+
+        {% block modal_main %}
+            {% if form %}
+                <form id="form_securiser_modal" method="post" action="{{ path('kgc_secu', {'id':rdv.id}) }}" {{ form_enctype(form) }} class="ajax_modal_form form-horizontal" {{ form.vars.valid ? 'data-refresh="#rdv_securisation,#rdv_planning" data-close="1"':'' }}>
+                    {% set modal_body_class = 'fiche' %}
+                    {{ parent() }}
+                    {{ form_widget(form.mainaction) }}
+                    {{ form_widget(form._token) }}
+                    {{ form_widget(form_edit._token) }}
+                </form>
+            {% else %}
+                {{ parent() }}
+            {% endif %}
+        {% endblock modal_main %}
+
+        {% block modal_body %}
+            {% if form %}
+                <div class="row">
+                    <div class="col-lg-6">
+                        {{ fiche.client({'form':form, 'form_edit':form_edit, 'rdv':rdv}, true) }}
+                        {{ fiche.questions({'form':form, 'form_edit':form_edit}) }}
+                        {{ fiche.historique(rdv) }}
+                    </div>
+                    <div class="col-lg-6">
+                        {{ fiche.consultation({'rdv':rdv,'form':form, 'form_edit':form_edit}) }}
+                        {{ fiche.coordonneesbancaires({'form':form, 'form_edit':form_edit}) }}
+                        {{ fiche.securisation({'rdv': rdv, 'form':form, 'edit':(rdv.isConfirmedSecurisationEditable() ? form_edit : false)}) }}
+                    </div>
+                </div>
+            {% elseif rdv is not null and rdv.etat.idcode == 'ADDED' %}
+                <p class="alert alert-info">Aucun carte bancaire n'a encore été renseignée pour cette fiche.</p>
+            {% elseif rdv %}
+                <p class="alert alert-info">La sécurisation a déjà été enregistrée pour cette fiche.</p>
+            {% else %}
+                <p class="alert alert-danger">La fiche demandée nʼa pas été trouvée. Il s'agit sûrement dʼun lien erroné.</p>
+            {% endif %}
+        {% endblock modal_body %}
+
+        {% block modal_footer %}
+            {% if form %}
+                {{ fiche.rdv_form_footer({'form':form, 'rdv':rdv,'retour': true, 'cochefermeture':true}) }}
+            {% elseif rdv %}
+                {{ fiche.rdv_form_footer({'rdv':rdv,'retour': true}) }}
+            {% else %}
+                {{ fiche.rdv_form_footer() }}
+            {% endif %}
+        {% endblock %}
+
+    {% endembed %}
+{% endblock body %}

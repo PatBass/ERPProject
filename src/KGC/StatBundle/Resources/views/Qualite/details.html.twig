@@ -1,0 +1,46 @@
+{# src/KGC/StatBundle/Ressources/views/Qualite/details.html.twig #}
+
+{% extends not app.request.isXmlHttpRequest() ? '::layout.html.twig' : '::emptylayout.html.twig' %}
+
+{% block body %}
+    {% embed '::modallayout.html.twig' %}
+
+        {% block modal_title %}
+            Détail Qualité - 
+            {% if stat == 'detail_taken' %}
+                Suivis ajoutés par {{ user.username }}
+            {% elseif stat == 'detail_done' %}
+                Suivis de {{ user.username }} effectués
+            {% endif %}
+            {% if periode == 'month' %}
+                pour le mois de {{ date|date('F Y')|trans }}
+            {% else %}
+                le {{ date|date('d/m/Y') }}
+            {% endif %}
+        {% endblock modal_title %}
+
+        {% block modal_body %}
+            {% use 'KGCRdvBundle::listefichesRDV.html.twig' %}
+                {% set quality_info = true %}
+                {% set actions = {
+                    1 : {
+                        'route_action' : 'kgc_rdv_fiche',
+                        'load' : 'modal-load',
+                        'color' : 'primary',
+                        'icon' : 'file',
+                        'disabled' : false,
+                        'title' : "Fiche standard",
+                        'placement': 'left'
+                    },
+                    2 : {
+                        'route_action' : 'kgc_qa_fiche',
+                        'load' : 'nothing',
+                        'title' : "Fiche voyant",
+                        'color' : 'warning',
+                        'placement': 'left'
+                    }
+                } %}
+                {{ fiches|length > 0 ? block('tableau_fiches') : '<table class="table"><tr><td>Aucun résultat</td></tr><table>' }}
+        {% endblock modal_body %}
+    {% endembed %}
+{% endblock body %}

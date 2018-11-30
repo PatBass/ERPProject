@@ -1,0 +1,48 @@
+{# src/KGC/StatBundle/Ressources/views/Admin/psychic_bonus.html.twig #}
+
+{% extends not app.request.isXmlHttpRequest() ? '::layout.html.twig' : '::emptylayout.html.twig' %}
+
+{% block body %}
+    {% embed '::widgetlayout.html.twig' %}
+        {% set widget_options = {
+            'titre' : 'PRIMES',
+            'refresh' : '#psychic_Bonus'
+        } %}
+
+        {% block widget_body %}
+            {% if consultant and bonus is not empty %}
+            <table class="table table-striped" style="margin-bottom: 0px;">
+                <tr>
+                    <td>
+                        Prime moyenne paie 
+                        {% if averages.paie_bonus | default(false) %}
+                            <span class="{{ averages.paie_bonus.color }}">
+                                {{ averages.paie_bonus.amount }} %
+                            </span>
+                        {% endif %}
+                    </td>
+                    <td>{{ bonus.paie | number_format(0, ',', ' ') }} dhs</td>
+                </tr>
+                <tr>
+                    <td>Prime moyenne réalisée</td>
+                    <td>{{ bonus.rea | number_format(0, ',', ' ') }} dhs</td>
+                </tr>
+                <tr>
+                    <td>Prime suivi</td>
+                    <td>{{ bonus.suivi | number_format(0, ',', ' ') }} dhs</td>
+                </tr>
+                <tr>
+                    <td>Pénalité</td>
+                    <td>{{ bonus.penalty | number_format(0, ',', ' ') }} dhs</td>
+                </tr>
+                <tr>
+                    <th>TOTAL</th>
+                    <th>{{ bonus.total | number_format(0, ',', ' ') }} dhs</th>
+                </tr>
+            </table>
+            {% else %}
+            <h2 class="center text-muted">Aucun consultant sélectionné.</h2>
+            {% endif %}
+        {% endblock %}
+    {% endembed %}
+{% endblock body %}

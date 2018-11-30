@@ -1,0 +1,125 @@
+{# src/KGC/StatBundle/Resources/views/Standard/stats.html.twig #}
+
+{% extends not app.request.isXmlHttpRequest() ? '::layout.html.twig' : '::emptylayout.html.twig' %}
+
+{% block body %}
+    {% embed '::widgetlayout.html.twig' %}
+
+        {% set widget_options = {
+            'titre' : 'Statistiques standard',
+            'header_class' : 'widget-header-small header-color-green2',
+            'refresh' : '#standard_stats',
+            'collapse' : true,
+            'no_padding' : true,
+            'body_extra_class' : 'stat-standard-stats'
+        } %}
+
+        {% block widget_body %}
+            <div class="row center" style="padding: 6px 0; margin:0">
+                <div class="col-md-6">
+                    {{ form_widget(form.past_date) }}
+                </div>
+                <div class="col-md-6">
+                    <button type="submit" class="btn btn-success btn-block btn-sm">
+                        <i class="icon-arrow-right"></i> Appliquer
+                    </button>
+                </div>
+            </div>
+            {{ parent() }}
+        {% endblock widget_body %}
+
+        {% block widget_main %}
+            <table class="table table-striped table-condensed">
+                <thead>
+                    <tr>
+                        <th>&nbsp;</th>
+                        <th>Jour <small>({{ date | date('d/m/Y') }})</small></th>
+                        <th>Mois <small>({{ date | date('m/Y') }})</small></th>
+                    </tr>
+                </thead>
+                <tbody class="valign-middle">
+                    <tr>
+                        <td>CA ENCAISSÉ</td>
+                        <td>
+                            <a href="{{ path('kgc_stat_standard_stats_details', {'type': 'turnover', 'periode': 'day'}) }}" class="modal-load">{{ stats.turnover_day | number_format(2, ',', ' ') }} &euro;</a><br />
+                            {%  if stats.turnover_day_secure %}
+                                ( dont <i class="icon-shield bigger-100 tooltip-inverse"   title="Sécurisation" data-rel="tooltip" data-placement="bottom"></i>
+                                {{ stats.turnover_day_secure |number_format(2, ',', ' ') }} &euro;)
+                            {%  endif %}
+                        </td>
+                        <td>
+                            <a href="{{ path('kgc_stat_standard_stats_details', {'type': 'turnover', 'periode': 'month'}) }}" class="modal-load">{{ stats.turnover_month |number_format(2, ',', ' ') }} &euro;</a><br />
+                            {%  if stats.turnover_month_secure %}
+                                ( dont <i class="icon-shield bigger-100 tooltip-inverse"   title="Sécurisation" data-rel="tooltip" data-placement="bottom"></i>
+                                {{ stats.turnover_month_secure |number_format(2, ',', ' ') }} &euro;)
+                            {%  endif %}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>dont RÉCUP</td>
+                        <td><a href="{{ path('kgc_stat_standard_stats_details', {'type': 'turnover_recup', 'periode': 'day'}) }}" class="modal-load">{{ stats.turnover_day_recup | number_format(2, ',', ' ') }} &euro;</a></td>
+                        <td><a href="{{ path('kgc_stat_standard_stats_details', {'type': 'turnover_recup', 'periode': 'month'}) }}" class="modal-load">{{ stats.turnover_month_recup | number_format(2, ',', ' ') }} &euro;</a></td>
+                    </tr>
+                    <tr>
+                        <td>CA IMPAYÉ</td>
+                        <td><a href="{{ path('kgc_stat_standard_stats_details', {'type': 'turnover_fna', 'periode': 'day'}) }}" class="modal-load">{{ stats.turnover_day_fna | number_format(2, ',', ' ') }} &euro;</a></td>
+                        <td><a href="{{ path('kgc_stat_standard_stats_details', {'type': 'turnover_fna', 'periode': 'month'}) }}" class="modal-load">{{ stats.turnover_month_fna | number_format(2, ',', ' ') }} &euro;</a></td>
+                    </tr>
+                    <tr>
+                        <td>OPPO</td>
+                        <td><a href="{{ path('kgc_stat_standard_stats_details', {'type': 'oppo', 'periode': 'day'}) }}" class="modal-load">{{ stats.oppo_day | number_format(2, ',', ' ') }} &euro;</a></td>
+                        <td><a href="{{ path('kgc_stat_standard_stats_details', {'type': 'oppo', 'periode': 'month'}) }}" class="modal-load">{{ stats.oppo_month | number_format(2, ',', ' ') }} &euro;</a></td>
+                    </tr>
+                    <tr>
+                        <td>REMBOURSÉ</td>
+                        <td><a href="{{ path('kgc_stat_standard_stats_details', {'type': 'refund', 'periode': 'day'}) }}" class="modal-load">{{ stats.refund_day | number_format(2, ',', ' ') }} &euro;</a></td>
+                        <td><a href="{{ path('kgc_stat_standard_stats_details', {'type': 'refund', 'periode': 'month'}) }}" class="modal-load">{{ stats.refund_month | number_format(2, ',', ' ') }} &euro;</a></td>
+                    </tr>
+                </tbody>
+                <thead>
+                    <tr>
+                        <th>&nbsp;</th>
+                        <th><br />Consultations <small>({{ date | date('d/m/Y') }})</small></th>
+                        <th><br />Suivis <small>({{ date | date('d/m/Y') }})</small></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Moyenne</td>
+                        <td>{{ stats.mean_day_specific | number_format(2, ',', ' ') }} &euro;</td>
+                        <td>{{ stats.mean_day_follow_specific | number_format(2, ',', ' ') }} &euro;</td>
+                    </tr>
+                    <tr>
+                        <td>Total traité</td>
+                        <td><a href="{{ path('kgc_stat_standard_stats_details_rdv', {'type': 'taken_specific', 'periode': 'day'}) }}" class="modal-load">{{ stats.taken_day_specific }}</a></td>
+                        <td><a href="{{ path('kgc_stat_standard_stats_details_rdv', {'type': 'taken_follow_specific', 'periode': 'day'}) }}" class="modal-load">{{ stats.taken_day_follow_specific }}</a></td>
+                    </tr>
+                    <tr>
+                        <td>% 10 Minutes</td>
+                        <td>{{ stats.ten_day_specific | number_format(1, ',', ' ')}} %</td>
+                        <td>{{ stats.ten_day_follow_specific | number_format(1, ',', ' ') }} %</td>
+                    </tr>
+                </tbody>
+                <thead>
+                    <tr>
+                    <th>&nbsp;</th>
+                    <th><br />Consultations <small>({{ 'now' | date('d/m/Y') }})</small></th>
+                    <th><br />Suivis <small>({{ 'now' | date('d/m/Y') }})</small></th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                        <td>En cours</td>
+                        <td><a href="{{ path('kgc_stat_standard_stats_details_rdv', {'type': 'processing', 'periode': 'today'}) }}" class="modal-load">{{ stats.count_processing }}</a></td>
+                        <td><a href="{{ path('kgc_stat_standard_stats_details_rdv', {'type': 'processing_follow', 'periode': 'today'}) }}" class="modal-load">{{ stats.count_processing_follow }}</a></td>
+                    </tr>
+                    <tr>
+                        <td>En attente</td>
+                        <td><a href="{{ path('kgc_stat_standard_stats_details_rdv', {'type': 'pending', 'periode': 'today'}) }}" class="modal-load">{{ stats.count_pending }}</a></td>
+                        <td><a href="{{ path('kgc_stat_standard_stats_details_rdv', {'type': 'pending_follow', 'periode': 'today'}) }}" class="modal-load">{{ stats.count_pending_follow }}</a></td>
+                    </tr>
+                </tbody>
+            </table>
+        {% endblock %}
+    {% endembed %}
+{% endblock body %}

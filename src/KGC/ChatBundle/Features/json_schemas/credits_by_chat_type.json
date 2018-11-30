@@ -1,0 +1,8 @@
+{
+    "id": "credits_by_chat_type.json",
+    "title": "Credit by chat type",
+    "type": "array",
+    "items": {
+        "$ref": "credit_by_chat_type.json"
+    }
+}

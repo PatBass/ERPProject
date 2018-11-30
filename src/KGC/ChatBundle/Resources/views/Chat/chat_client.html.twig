@@ -1,0 +1,189 @@
+{% set prospect = client.getLandingByWebsite(website) %}
+{% embed '::widgetlayout.html.twig' %}
+
+    {% set widget_options = {
+    'titre' : 'Coordonnées client',
+    'header_class' : 'widget-header-small',
+    'refresh' : null,
+    'collapse' : true,
+    'no_padding' : true,
+    } %}
+
+    {% block widget_toolbar %}
+        <a class="debugdata tooltip-light" data-rel="tooltip" title="" data-placement="right" data-original-title="id : {{ client.id }}">
+            <i class="icon-cog"></i>
+        </a>
+        {% if app.user.isAdmin() or app.user.isManagerChat() %}
+            {% if client.numtel1 is defined and client.numtel1 != "" or client.numtel2 is defined and client.numtel2 != "" %}
+                <a style="margin-top: 3px;margin-right: 5px;" title="Envoyer un sms" class="modal-load btn btn-xs pull-right" href="{{ path('kgc_chat_prepare_sms',{'id':client.id}) }}">
+                    <i class="icon-comments bigger-120"></i> Envoyer un sms
+                </a>
+            {% endif %}
+            <a style="margin-top: 3px;margin-right: 5px;" title=" Envoyer un mail" class="modal-load btn btn-xs pull-right" href="{{ path('kgc_chat_prepare_mail',{'id':client.id}) }}">
+                <i class="icon-envelope bigger-120"></i> Envoyer un mail
+            </a>
+        {% endif %}
+    {% endblock %}
+
+    {% block widget_main %}
+
+        <table class="table table-striped ">
+            <tbody>
+            <tr>
+                <th>
+                    <span>Prénom</span>
+                </th>
+                <td>
+                    {{ client.prenom }}
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    <span>Pseudo</span>
+                </th>
+                <td>
+                    {{ client.username }}
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    <span>Genre</span>
+                </th>
+                <td>
+                    {{ client.genre }}
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    <span>Adresse mail</span>
+                </th>
+                <td>
+                    {{ client.email }}
+                </td>
+            </tr>
+            {% if client.numtel1 is defined and not client.numtel1 == "" %}
+                <tr>
+                    <th>
+                        <span>Téléphone</span>
+                    </th>
+                    <td>
+                        {{ client.numtel1 }}
+                    </td>
+                </tr>
+            {% elseif client.numtel2 is defined and not client.numtel2 == "" %}
+                <tr>
+                    <th>
+                        <span>Téléphone</span>
+                    </th>
+                    <td>
+                        {{ client.numtel2 }}
+                    </td>
+                </tr>
+            {% endif %}
+
+            <tr>
+                <th style="width:160px;">
+                    <span>
+                       Date de naissance
+                        {{ '(' ~ (client.dateNaissance | age) ~ ' ans - ' ~ (client.dateNaissance | astro) ~ ')' }}
+                    </span>
+                </th>
+                <td>
+                    {{ client.dateNaissance | date('d/m/Y') }}
+                </td>
+            </tr>
+
+            </tbody>
+        </table>
+
+    {% endblock %}
+{% endembed %}
+
+{% embed '::widgetlayout.html.twig' %}
+
+    {% set widget_options = {
+    'titre' : 'Informations tchat',
+    'header_class' : 'widget-header-small',
+    'refresh' : null,
+    'collapse' : true,
+    'no_padding' : true,
+    } %}
+
+    {% block widget_main %}
+
+        <table class="table table-striped ">
+            <tbody>
+            <tr>
+                <th>
+                    <span>Sujet principal</span>
+                </th>
+                <td>
+                    {{ client.chatInfoSubject }}
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    <span>Prénom du conjoint</span>
+                </th>
+                <td>
+                    {{ client.chatInfoPartner }}
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    <span>Conseil principal</span>
+                </th>
+                <td>
+                    {{ client.chatInfoAdvice }}
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+    {% endblock %}
+{% endembed %}
+
+
+{% if prospect is not null %}
+    {% embed '::widgetlayout.html.twig' %}
+            {% set widget_options = {
+            'titre' : 'UTM',
+            'header_class' : 'widget-header-small',
+            'refresh' : null,
+            'collapse' : true,
+            'no_padding' : true,
+            } %}
+
+            {% block widget_main %}
+
+                <table class="table table-striped">
+                    <tbody>
+                        <tr>
+                            <th>
+                                <span>Site</span>
+                            </th>
+                            <td>
+                                {{ prospect.myastroWebsite }}
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>
+                                <span>Source</span>
+                            </th>
+                            <td>
+                                {{ prospect.myastroSource }}
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>
+                                <span>URL</span>
+                            </th>
+                            <td>
+                                {{ prospect.myastroUrl }}
+                            </td>
+                        </tr>
+                </table>
+
+            {% endblock %}
+    {% endembed %}
+{% endif %}

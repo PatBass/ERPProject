@@ -1,0 +1,30 @@
+{% extends not app.request.isXmlHttpRequest() ? '::layout.html.twig' : '::emptylayout.html.twig' %}
+
+{% block body %}
+    {% embed '::modallayout.html.twig' %}
+        {% block modal_header %}
+            <div class="alert" style="background-color: #87b87f">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <strong><i class="icon-warning-sign"></i> Succès</strong>
+            </div>
+        {% endblock %}
+        {% block modal_body %}
+            <div class="text-success">
+                APPEL EN COURS
+            </div>
+        {% endblock modal_body %}
+
+        {% block modal_footer %}
+            <div class="modal-footer">
+                <a class="btn btn-sm btn-danger pull-right" title="Fermer" data-dismiss="modal">
+                    <i class="icon-remove"></i> Fermer
+                </a>
+                {%  if rdv is defined %}
+                    <a id="retour_fiche" href="{{ path('kgc_rdv_fiche',{'id':rdv.id}) }}" class="btn btn-sm btn-grey modal-load" style="margin-left:0">
+                        <i class="icon-arrow-left"></i> Retour à la fiche
+                    </a>
+                {% endif %}
+            </div>
+        {% endblock modal_footer %}
+    {% endembed %}
+{% endblock %}

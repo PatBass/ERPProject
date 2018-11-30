@@ -1,0 +1,25 @@
+{% block subject %}{{ 'email.subscription.cancelSuccess.subject'|trans({'%siteLabel%': "shared.#{user.origin}.email.siteLabel"|trans({}, 'KGCSharedBundle')}) }}{% endblock %}
+
+{% block body_text %}
+{% autoescape false %}
+{{ 'email.subscription.cancelSuccess.body_text'|trans({'%siteLabel%': "shared.#{user.origin}.email.siteLabel"|trans({}, 'KGCSharedBundle'), '%firstName%': user.prenom, '%endDate%': subscription.commitmentEndDate|date('d/m'), '%redirectUrl%': "#{siteUrl}/#{sitePrefix}"}
+) }}
+{% endautoescape %}
+{% endblock %}
+
+{% block body_html %}
+    {% embed "KGCSharedBundle:#{user.origin|capitalize}:layout.email.twig" %}
+        {% block body %}
+        <h3 style="{{ h3Style }}">{{ 'email.subscription.cancelSuccess.title'|trans({'%firstName%': user.prenom}) }}</h3>
+        {{ 'email.subscription.cancelSuccess.explanation'|trans }}<br />
+        <br />
+        {{ 'email.subscription.cancelSuccess.details'|trans({'%endDate%': subscription.commitmentEndDate|date('d/m')}) }}<br />
+        <br />
+        <p style="text-align :center">
+            <a class="button" style="{{ buttonStyle }}" href="{{ "#{siteUrl}#{sitePrefix}/voyants" }}">{{ 'email.subscription.cancelSuccess.buttonText'|trans }}</a>
+        </p>
+        <br />
+        {{ 'email.subscription.cancelSuccess.seeYouSoon'|trans }}<br />
+        {% endblock %}
+    {% endembed %}
+{% endblock %}

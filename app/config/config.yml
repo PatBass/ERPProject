@@ -1,0 +1,366 @@
+imports:
+    - { resource: parameters.yml }
+    - { resource: parameters.php }
+    - { resource: security.yml }
+    - { resource: ../../vendor/knplabs/doctrine-behaviors/config/orm-services.yml }
+
+services:
+    php_excel: @phpexcel
+
+parameters:
+    migrations_project_name: kgestion
+    fos_elastica.client.class: KGC\RdvBundle\Elastic\Client\Client
+    elastica_listener:
+        insert: %elastic_enabled%
+        update: %elastic_enabled%
+        delete: %elastic_enabled%
+    kgc.mail.from: comptabilite@kg-com.fr
+    kgc.mail.cci: ''
+
+framework:
+    #esi:             ~
+    translator:      { fallback: "%locale%" }
+    secret:          "%secret%"
+    router:
+        resource: "%kernel.root_dir%/config/routing.yml"
+        strict_requirements: ~
+    form:            ~
+    csrf_protection: ~
+    validation:      { enable_annotations: true }
+    templating:
+        engines: ['twig']
+        #assets_version: SomeVersionScheme
+    default_locale:  "%locale%"
+    trusted_hosts:   ~
+    trusted_proxies:  ~
+    session:
+        # handler_id set to null will use default session handler from php.ini
+        # handler_id:  ~
+        handler_id: session.handler.native_file
+        save_path: "%kernel.root_dir%/sessions"
+        cookie_lifetime: 31536000
+        name: KGESTION_PHPSESSID
+
+    fragments:       ~
+    http_method_override: true
+
+# Twig Configuration
+twig:
+    debug:            "%kernel.debug%"
+    strict_variables: "%kernel.debug%"
+    form:
+        resources:
+            - '::formlayout.html.twig'
+    globals:
+        img_path: /img/
+        socketio_url: %socketio_url%
+        myastro_url: %myastro.url%
+        myastro_prefix: %myastro.prefix%
+        paymentUtils: @kgc.payment.twig_utils
+
+# Assetic Configuration
+assetic:
+    debug:          "%kernel.debug%"
+    use_controller: false
+    bundles:        [ ]
+    #java: /usr/bin/java
+    filters:
+        cssrewrite: ~
+        scssphp:
+            formatter: 'Leafo\ScssPhp\Formatter\Compressed'
+        #closure:
+        #    jar: "%kernel.root_dir%/Resources/java/compiler.jar"
+        #yui_css:
+        #    jar: "%kernel.root_dir%/Resources/java/yuicompressor-2.4.7.jar"
+
+# Doctrine Configuration
+doctrine:
+    dbal:
+        driver:   "%database_driver%"
+        host:     "%database_host%"
+        port:     "%database_port%"
+        dbname:   "%database_name%"
+        user:     "%database_user%"
+        password: "%database_password%"
+        charset:  UTF8
+        # if using pdo_sqlite as your database driver, add the path in parameters.yml
+        # e.g. database_path: "%kernel.root_dir%/data/data.db3"
+        # path:     "%database_path%"
+
+    orm:
+        resolve_target_entities:
+            KGC\Bundle\SharedBundle\Entity\Interfaces\CarteBancaire: KGC\RdvBundle\Entity\CarteBancaire
+            KGC\Bundle\SharedBundle\Entity\Interfaces\ClientMailSent: KGC\ClientBundle\Entity\MailSent
+            KGC\Bundle\SharedBundle\Entity\Interfaces\ClientSmsSent: KGC\ClientBundle\Entity\SmsSent
+            KGC\Bundle\SharedBundle\Entity\Interfaces\RDV: KGC\RdvBundle\Entity\RDV
+            KGC\Bundle\SharedBundle\Entity\Interfaces\CarteBancaire: KGC\RdvBundle\Entity\CarteBancaire
+            KGC\Bundle\SharedBundle\Entity\Interfaces\Forfait: KGC\RdvBundle\Entity\Forfait
+            KGC\Bundle\SharedBundle\Entity\Interfaces\Historique: KGC\ClientBundle\Entity\Historique
+            KGC\Bundle\SharedBundle\Entity\Interfaces\ChatFormula: KGC\ChatBundle\Entity\ChatFormula
+            KGC\Bundle\SharedBundle\Entity\Interfaces\ChatRoom: KGC\ChatBundle\Entity\ChatRoom
+            KGC\Bundle\SharedBundle\Entity\Interfaces\ChatParticipant: KGC\ChatBundle\Entity\ChatParticipant
+            KGC\Bundle\SharedBundle\Entity\Interfaces\ChatPayment: KGC\ChatBundle\Entity\ChatPayment
+            KGC\Bundle\SharedBundle\Entity\Interfaces\ChatSubscription: KGC\ChatBundle\Entity\ChatSubscription
+        auto_generate_proxy_classes: "%kernel.debug%"
+        auto_mapping: true
+        mappings:
+            KGCSharedBundle:
+                type: annotation
+            gedmo_loggable:
+                type: annotation
+                prefix: Gedmo\Loggable\Entity
+                dir: "%kernel.root_dir%/../vendor/gedmo/doctrine-extensions/lib/Gedmo/Loggable/Entity"
+                alias: GedmoLoggable # (optional) it will default to the name set for the mappingmapping
+                is_bundle: false
+        dql:
+            datetime_functions:
+                date: DoctrineExtensions\Query\Mysql\Date
+                month: DoctrineExtensions\Query\Mysql\Month
+                year: DoctrineExtensions\Query\Mysql\Year
+                last_day: DoctrineExtensions\Query\Mysql\LastDay
+                date_format: DoctrineExtensions\Query\Mysql\DateFormat
+
+swiftmailer:
+    default_mailer: default
+    mailers:
+        default:
+            transport: "%mailer_transport%"
+            spool:     { type: memory }
+        second_mailer:
+            host: mailcatcher
+            port: 1025
+            username: null
+            password: null
+
+hautelook_alice:
+    locale: fr_FR   # default
+    seed: 1         # default
+
+# Doctrine migrations
+doctrine_migrations:
+    dir_name: "%kernel.root_dir%/../vendor/kgcomdev/kgestion-common/src/KGC/DoctrineMigrations"
+    namespace: Application\Migrations
+    table_name: migration_versions
+    name: Application Migrations
+
+jms_di_extra:
+    locations:
+        all_bundles: false
+        bundles: [UserBundle, KGCSharedBundle]
+        directories: ["%kernel.root_dir%/../src"]
+
+# FOS User
+fos_user:
+    db_driver: orm
+    firewall_name: main
+    user_class: KGC\Bundle\SharedBundle\Entity\User
+    service:
+        user_manager: pugx_user_manager
+    from_email:
+        address: %webmaster_mail%
+        sender_name: Admin
+
+pugx_multi_user:
+    users:
+        admins:
+            entity:
+                class: KGC\UserBundle\Entity\Utilisateur
+        customers:
+            entity:
+                class: KGC\Bundle\SharedBundle\Entity\Client
+            registration:
+                form:
+                    type: AppBundle\Form\RegistrationFormType
+                template: :Customer:register.html.twig
+
+fos_elastica:
+    clients:
+        default:
+          host: %elastic_host%
+          port: %elastic_port%
+          logger: 'logger'
+    indexes:
+        kgestion_idx:
+            use_alias: true
+            index_name: kgestion_%kernel.environment%
+            settings:
+                index:
+                    analysis:
+                        analyzer:
+                            custom_search_analyzer:
+                                type: custom
+                                tokenizer: nGram
+                                filter   : [stopwords, asciifolding, lowercase, snowball, elision, worddelimiter]
+                            custom_index_analyzer:
+                                type: custom
+                                tokenizer: nGram
+                                filter   : [stopwords, asciifolding, lowercase, snowball, elision, worddelimiter]
+                            custom_email_analyzer:
+                                type: custom
+                                tokenizer: email
+                                filter: [asciifolding, lowercase]
+                            custom_simple_analyzer:
+                                type: custom
+                                tokenizer: standard
+                                filter: [asciifolding, lowercase]
+                        tokenizer:
+                            nGram:
+                                type:     nGram
+                                min_gram: 3
+                                max_gram: 15
+                            email:
+                                type: uax_url_email
+                        filter:
+                            snowball:
+                                type:     snowball
+                                language: French
+                            elision:
+                                type:     elision
+                                articles: [l, m, t, qu, n, s, j, d]
+                            stopwords:
+                                type:      stop
+                                stopwords: [_french_]
+                                ignore_case : true
+                            worddelimiter :
+                                type:      word_delimiter
+                                generate_number_parts: true
+                                catenate_numbers: true
+                                catenate_all: true
+
+            types:
+                prospect:
+                    mappings:
+                        id: { type: integer, "index": "not_analyzed" }
+                        idAstro: { type: integer }
+                        firstname: { type: string, boost: 2, search_analyzer: custom_index_analyzer, index_analyzer: custom_index_analyzer }
+                        phone: { type: string, boost: 2, search_analyzer: custom_search_analyzer, index_analyzer: custom_index_analyzer }
+                        birthdayES: { type: date, boost: 1, format: "yyyy-MM-dd" }
+                        createdAtES: { type: date, boost: 1, format: 'yyyy-MM-dd' }
+                        email: { type: string, boost: 2, search_analyzer: custom_search_analyzer, index_analyzer: custom_index_analyzer }
+
+                    persistence:
+                        driver: orm
+                        model: KGC\Bundle\SharedBundle\Entity\LandingUser
+                        elastica_to_model_transformer:
+                            service: kgc.elastic.prospect.transformer
+                            query_builder_method: createQueryBuilderSearch
+                            ignore_missing: true
+                        provider:
+                            batch_size: 1000
+                            query_builder_method: createQueryBuilderIndex
+                        listener:
+                            logger: true
+                            immediate: true
+                        finder: ~
+                client:
+                    mappings:
+                        id: { type: integer, "index": "not_analyzed" }
+                        nomPrenom: { type: string, boost: 2, search_analyzer: custom_index_analyzer, index_analyzer: custom_index_analyzer, "fields": {"raw": { "type":  "string", "index": "not_analyzed"}} }
+                        nom: { type: string, boost: 2, search_analyzer: custom_index_analyzer, index_analyzer: custom_index_analyzer }
+                        prenom: { type: string, boost: 2, search_analyzer: custom_index_analyzer, index_analyzer: custom_index_analyzer }
+                        dateNaissanceES: { type: date, boost: 1, format: "yyyy-MM-dd" }
+                        dateCreationES: { type: date, boost: 1, format: 'yyyy-MM-dd' }
+                        mail: { type: string, boost: 2, search_analyzer: custom_search_analyzer, index_analyzer: custom_index_analyzer }
+                        formulasES: { type: string, "index": "not_analyzed" }
+                        psychicsES: { type: string, "index": "not_analyzed" }
+                        origin: { type: string, "index": "not_analyzed" }
+                        sourceES: { type: string, "index": "not_analyzed" }
+                        cbsES: { type: string, "index": "not_analyzed" }
+                        phonesES: { type: string, "index": "not_analyzed" }
+                        tchatES: { type: integer, "index": "not_analyzed" }
+                        consultationES: { type: integer, "index": "not_analyzed" }
+
+                    persistence:
+                        driver: orm
+                        model: KGC\Bundle\SharedBundle\Entity\Client
+                        elastica_to_model_transformer:
+                            service: kgc.elastic.client.transformer
+                            query_builder_method: createQueryBuilderSearch
+                            ignore_missing: true
+                        provider:
+                            batch_size: 1000
+                            query_builder_method: createQueryBuilderIndex
+                        listener:
+                            logger: true
+                            immediate: true
+                        finder: ~
+                rdv:
+                    mappings:
+                        id: { type: integer, "index": "not_analyzed" }
+                        numtel1ES: { type: string, boost: 2, search_analyzer: custom_search_analyzer, index_analyzer: custom_index_analyzer }
+                        numtel2ES: { type: string, boost: 2, search_analyzer: custom_search_analyzer, index_analyzer: custom_index_analyzer }
+                        adresse: { type: string, boost: 2, search_analyzer: custom_search_analyzer, index_analyzer: custom_index_analyzer }
+                        idAstro: { type: string, boost: 2, search_analyzer: custom_search_analyzer, index_analyzer: custom_index_analyzer }
+                        dateContactES: { type: date, boost: 1, format: "yyyy-MM-dd" }
+                        dateReminderES: { type: date, boost: 1, format: "yyyy-MM-dd" }
+                        dateConsultationES: { type: date, boost: 1, format: "yyyy-MM-dd" }
+                        dateLastEncaissementES: { type: date, boost: 1, format: "yyyy-MM-dd" }
+                        dateNextEncaissementES: { type: date, boost: 1, format: "yyyy-MM-dd" }
+                        supportES: { type: string, "index": "not_analyzed" }
+                        codepromoES: { type: string, "index": "not_analyzed" }
+                        voyantES: { type: string, "index": "not_analyzed" }
+                        websiteES: { type: string, "index": "not_analyzed" }
+                        formUrlES : { type: string, "index": "not_analyzed" }
+                        tpeES: { type: string, "index": "not_analyzed" }
+                        consultantES: { type: string, "index": "not_analyzed" }
+                        etatES: { type: string, "index": "not_analyzed" }
+                        sourceES: { type: string, "index": "not_analyzed" }
+                        classementES: { type: string, "index": "not_analyzed" }
+                        etiquettesES: { type: string, "index": "not_analyzed" }
+                        forfaitsES: { type: string, "index": "not_analyzed" }
+                        cbsES: { type: string, "index": "not_analyzed" }
+                        tarification:
+                          type: "nested"
+                          properties:
+                              id: { type: integer, "index": "not_analyzed" }
+                              code: { type: string }
+                              temps: { type: integer }
+                              montantTotal: { type: integer }
+                    _parent:
+                      type : "client"
+                      identifier: "id"
+                      property : "client"
+
+                    persistence:
+                        driver: orm
+                        model: KGC\RdvBundle\Entity\RDV
+                        elastica_to_model_transformer:
+                            service: kgc.elastic.rdv.transformer
+                            query_builder_method: createQueryBuilderSearch
+                            ignore_missing: true
+                        provider:
+                            batch_size: 1000
+                            query_builder_method: createQueryBuilderIndex
+                        listener:
+                            logger: true
+                            immediate: true
+                        finder: ~
+
+lexik_jwt_authentication:
+    private_key_path: %jwt_private_key_path%
+    public_key_path:  %jwt_public_key_path%
+    pass_phrase:      %jwt_key_pass_phrase%
+    token_ttl:        %jwt_token_ttl%
+
+payum:
+    security:
+        token_storage:
+            KGC\PaymentBundle\Entity\PaymentToken: { doctrine: orm }
+    storages:
+        KGC\PaymentBundle\Entity\Payment: { doctrine: orm }
+    gateways:
+        klikandpay:
+            klikandpay:
+                identifier: "%klikandpay.identifier%"
+                privateKey: "%klikandpay.secret.key%"
+                sandbox: %klikandpay.sandbox%
+        be2bill:
+            be2bill_direct_zol:
+                identifier: "%be2bill.identifier%"
+                password: "%be2bill.password%"
+                sandbox: %be2bill.sandbox%
+        be2bill_authorize:
+            be2bill_authorize:
+                identifier: "%be2bill.identifier%"
+                password: "%be2bill.password%"
+                sandbox: %be2bill.sandbox%

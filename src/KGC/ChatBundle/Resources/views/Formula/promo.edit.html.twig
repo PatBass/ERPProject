@@ -1,0 +1,97 @@
+{% extends not app.request.isXmlHttpRequest() ? '::layout.html.twig' : '::emptylayout.html.twig' %}
+
+{% block body %}
+    {% embed '::modallayout.html.twig' %}
+        {% block modal_header %}
+            {% set link = {
+                'txt' : isNew ? 'Création de promotion' : 'Edition de promotion',
+                'url' : path(url, url_params),
+                'icon' : 'pencil'
+            } %}
+            {{ parent() }}
+        {% endblock %}
+
+        {% block modal_dialog_head %}
+            {% if not form.vars.valid %}
+                <p class="alert alert-danger">{{ form_errors(form) }}</p>
+            {% endif %}
+        {% endblock modal_dialog_head %}
+
+        {% block modal_content %}
+            <form id="chat_formula_modal" method="post" action="{{ path(url, url_params) }}" {{ form_enctype(form) }} data-close="{{ form.vars.valid ? 1 : 0 }}" data-refresh="#config_formula_promo" class="ajax_modal_form form-horizontal chat_formula_form">
+                {{ parent() }}
+                {{ form_widget(form._token) }}
+            </form>
+        {% endblock modal_content %}
+
+        {% block modal_body %}
+            <div class="row">
+                <div class="col-md-5">
+                    {{ form_label(form.name) }}<br />
+                    {{ form_widget(form.name) }}
+                </div>
+                <div class="col-md-1">
+                    {{ form_label(form.enabled) }}<br />
+                    {{ form_widget(form.enabled, {'attr': {'class': 'promo-enabled'}}) }}
+                </div>
+                <div class="col-md-6">
+                    {{ form_label(form.website) }}<br />
+                    {{ form_widget(form.website) }}
+                </div>
+            </div>
+            <div class="space-4"></div>
+            <div class="row">
+                <div class="col-md-6">
+                    {{ form_label(form.type) }}<br />
+                    {{ form_widget(form.type) }}
+                </div>
+                <div class="col-md-6">
+                    {{ form_label(form.promotionCode) }}<br />
+                    {{ form_widget(form.promotionCode) }}
+                </div>
+            </div>
+            <div class="space-4"></div>
+            <div class="row">
+                <div class="col-md-6">
+                    {{ form_label(form.unitType) }}<br />
+                    {{ form_widget(form.unitType) }}
+                </div>
+                <div class="col-md-6">
+                    {{ form_label(form.unit) }}{{ form_label(form.unitMoney) }}<br />
+                    {{ form_widget(form.unit) }}{{ form_widget(form.unitMoney) }}
+                </div>
+            </div>
+            <div class="space-4"></div>
+            <div class="row">
+                <div class="col-md-12">
+                    {{ form_label(form.allowedFormulas) }}<br />
+                    {{ form_widget(form.allowedFormulas, {'attr': {'class': 'allowed-formulas'}}) }}
+                </div>
+            </div>
+            <div class="space-4"></div>
+            <div class="row">
+                <div class="col-md-6">
+                    {{ form_label(form.startDate) }}<br />
+                    {{ form_widget(form.startDate) }}
+                </div>
+                <div class="col-md-6">
+                    {{ form_label(form.endDate) }}<br />
+                    {{ form_widget(form.endDate) }}
+                </div>
+            </div>
+        {% endblock modal_body %}
+
+        {% block modal_footer %}
+            <div class="modal-footer">
+                <div class="pull-left">
+                    <button type="button" class="btn btn-sm btn-danger" data-dismiss="modal"><i class="icon-remove"></i> Fermer</button>
+                </div>
+                <div class="pull-right">
+                    <button type="submit" class="btn btn-success btn-block btn-sm">
+                        <i class="icon-arrow-right"></i> Enregistrer
+                    </button>
+                </div>
+            </div>
+        {% endblock modal_footer %}
+    {% endembed %}
+{% endblock body %}

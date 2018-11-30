@@ -1,0 +1,45 @@
+{% import 'KGCRdvBundle::interfacedata.html.twig' as interface %}
+<table class="table table-striped valign-middle">
+    <thead>
+        <tr>
+            <th class="center">Nom</th>
+            <th class="center">Prénom</th>
+            <th class="center">Date de consultation</th>
+            <th class="center">Etat</th>
+            <th class="center">Consultant</th>
+            <th class="center">Voyant</th>
+            <th class="center">Montant</th>
+            <th class="center">% payé</th>
+            <th class="center"></th>
+        </tr>
+    </thead>
+    <tboby>
+        {% for rdv in list %}
+            <tr>
+                <td class="center">{{ rdv.client.nom }}</td>
+                <td class="center">{{ rdv.client.prenom }}</td>
+                <td class="center">{{ rdv.dateConsultation|date("d/m/Y") }}</td>
+                <td class="align-center" style="white-space: nowrap; vertical-align: middle;">
+                    {{ interface.stateline(rdv) }}
+                </td>
+                <td class="center">{{ rdv.consultant?rdv.consultant.username:'' }}</td>
+                <td class="center">{{ rdv.voyant?rdv.voyant.nom:'' }}</td>
+                <td class="center">{{ rdv.getMontantTotal()|round(2,'floor') }} €</td>
+                <td class="center">{{ rdv.getPercentPaid() }} %</td>
+                <td class="line-actions center">
+                    <a href="{{ path('kgc_rdv_fiche', {'id':rdv.id}) }}" class="btn btn-xs btn-primary tooltip-primary modal-load" role="button" title="Ouvrir la fiche de consultation" data-rel="tooltip">
+                        <i class="icon-file"></i>
+                    </a>
+                    <a href="{{ path('kgc_qa_fiche', {'id':rdv.id}) }}" class="btn btn-xs btn-warning tooltip-warning" role="button" title="Fiche voyant" data-rel="tooltip">
+                        <i class="icon-file"></i>
+                    </a>
+                    {% if rdv.prospect is defined and rdv.prospect is not empty %}
+                        <a href="{{ path('kgc_landinguser_fiche', {'id':rdv.prospect.id}) }}" class="btn btn-xs btn-grey tooltip-grey modal-load" role="button" title="Fiche prospect" data-rel="tooltip">
+                            <i class="icon-file"></i>
+                        </a>
+                    {% endif %}
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+</table>

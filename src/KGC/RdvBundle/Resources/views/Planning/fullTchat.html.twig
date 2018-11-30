@@ -1,0 +1,64 @@
+{# src/KGC/RdvBundle/Resources/views/Planning/full.html.twig #}
+
+{% extends '::emptylayout.html.twig' %}
+
+{% block body %}
+
+    {% use 'KGCRdvBundle::listefichesRDV.html.twig' %}
+
+    <form id="rdv_planning">
+    {% for i in 0..10 %}
+    <div class="row">
+        {% for j in 1..3 %}
+        <div class="col-lg-4">
+            {% for horaire, liste_chatRoom in planning[i*3+j]|default({ '':[] }) %}
+                {% if liste_chatRoom is not empty %}
+            <table class="table table-striped valign-middle">
+                <tr>
+                    <th rowspan="{{ liste_chatRoom|length }}" style="vertical-align: top !important;">{{ horaire }}</th>
+                    {% for array in liste_chatRoom %}
+                        {% if array is not null %}
+                            {% set room = array['room'] %}
+                            {% set payment = array['free'] %}
+                            <td>{{ room.startDate | date('d/m/Y') }}</td>
+                            <td>{{ room.startDate | date('H:i') }}</td>
+                            <td style="{{ payment?'background-color:#438eb9 !important':'background-color:#87b87f  !important' }}">
+                                {% if room.client %}
+                                    <strong>{{ room.client.username }}</strong> {{ room.client.prenom }}
+                                {% endif %}
+                            </td>
+                            <td title="{{ room.website.libelle }}">{{ room.website.shortName }}</td>
+                            <td class="align-center " style="white-space: nowrap; vertical-align: middle;">
+                                {% include 'KGCChatBundle:Chat:chat_status.html.twig' with {'status': room.status} only %}
+                            </td>
+                            <td class="line-actions">
+                                {% if room.client %}
+                                    <a href="{{ path('kgc_clients_chat_show_single', {'clientId':room.client.id, 'roomId':room.id, 'websiteId': room.website.Id}) }}"
+                                            class="modal-load btn btn-xs btn-warning tooltip-warning" role="button" title="" data-rel="tooltip" data-placement="right" data-original-title="Détail">
+                                        <i class="icon-file"></i>
+                                    </a>
+                                    <a href="{{ path('kgc_clients_show', {id:room.client.id}) }}" class="btn btn-xs btn-primary tooltip-primary"
+                                            role="button" title="" data-rel="tooltip" data-placement="right" data-original-title="Fiche client">
+                                        <i class="icon-user"></i>
+                                    </a>
+                                {% endif %}
+                            </td>
+                        {% else %}
+                        <td colspan="5" class="text-muted">libre
+                        {% endif %}
+                    </td>
+                </tr>
+                {% if not loop.last %}
+                <tr>
+                {% endif %}
+                    {% endfor %}
+            </table>
+                {% endif %}
+            {% endfor %}
+        </div>
+        {% endfor %}
+    </div>
+    {% endfor %}
+    </form>
+
+{% endblock body %}

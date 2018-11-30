@@ -1,0 +1,42 @@
+web:
+    extends:
+        file: docker-compose-common.yml
+        service: web
+    links:
+        - db
+        - search
+        - mailcatcher
+    environment:
+        SYMFONY__CRYPT__KEY:
+        SYMFONY__MYASTRO__PREFIX: /app_dev.php
+        VIRTUAL_HOST: kgestion.dev.zol.fr
+
+db:
+    extends:
+        file: docker-compose-common.yml
+        service: db
+    environment:
+        VIRTUAL_HOST: db.kgestion.dev.zol.fr
+    ports:
+        - "3310:3306"
+
+composer:
+    extends:
+        file: .kgcomdev/kgcom-common/compose/common.yml
+        service: composer
+
+search:
+    extends:
+            file: docker-compose-common.yml
+            service: search
+    volumes:
+        - "./elasticsearch/data:/usr/share/elasticsearch/data"
+    environment:
+        VIRTUAL_HOST: elk.kgestion.dev.zol.fr
+        VIRTUAL_PORT: 9200
+
+mailcatcher:
+    image: zolweb/docker-mailcatcher
+    environment:
+        VIRTUAL_HOST: mailcatcher.dev.zol.fr
+        VIRTUAL_PORT: 1080

@@ -1,0 +1,18 @@
+## src/KGC/RdvBundle/Ressources/fixtures/Version20150402164046/tiroir.yml
+
+KGC\RdvBundle\Entity\Tiroir:
+    tiroir1:
+        idcode: PROCESSING
+        libelle: EN COURS
+        desc: Fiches en traitement
+        couleur: info
+    tiroir2:
+        idcode: ARCHIVES
+        libelle: ARCH
+        desc: Fiches archivées
+        couleur: success
+    tiroir3:
+        idcode: UNPAID
+        libelle: IMPAYES
+        desc: Fiches en impayé
+        couleur: danger

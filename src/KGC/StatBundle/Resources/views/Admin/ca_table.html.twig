@@ -1,0 +1,88 @@
+{# src\KGC\StatBundle\Resources\views\Admin\ca_table.html.twig #}
+
+<table class="table table-bordered" id="psychic_CA_table">
+    <thead>
+        <tr>
+            <td></td>
+            <td colspan="3">Consultations</td>
+            <td colspan="3" class="hatched">Suivis</td>
+        </tr>
+        <tr>
+            <td></td>
+            <td>Encaissé</td>
+            <td>Impayé</td>
+            <td>Récupéré</td>
+            <td class="hatched">Encaissé</td>
+            <td class="hatched">Impayé</td>
+            <td class="hatched">Récupéré</td>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <th>CA</th>
+            <td>
+                <a class="modal-load" href="{{ path('kgc_stat_admin_psychicCATableDetails', { idconsultant : consultant ? consultant.id : null, is_turnover: true, details : 'stat_turnover_rdv' }) }}">
+                    {{ stats.rdv.turnover_day | number_format(2, ',', ' ') }} &euro;
+                </a>
+            </td>
+            <td>
+                <a class="modal-load" href="{{ path('kgc_stat_admin_psychicCATableDetails', { idconsultant : consultant ? consultant.id : null, is_turnover: true, details : 'stat_turnover_rdv_fna' }) }}">
+                    {{ stats.rdv.turnover_day_fna | number_format(2, ',', ' ') }} &euro;
+                </a>
+            </td>
+            <td>
+                <a class="modal-load" href="{{ path('kgc_stat_admin_psychicCATableDetails', { idconsultant : consultant ? consultant.id : null, is_turnover: true, details : 'stat_turnover_rdv_recup' }) }}">
+                    {{ stats.rdv.turnover_recup | number_format(2, ',', ' ') }} &euro;
+                </a>
+            </td>
+            <td>
+                <a class="modal-load" href="{{ path('kgc_stat_admin_psychicCATableDetails', { idconsultant : consultant ? consultant.id : null, is_turnover: true, details : 'stat_turnover_follow' }) }}">
+                    {{ stats.follow.turnover_day | number_format(2, ',', ' ') }} &euro;
+                </a>
+            </td>
+            <td>
+                <a class="modal-load" href="{{ path('kgc_stat_admin_psychicCATableDetails', { idconsultant : consultant ? consultant.id : null, is_turnover: true, details : 'stat_turnover_follow_fna' }) }}">
+                    {{ stats.follow.turnover_day_fna | number_format(2, ',', ' ') }} &euro;
+                </a>
+            </td>
+            <td>
+                <a class="modal-load" href="{{ path('kgc_stat_admin_psychicCATableDetails', { idconsultant : consultant ? consultant.id : null, is_turnover: true, details : 'stat_turnover_follow_recup' }) }}">
+                    {{ stats.follow.turnover_recup | number_format(2, ',', ' ') }} &euro;
+                </a>
+            </td>
+        </tr>
+        <tr>
+            <th>NB</th>
+            <td>
+                <a class="modal-load" href="{{ path('kgc_stat_admin_psychicCATableDetails', { idconsultant : consultant ? consultant.id : null, details : 'stat_rdv_valid' }) }}">
+                    {{ stats.rdv.count_day_valid }}
+                </a>
+            </td>
+            <td>
+                <a class="modal-load" href="{{ path('kgc_stat_admin_psychicCATableDetails', {idconsultant : consultant ? consultant.id : null, details : 'stat_rdv_fna' }) }}">
+                    {{ stats.rdv.count_day_fna }}
+                </a>
+            </td>
+            <td>
+                <a class="modal-load" href="{{ path('kgc_stat_admin_psychicCATableDetails', {idconsultant : consultant ? consultant.id : null, details : 'stat_rdv_recup' }) }}">
+                    {{ stats.rdv.count_recup }}
+                </a>
+            </td>
+            <td>
+                <a class="modal-load" href="{{ path('kgc_stat_admin_psychicCATableDetails', {idconsultant : consultant ? consultant.id : null, details : 'stat_follow_valid' }) }}">
+                    {{ stats.follow.count_day_valid }}
+                </a>
+            </td>
+            <td>
+                <a class="modal-load" href="{{ path('kgc_stat_admin_psychicCATableDetails', {idconsultant : consultant ? consultant.id : null, details : 'stat_follow_fna' }) }}">
+                    {{ stats.follow.count_day_fna }}
+                </a>
+            </td>
+            <td>
+                <a class="modal-load" href="{{ path('kgc_stat_admin_psychicCATableDetails', {idconsultant : consultant ? consultant.id : null, details : 'stat_follow_recup' }) }}">
+                    {{ stats.follow.count_recup }}
+                </a>
+            </td>
+        </tr>
+    </tbody>
+</table>

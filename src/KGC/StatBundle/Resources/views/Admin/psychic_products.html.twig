@@ -1,0 +1,28 @@
+{# src/KGC/StatBundle/Ressources/views/Admin/psychic_products.html.twig #}
+
+{% extends not app.request.isXmlHttpRequest() ? '::layout.html.twig' : '::emptylayout.html.twig' %}
+
+{% block body %}
+    {% embed '::widgetlayout.html.twig' %}
+        {% set widget_options = {
+            'titre' : 'PRODUITS',
+            'refresh' : '#psychic_Products'
+        } %}
+
+        {% block widget_body %}
+        <table class="table table-striped" style="margin-bottom: 0px;">
+            <tbody>
+                {% for vente in products %}
+                <tr>
+                    <th>{{ vente.label }}</th>
+                    <td>{{ vente.qt }}</td>
+                    <td>{{ vente.mt | number_format(2, ',', ' ') }} €</td>
+                </tr>
+                {% else %}
+                    <tr><td>Aucun</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% endblock %}
+    {% endembed %}
+{% endblock body %}

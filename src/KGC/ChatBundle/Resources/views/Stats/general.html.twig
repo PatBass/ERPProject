@@ -1,0 +1,134 @@
+{% extends not app.request.isXmlHttpRequest() ? '::layout.html.twig' : '::emptylayout.html.twig' %}
+
+{% block body %}
+    {% embed '::widgetlayout.html.twig' %}
+
+        {% set widget_options = {
+            'titre' : 'Statistiques chat',
+            'header_class' : 'widget-header-small header-color-green2',
+            'refresh' : '#rdv_stats_general',
+            'collapse' : true,
+            'no_padding' : true,
+            'body_extra_class' : 'stat-standard-stats'
+        } %}
+
+        {% block widget_body %}
+            <div class="row center" style="padding: 6px 0; margin:0">
+                <div class="col-md-6">
+                    {{ form_widget(form.past_date) }}
+                </div>
+                <div class="col-md-6">
+                    <button type="submit" class="btn btn-success btn-block btn-sm">
+                        <i class="icon-arrow-right"></i> Appliquer
+                    </button>
+                </div>
+            </div>
+            {{ parent() }}
+        {% endblock widget_body %}
+
+        {% block widget_main %}
+            <table class="table table-striped table-condensed">
+                <thead>
+                    <tr>
+                        <th>&nbsp;</th>
+                        <th>Jour <small>({{ date | date('d/m/Y') }})</small></th>
+                        <th>Mois <small>({{ date | date('m/Y') }})</small></th>
+                    </tr>
+                </thead>
+                <tbody class="valign-middle">
+                    <tr>
+                        <td>CA ENCAISSÉ</td>
+                        <td><a href="{{ path('kgc_chat_stats_detail_turnover', {'type': 'turnover', 'periode': 'day'}) }}" class="modal-load">{{ stats.turnover_day | number_format(2, ',', ' ') }} &euro;</a></td>
+                        <td><a href="{{ path('kgc_chat_stats_detail_turnover', {'type': 'turnover', 'periode': 'month'}) }}" class="modal-load">{{ stats.turnover_month | number_format(2, ',', ' ') }} &euro;</a></td>
+                    </tr>
+
+                    <tr>
+                        <td>Dont offre découverte</td>
+                        <td><a href="{{ path('kgc_chat_stats_detail_turnover', {'type': 'turnover_formula_discover', 'periode': 'day'}) }}" class="modal-load">{{ stats.turnover_day_formula_discover | number_format(2, ',', ' ') }} &euro;</a></td>
+                        <td><a href="{{ path('kgc_chat_stats_detail_turnover', {'type': 'turnover_formula_discover', 'periode': 'month'}) }}" class="modal-load">{{ stats.turnover_month_formula_discover | number_format(2, ',', ' ') }} &euro;</a></td>
+                    </tr>
+                    <tr>
+                        <td>Dont recréditage</td>
+                        <td><a href="{{ path('kgc_chat_stats_detail_turnover', {'type': 'turnover_formula_standard', 'periode': 'day'}) }}" class="modal-load">{{ stats.turnover_day_formula_standard | number_format(2, ',', ' ') }} &euro;</a></td>
+                        <td><a href="{{ path('kgc_chat_stats_detail_turnover', {'type': 'turnover_formula_standard', 'periode': 'month'}) }}" class="modal-load">{{ stats.turnover_month_formula_standard | number_format(2, ',', ' ') }} &euro;</a></td>
+                    </tr>
+                    <tr>
+                        <td>Dont abo prévu</td>
+                        <td><a href="{{ path('kgc_chat_stats_detail_turnover', {'type': 'turnover_formula_planned', 'periode': 'day'}) }}" class="modal-load">{{ stats.turnover_day_formula_planned | number_format(2, ',', ' ') }} &euro;</a></td>
+                        <td><a href="{{ path('kgc_chat_stats_detail_turnover', {'type': 'turnover_formula_planned', 'periode': 'month'}) }}" class="modal-load">{{ stats.turnover_month_formula_planned | number_format(2, ',', ' ') }} &euro;</a></td>
+                    </tr>
+                    <tr>
+                        <td>Dont récup</td>
+                        <td><a href="{{ path('kgc_chat_stats_detail_turnover', {'type': 'turnover_recup', 'periode': 'day'}) }}" class="modal-load">{{ stats.turnover_day_recup | number_format(2, ',', ' ') }} &euro;</a></td>
+                        <td><a href="{{ path('kgc_chat_stats_detail_turnover', {'type': 'turnover_recup', 'periode': 'month'}) }}" class="modal-load">{{ stats.turnover_month_recup | number_format(2, ',', ' ') }} &euro;</a></td>
+                    </tr>
+                    <tr>
+                        <td>CA IMPAYÉ</td>
+                        <td><a href="{{ path('kgc_chat_stats_detail_turnover', {'type': 'turnover_fna', 'periode': 'day'}) }}" class="modal-load">{{ stats.turnover_day_fna | number_format(2, ',', ' ') }} &euro;</a></td>
+                        <td><a href="{{ path('kgc_chat_stats_detail_turnover', {'type': 'turnover_fna', 'periode': 'month'}) }}" class="modal-load">{{ stats.turnover_month_fna | number_format(2, ',', ' ') }} &euro;</a></td>
+                    </tr>
+                    <tr>
+                        <td>OPPO</td>
+                        <td><a href="{{ path('kgc_chat_stats_detail_turnover', {'type': 'turnover_oppo', 'periode': 'day'}) }}" class="modal-load">{{ stats.turnover_day_oppo | number_format(2, ',', ' ') }} &euro;</a></td>
+                        <td><a href="{{ path('kgc_chat_stats_detail_turnover', {'type': 'turnover_oppo', 'periode': 'month'}) }}" class="modal-load">{{ stats.turnover_month_oppo | number_format(2, ',', ' ') }} &euro;</a></td>
+                    </tr>
+                    <tr>
+                        <td>Remboursement</td>
+                        <td><a href="{{ path('kgc_chat_stats_detail_turnover', {'type': 'turnover_refund', 'periode': 'day'}) }}" class="modal-load">{{ stats.turnover_day_refund | number_format(2, ',', ' ') }} &euro;</a></td>
+                        <td><a href="{{ path('kgc_chat_stats_detail_turnover', {'type': 'turnover_refund', 'periode': 'month'}) }}" class="modal-load">{{ stats.turnover_month_refund | number_format(2, ',', ' ') }} &euro;</a></td>
+                    </tr>
+                    <tr>
+                        <td>NB TCHAT</td>
+                        <td>{{ stats.count_day_chat_room }}</td>
+                        <td>{{ stats.count_month_chat_room }}</td>
+                    </tr>
+                    <tr>
+                        <td>NB de recréditage</td>
+                        <td><a href="{{ path('kgc_chat_stats_detail_turnover', {'type': 'formula_standard', 'periode': 'day'}) }}" class="modal-load">{{ stats.count_day_formula_standard }}</a></td>
+                        <td><a href="{{ path('kgc_chat_stats_detail_turnover', {'type': 'formula_standard', 'periode': 'month'}) }}" class="modal-load">{{ stats.count_month_formula_standard }}</a></td>
+                    </tr>
+                    <tr>
+                        <td>NB d'abo</td>
+                        <td><a href="{{ path('kgc_chat_stats_detail_subscription', {'type': 'subscription', 'periode': 'day'}) }}" class="modal-load">{{ stats.count_day_subscription }}</a></td>
+                        <td><a href="{{ path('kgc_chat_stats_detail_subscription', {'type': 'subscription', 'periode': 'month'}) }}" class="modal-load">{{ stats.count_month_subscription }}</a></td>
+                    </tr>
+                    <tr>
+                        <td>Dont VPT</td>
+                        <td><a href="{{ path('kgc_chat_stats_detail_subscription', {'type': 'subscription_tchat', 'periode': 'day'}) }}" class="modal-load">{{ stats.count_day_subscription_tchat }}</a></td>
+                        <td><a href="{{ path('kgc_chat_stats_detail_subscription', {'type': 'subscription_tchat', 'periode': 'month'}) }}" class="modal-load">{{ stats.count_month_subscription_tchat }}</a></td>
+                    </tr>
+                    <tr>
+                        <td>Dont MAV</td>
+                        <td><a href="{{ path('kgc_chat_stats_detail_subscription', {'type': 'subscription_love', 'periode': 'day'}) }}" class="modal-load">{{ stats.count_day_subscription_love }}</a></td>
+                        <td><a href="{{ path('kgc_chat_stats_detail_subscription', {'type': 'subscription_love', 'periode': 'month'}) }}" class="modal-load">{{ stats.count_month_subscription_love }}</a></td>
+                    </tr>
+                    <tr>
+                        <td>Dont TED</td>
+                        <td><a href="{{ path('kgc_chat_stats_detail_subscription', {'type': 'subscription_tarot', 'periode': 'day'}) }}" class="modal-load">{{ stats.count_day_subscription_tarot }}</a></td>
+                        <td><a href="{{ path('kgc_chat_stats_detail_subscription', {'type': 'subscription_tarot', 'periode': 'month'}) }}" class="modal-load">{{ stats.count_month_subscription_tarot }}</a></td>
+                    </tr>
+                    <tr>
+                        <td>Dont PV3</td>
+                        <td><a href="{{ path('kgc_chat_stats_detail_subscription', {'type': 'subscription_power', 'periode': 'day'}) }}" class="modal-load">{{ stats.count_day_subscription_power }}</a></td>
+                        <td><a href="{{ path('kgc_chat_stats_detail_subscription', {'type': 'subscription_power', 'periode': 'month'}) }}" class="modal-load">{{ stats.count_month_subscription_power }}</a></td>
+                    </tr>
+                    <tr>
+                        <td>Dont MYA</td>
+                        <td><a href="{{ path('kgc_chat_stats_detail_subscription', {'type': 'subscription_myastro', 'periode': 'day'}) }}" class="modal-load">{{ stats.count_day_subscription_myastro }}</a></td>
+                        <td><a href="{{ path('kgc_chat_stats_detail_subscription', {'type': 'subscription_myastro', 'periode': 'month'}) }}" class="modal-load">{{ stats.count_month_subscription_myastro }}</a></td>
+                    </tr>
+                    <tr>
+                        <td>Désabonnement</td>
+                        <td><a href="{{ path('kgc_chat_stats_detail_subscription', {'type': 'unsubscription', 'periode': 'day'}) }}" class="modal-load">{{ stats.count_day_unsubscription }}</a></td>
+                        <td><a href="{{ path('kgc_chat_stats_detail_subscription', {'type': 'unsubscription', 'periode': 'month'}) }}" class="modal-load">{{ stats.count_month_unsubscription }}</a></td>
+                    </tr>
+                    <tr>
+                        <td title="Offres gratuites non converties en offres payantes">Gratuit n-c</td>
+                        <td><a href="{{ path('kgc_chat_stats_detail_turnover', {'type': 'non_conversion', 'periode': 'day'}) }}" class="modal-load">{{ stats.count_day_non_conversion }}</a></td>
+                        <td><a href="{{ path('kgc_chat_stats_detail_turnover', {'type': 'non_conversion', 'periode': 'month'}) }}" class="modal-load">{{ stats.count_month_non_conversion }}</a></td>
+                    </tr>
+                </tbody>
+            </table>
+        {% endblock %}
+    {% endembed %}
+{% endblock body %}

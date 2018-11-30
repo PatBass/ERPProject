@@ -1,0 +1,7 @@
+parameters:
+
+services:
+    kgc.stat.repository.classmetadata:
+        class: Doctrine\ORM\Mapping\ClassMetadata
+        arguments:
+            - KGC\RdvBundle\Entity\RDV

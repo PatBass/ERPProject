@@ -1,0 +1,148 @@
+
+{% extends not app.request.isXmlHttpRequest() ? '::layout.html.twig' : '::emptylayout.html.twig' %}
+
+{% block body %}
+
+<div class="widget-box">
+    <div class="widget-header">
+        <h5>
+            <a href="#" data-action="collapse">
+                <i class="icon-chevron-up"></i>
+                {{ data.label }}<b></b>
+            </a>
+        </h5>
+        <div class="widget-toolbar">
+            <a class="ajax_reload" href="#admin_stats_specific_{{ table_key }}" title="Recharger">
+                <i class="icon-refresh"></i>
+            </a>
+            {% if not app.request.isXmlHttpRequest() %}
+                <a href="#" title="Imprimer" onclick="print();">
+                    <i class="icon-print"></i>
+                </a>
+            {% else %}
+                <a href="{{ path('kgc_stat_admin_specific', { 'i' : table_key }) }}" title="Ouvrir dans une nouvelle fenêtre et imprimer" target="_blank">
+                    <i class="icon-print"></i>
+                </a>
+                <a href="{{ path('kgc_stat_admin_specific', { 'i' : table_key, 'export' : 1 }) }}" title="Export Excel (.csv)">
+                    <i class="icon-download-alt"></i>
+                </a>
+                <a href="{{ path('kgc_stat_admin_specific_delete_tab', { 'i' : table_key }) }}" title="Supprimer le tableau" onclick="return confirm('Etes vous sûr de vouloir supprimer le tableau ? Celui-ci ne pourra pas être retrouvé.')">
+                    <i class="icon-trash"></i>
+                </a>
+            {% endif %}
+        </div>
+    </div>
+    <div class="widget-body stat-admin-general config">
+        <div class="widget-main no-padding">
+            <table class="table table-bordered table-responsive table-hover table-specific">
+                <thead>
+                    {% if data.lines %}
+                        <tr>
+                            {# <!-- CATEGORIES HEADERS --> #}
+                            <th colspan="{{ data.categories_offset }}"></th>
+                            {% for table_categories_header in data.categories %}
+                                <th colspan={{ table_categories_header.colSize }}>{{ table_categories_header.label }}</th>
+                            {% endfor %}
+                        </tr>
+
+                        <tr>
+                            {# <!-- COLLUMN HEADERS --> #}
+                            {% for table_header in data.headers %}
+                                <th  title="{{ table_header.descr }}" colspan={{ table_header.colSize }}>
+                                    {% if table_header.code is defined %}
+                                        <a class="specific_sorting_link" href="{{ path('kgc_stat_admin_specific_sort_tab', { 'i': table_key, 'sort': table_header.code }) }}">
+                                            {{ table_header.label }}
+                                        </a>
+                                    {% else %}
+                                        {{ table_header.label }}
+                                    {% endif %}
+
+                                    {% if table_header.ordered is defined %}
+                                        {% if table_header.ordered == 'DESC' %}
+                                            <br><i class="icon-sort-up"></i>
+                                        {% else %}
+                                            <br><i class="icon-sort-down"></i>
+                                        {% endif %}
+                                    {% endif %}
+                                </th>
+                            {% endfor %}
+                        </tr>
+                    {% endif %}
+                </thead>
+                <tbody>
+                    {% if data.lines %}
+                        {# <!-- LINES --> #}
+                        {% for line in data.lines %}
+                            <tr>
+                                {# <!-- LINE HEADERS --> #}
+                                {% for header in line.headers %}
+                                    {% if header.shown %}
+                                        <th rowspan="{{ header.rowSize }}">{{ header.label }}</th>
+                                    {% endif %}
+                                {% endfor %}
+
+                                {# <!-- LINE VALUES--> #}
+                                {% for value in line.values %}
+                                    <td style="color: {{ (value.decoration) ? value.decoration : '#000000' }};">
+                                        {% if not value.details %}
+                                            {{ value.value | number_format(2, ',', ' ') }} &euro;
+                                        {% else %}
+                                            <a class="modal-load" href="{{ path('kgc_stat_admin_specific_details', {
+                                                'columnCode': value.colCode,
+                                                'phonist_id': line.phonist_id | default(-1),
+                                                'proprio_id': line.proprio_id | default(-1),
+                                                'reflex_affiliate_id': line.reflex_affiliate_id | default(-1),
+                                                'reflex_source_id': line.reflex_source_id | default(-1),
+                                                'consultant_id': line.consultant_id | default(-1),
+                                                'website_id': line.website_id | default(-1),
+                                                'source_id': line.source_id | default(-1),
+                                                'url_id': line.url_id | default(-1),
+                                                'codepromo_id': line.codepromo_id | default(-1),
+                                                'support_id': line.support_id | default(-1),
+                                                'table_key' : table_key,
+                                                'ca_details' : value.isCa,
+                                                'rdv_details' : not value.isCa
+                                            }) }}">
+                                                {% if value.isCa %}
+                                                    {{ value.value | number_format(2, ',', ' ') }} &euro;
+                                                {% else %}
+                                                    {{ value.value | number_format(0, ',', '') }}
+                                                {% endif %}
+                                            </a>
+                                        {% endif %}
+                                    </td>
+                                    {% if not value.ratio is null %}
+                                        <td style="color: {{ (value.decoration) ? value.decoration : '#000000' }};">{{ value.ratio | number_format(1, ',', '')}}%</td>
+                                    {% endif %}
+                                {% endfor %}
+                            </tr>
+                        {% endfor %}
+
+                        {# <!-- TOTALS --> #}
+                        <tr>
+                            <th>Total</th>
+                            {% for total in data.total %}
+                                <td>
+                                    {% if total.isCa %}
+                                        {{ total.value | number_format(2, ',', ' ') }} &euro;
+                                    {% else %}
+                                        {{ total.value  }}
+                                    {% endif %}
+                                </td>
+                            {% endfor %}
+                        </tr>
+                    {% else %}
+                        <tr>
+                            <td>
+                                Aucune donnée n'a été trouvée. Veuillez ajuster le filtre dans le formulaire ci-dessus
+                                <i class="icon-arrow-up"></i>
+                            </td>
+                        </tr>
+                    {% endif %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+{% endblock body %}

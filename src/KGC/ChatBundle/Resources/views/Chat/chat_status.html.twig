@@ -1,0 +1,6 @@
+{% set class = status == 0 ? 'warning' : (status == 1 ? 'info' : (status == 2 ? 'success' : ('danger'))) %}
+{% set text = status == 0 ? 'En attente' : (status == 1 ? 'En cours' : (status == 2 ? 'Fermé' : ('Refusé'))) %}
+
+<span class="label label-lg label-{{ class }} arrowed-in arrowed-right tooltip-{{ class }}" title="" data-rel="tooltip" data-original-title="{{ text }}">
+   <i class="icon-comments-alt bigger-120"></i>
+</span>

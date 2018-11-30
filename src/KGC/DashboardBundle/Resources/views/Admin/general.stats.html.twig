@@ -1,0 +1,87 @@
+{# src/KGC/DashboardBundle/Ressources/views/Admin/general.stats.html.twig #}
+
+{% extends "KGCDashboardBundle::layout.html.twig" %}
+
+{% block ariane %}
+    {% set fil = ['Administration'] %}
+    {{ parent() }}
+{% endblock %}
+
+{% block page_header %}
+    <div class="page-header">
+        <div class="pull-right">
+            <a class="ajax_reload close" href="#admin_stats_general_full,#admin_stats_general_month,#admin_stats_general_website,#admin_stats_general_website2,#admin_stats_general_website3, #admin_stats_general_support, #admin_stats_general_support2, #admin_stats_general_support3" title="Recharger">
+                <i class="icon-refresh"></i>
+            </a>
+        </div>
+        <h1>
+            Statistiques Générales
+            <small>
+                <form action="" method="post" class="form-inline">
+                    <i class="icon-double-angle-right"></i> Période :
+                    {{ form_widget(form.period_base.begin) }}
+                    {{ form_widget(form.period_base.end) }}
+                    {{ form_widget(form._token) }}
+                    <button type="submit" class="btn btn-success btn-xs">
+                        <i class="icon-arrow-right"></i> Appliquer
+                    </button>
+                </form>
+            </small>
+        </h1>
+    </div>
+{% endblock %}
+
+{% block dashboard_body %}
+    <h3 class="header smaller lighter blue">Chiffres Complets / Mois</h3>
+    <div class="row">
+        <div class="col-md-6">
+            <form method="post"
+                  action="{{ path('kgc_stat_admin_general_full') }}"
+                  class="ajax_load" id="admin_stats_general_full"></form>
+        </div>
+        <div class="col-md-6">
+            <form method="post"
+                  action="{{ path('kgc_stat_admin_general_month') }}"
+                  class="ajax_load" id="admin_stats_general_month"></form>
+        </div>
+    </div>
+
+    <h3 class="header smaller lighter blue">Chiffres par site</h3>
+
+    <div class="row">
+        <div class="col-md-6">
+            <form method="post"
+                  action="{{ path('kgc_stat_admin_general', {'group':'website', 'type' : 'consult', 'id':2, 'nature':'Consultations'}) }}"
+                  class="ajax_load" id="admin_stats_general_website2"></form>
+        </div>
+        <div class="col-md-6">
+            <form method="post"
+                  action="{{ path('kgc_stat_admin_general', {'group':'website', 'type' : 'follow', 'id':3, 'nature':'Suivis'}) }}" class="ajax_load" id="admin_stats_general_website3"></form>
+        </div>
+        <div class="col-md-12">
+            <form method="post"
+                  action="{{ path('kgc_stat_admin_general', {'group':'website', 'nature':'Total'}) }}" class="ajax_load" id="admin_stats_general_website"></form>
+        </div>
+    </div>
+
+    <h3 class="header smaller lighter blue">Chiffres par support</h3>
+
+    <div class="row">
+        <div class="col-md-6">
+            <form method="post"
+                  action="{{ path('kgc_stat_admin_general', {'group':'support',' type' : 'consult', 'id':2, 'nature':'Consultations'}) }}"
+                  class="ajax_load" id="admin_stats_general_support2"></form>
+        </div>
+        <div class="col-md-6">
+            <form method="post"
+                  action="{{ path('kgc_stat_admin_general', {'group':'support', 'type' : 'follow', 'id':3, 'nature':'Suivis'}) }}"
+                  class="ajax_load" id="admin_stats_general_support3"></form>
+        </div>
+        <div class="col-md-12">
+            <form method="post"
+                  action="{{ path('kgc_stat_admin_general', {'group':'support', 'nature':'Total'}) }}"
+                  class="ajax_load" id="admin_stats_general_support"></form>
+        </div>
+    </div>
+
+{% endblock %}

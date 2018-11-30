@@ -1,0 +1,35 @@
+{# src/KGC/CommonBundle/Ressources/views/macros.html.twig #}
+
+{% macro pagination_select(paginator, config) %}
+    {% if paginator.totalPagesCount %}
+        {% set showPages = config.pagesdispo|default(10) %}
+        {% set totalPagesCount = paginator.totalPagesCount %}
+        {% set currentPage = paginator.currentPage %}
+        {% set urlparams = config.urlparams|default([]) %}
+        {% set target = config.target|default(false) %}
+        <div class="align-center">
+            <h5>
+                <strong>{{ paginator.totalItemsCount }}</strong> résultats.
+                Page <strong>{{ currentPage }}</strong> sur <strong>{{ totalPagesCount }}</strong>.
+            </h5>
+            {% if totalPagesCount > 1 %}
+                <ul class="pagination no-margin">
+                    <li><a href="{{ path(config.url, urlparams|merge({'page':1})) }}" {{ target ? 'class=ajax_load_link data-target='~config.target }}>Premier</a></li>
+                    {% if currentPage > showPages/2 %}
+                        <li><a href="{{ path(config.url, urlparams|merge({'page':max(1, currentPage - showPages)})) }}" {{ target ? 'class=ajax_load_link data-target='~config.target }}>&lt;&lt;</a></li>
+                    {% endif %}
+                    {% for i in max(1,min(totalPagesCount-showPages, currentPage-(showPages/2)))..min(totalPagesCount, max(showPages,currentPage+(showPages/2))) %}
+                        <li class="{{ i == currentPage ? 'active' : '' }}">
+                            <a href="{{ path(config.url, urlparams|merge({'page':i})) }}" {{ target ? 'class=ajax_load_link data-target='~config.target }}>{{ i }}</a>
+                        </li>
+                    {% endfor %}
+                {% if currentPage < totalPagesCount - showPages/2 %}
+                    <li><a href="{{ path(config.url, urlparams|merge({'page':max(currentPage + showPages, totalPagesCount)})) }}" {{ target ? 'class=ajax_load_link data-target='~config.target }}>&gt;&gt;</a></li>
+                {% endif %}
+                    <li><a href="{{ path(config.url, urlparams|merge({'page':totalPagesCount})) }}" {{ target ? 'class=ajax_load_link data-target='~config.target }}>Dernier</a></li>
+                </ul>
+            {% endif %}
+        </div>
+        <div class="space-6"></div>
+    {% endif %}
+{% endmacro pagination_select %}

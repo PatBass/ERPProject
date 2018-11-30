@@ -1,0 +1,19 @@
+KGC\UserBundle\Entity\Profil:
+    profil_1:
+        name: 'sans autorisation'
+        role: 'ROLE_NO'
+    profil_2:
+        name: 'Phoniste'
+        role: 'ROLE_PHONISTE'
+    profil_3:
+        name: 'Voyant'
+        role: 'ROLE_VOYANT'
+    profil_4:
+        name: 'Standard'
+        role: 'ROLE_STANDARD'
+    profil_5:
+        name: 'Administration'
+        role: 'ROLE_ADMIN'
+    profil_6:
+        name: 'Service Qualité'
+        role: 'ROLE_QUALITE'

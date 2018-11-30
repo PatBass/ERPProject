@@ -1,0 +1,31 @@
+{# src/KGC/DashboardBundle/Ressources/views/Dashboard/standard.html.twig #}
+
+{% extends "KGCDashboardBundle::layout.html.twig" %}
+
+{% block ariane %}
+    {% set fil = ['Tableau de bord'] %}
+    {{ parent() }}
+{% endblock %}
+
+{% block page_header %}
+    {% set reload = {
+    'url':'#rdv_planning,#rdv_encaissements,#rdv_securisation,#rdv_effectues'
+    } %}
+    {{ parent() }}
+{% endblock %}
+
+{% block dashboard_body %}
+    <div class="row" style="min-height: 200px;">
+        <div class="col-lg-4">
+            <form method="post" action="{{ path('kgc_planning_widget') }}" class="ajax_load" id="rdv_planning"></form>
+        </div>
+        <div class="col-lg-4">
+            <form method="post" action="{{ path('kgc_encaissements_list') }}" class="ajax_load" id="rdv_encaissements"></form>
+            <div class="space-6"></div>
+            <form method="post" action="{{ path('kgc_rdv_effectues_widget') }}" class="ajax_load" id="rdv_effectues"></form>
+        </div>
+        <div class="col-lg-4">
+            <form method="post" action="{{ path('kgc_stat_standard_stats') }}" class="ajax_load" id="standard_stats"></form>
+        </div>
+    </div>
+{% endblock %}

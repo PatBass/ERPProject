@@ -1,0 +1,21 @@
+{
+    "id": "formula.json",
+    "title": "Formula schema",
+    "type": "object",
+    "properties": {
+        "id": {
+            "type": "integer"
+        },
+        "chat_type": {
+            "type": "object",
+            "$ref": "chat_type.json"
+        },
+        "formula_rates": {
+            "type": "array",
+            "items": {
+                "$ref": "formula_rate.json"
+            }
+        }
+    },
+    "required": ["id", "chat_type", "formula_rates"]
+}

@@ -1,0 +1,16 @@
+services:
+    gedmo.listener.timestampable:
+        class: Gedmo\Timestampable\TimestampableListener
+        tags:
+            - { name: doctrine.event_subscriber, connection: default }
+        calls:
+            - [ setAnnotationReader, [ @annotation_reader ] ]
+
+    kgc.common.loggable_listener:
+        class: KGC\CommonBundle\Listener\LoggableListener
+        arguments:
+            - @security.token_storage
+        tags:
+            - { name: doctrine.event_subscriber, connection: default }
+        calls:
+            - [ setAnnotationReader, [ "@annotation_reader" ] ]

@@ -1,0 +1,7 @@
+parameters:
+#    kgc_dashboard.example.class: KGC\DashboardBundle\Example
+
+services:
+#    kgc_dashboard.example:
+#        class: %kgc_dashboard.example.class%
+#        arguments: [@service_id, "plain_value", %parameter%]

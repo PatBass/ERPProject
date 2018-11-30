@@ -1,0 +1,506 @@
+# ^\(([0-9]+), '([^']+)', '(.*)'\)[,|;] // DO NOT DELETE THANKS
+KGC\RdvBundle\Entity\CodePromo:
+    code_promo_1:
+        id: 1
+        code: FLASH1
+        desc: Code utilisé dans le message /flash1 dans SmartFocus
+    code_promo_2:
+        id: 2
+        code: REPV
+        desc: Reponse Formulaire Voyance Gratuite
+    code_promo_3:
+        id: 3
+        code: REPT
+        desc: Reponse Formulaire Tarot Gratuit
+    code_promo_4:
+        id: 4
+        code: FLASH2
+        desc: Code utilisé dans le message /flash2 dans SmartFocus
+    code_promo_5:
+        id: 5
+        code: FLASH3
+        desc: Code utilisé dans le message /flash3 dans SmartFocus
+    code_promo_6:
+        id: 6
+        code: FLASH4
+        desc: Code utilisé dans le message /flash4 dans SmartFocus
+    code_promo_7:
+        id: 7
+        code: ASTRO24
+        desc: Code utilisé dans le message // Vente flash - 40% avec code dans SmartFocus
+    code_promo_8:
+        id: 8
+        code: MOIS
+        desc: Code utilisé dans le message // Voyant du mois dans SmartFocus
+    code_promo_9:
+        id: 9
+        code: ASTROBACK
+        desc: Code utilisé dans le message // Promo rentrée dans SmartFocus
+    code_promo_10:
+        id: 10
+        code: Q2
+        desc: Code utilisé dans le message // il vous a quitté non charté dans. SF
+    code_promo_11:
+        id: 11
+        code: Q3
+        desc: Code utilisé dans le message // est ce qu'il m'aime non charté dans SmartFocus
+    code_promo_12:
+        id: 12
+        code: Q2C
+        desc: Code utilisé dans le message // il vous a quitté charté dans SF
+    code_promo_13:
+        id: 13
+        code: Q3C
+        desc: Code utilisé dans le message // est ce qu'il m'aime charté dans SmartFocus
+    code_promo_14:
+        id: 14
+        code: Q1
+        desc: Code utilisé dans le message // Marre d'être seul non charté dans SmartFocus
+    code_promo_15:
+        id: 15
+        code: Q1R1
+        desc: Code utilisé dans le message // Marre d'être seul non charté Relance 1 dans SmartFocus
+    code_promo_16:
+        id: 16
+        code: MR
+        desc: Code utilisé dans le message envoyé après inscription
+    code_promo_17:
+        id: 17
+        code: SQ1
+        desc: Code utilisé dans le message destiné à ceux qui ont consulté et qui ont posé la question 1
+    code_promo_18:
+        id: 18
+        code: SQ2
+        desc: Code utilisé dans le message destiné à ceux qui ont consulté et qui ont posé la question 2
+    code_promo_19:
+        id: 19
+        code: SQ3
+        desc: Code utilisé dans le message destiné à ceux qui ont consulté et qui ont posé la question 3
+    code_promo_21:
+        id: 21
+        code: J2P2
+        desc: ''
+    code_promo_22:
+        id: 22
+        code: J3P2
+        desc: ''
+    code_promo_23:
+        id: 23
+        code: J4P2
+        desc: ''
+    code_promo_24:
+        id: 24
+        code: J5P2
+        desc: ''
+    code_promo_25:
+        id: 25
+        code: J6P2
+        desc: ''
+    code_promo_26:
+        id: 26
+        code: J7P2
+        desc: ''
+    code_promo_27:
+        id: 27
+        code: J8P2
+        desc: ''
+    code_promo_28:
+        id: 28
+        code: J1A
+        desc: ''
+    code_promo_29:
+        id: 29
+        code: J2A
+        desc: ''
+    code_promo_30:
+        id: 30
+        code: J3A
+        desc: ''
+    code_promo_31:
+        id: 31
+        code: J4A
+        desc: ''
+    code_promo_32:
+        id: 32
+        code: J5A
+        desc: ''
+    code_promo_33:
+        id: 33
+        code: J6A
+        desc: ''
+    code_promo_34:
+        id: 34
+        code: J7A
+        desc: ''
+    code_promo_35:
+        id: 35
+        code: J8A
+        desc: ''
+    code_promo_36:
+        id: 36
+        code: J1AR
+        desc: ''
+    code_promo_37:
+        id: 37
+        code: J2AR
+        desc: ''
+    code_promo_38:
+        id: 38
+        code: J3AR
+        desc: ''
+    code_promo_39:
+        id: 39
+        code: J4AR
+        desc: ''
+    code_promo_40:
+        id: 40
+        code: J5AR
+        desc: ''
+    code_promo_41:
+        id: 41
+        code: J6AR
+        desc: ''
+    code_promo_42:
+        id: 42
+        code: J7AR
+        desc: ''
+    code_promo_43:
+        id: 43
+        code: J8AR
+        desc: ''
+    code_promo_44:
+        id: 44
+        code: J1T
+        desc: ''
+    code_promo_45:
+        id: 45
+        code: J2T
+        desc: ''
+    code_promo_46:
+        id: 46
+        code: J3T
+        desc: ''
+    code_promo_47:
+        id: 47
+        code: J4T
+        desc: ''
+    code_promo_48:
+        id: 48
+        code: J5T
+        desc: ''
+    code_promo_49:
+        id: 49
+        code: J6T
+        desc: ''
+    code_promo_50:
+        id: 50
+        code: J7T
+        desc: ''
+    code_promo_51:
+        id: 51
+        code: J8T
+        desc: ''
+    code_promo_52:
+        id: 52
+        code: S
+        desc: SMS FLASH
+    code_promo_53:
+        id: 53
+        code: S1
+        desc: SMS DE REPONSE A J+1
+    code_promo_54:
+        id: 54
+        code: ASTRONOEL
+        desc: ''
+    code_promo_55:
+        id: 55
+        code: ASTRO2015
+        desc: ''
+    code_promo_56:
+        id: 56
+        code: INFINITY
+        desc: ''
+    code_promo_57:
+        id: 57
+        code: ASTRO10
+        desc: ''
+    code_promo_58:
+        id: 58
+        code: HOROS15
+        desc: ''
+    code_promo_59:
+        id: 59
+        code: FLASH
+        desc: ''
+    code_promo_60:
+        id: 60
+        code: FLASH15
+        desc: ''
+    code_promo_61:
+        id: 61
+        code: NUME15
+        desc: ''
+    code_promo_62:
+        id: 62
+        code: TAROT15
+        desc: ''
+    code_promo_63:
+        id: 63
+        code: TCHAT15
+        desc: ''
+    code_promo_64:
+        id: 64
+        code: VIRTU15
+        desc: ''
+    code_promo_65:
+        id: 65
+        code: TV
+        desc: code utilisé dans le mail de réponse du site voyance-par-tchat
+    code_promo_66:
+        id: 66
+        code: T2
+        desc: voyance-par-tchat.com
+    code_promo_67:
+        id: 67
+        code: T3
+        desc: voyance-par-tchat.com
+    code_promo_68:
+        id: 68
+        code: T4
+        desc: voyance-par-tchat.com
+    code_promo_69:
+        id: 69
+        code: T5
+        desc: voyance-par-tchat.com
+    code_promo_70:
+        id: 70
+        code: T6
+        desc: voyance-par-tchat.com
+    code_promo_71:
+        id: 71
+        code: T7
+        desc: voyance-par-tchat.com
+    code_promo_72:
+        id: 72
+        code: T8
+        desc: voyance-par-tchat.com
+    code_promo_73:
+        id: 73
+        code: T2T
+        desc: voyance-par-tchat.com
+    code_promo_74:
+        id: 74
+        code: T3T
+        desc: voyance-par-tchat.com
+    code_promo_75:
+        id: 75
+        code: T4T
+        desc: voyance-par-tchat.com
+    code_promo_76:
+        id: 76
+        code: T5T
+        desc: voyance-par-tchat.com
+    code_promo_77:
+        id: 77
+        code: T6T
+        desc: voyance-par-tchat.com
+    code_promo_78:
+        id: 78
+        code: T7T
+        desc: voyance-par-tchat.com
+    code_promo_79:
+        id: 79
+        code: T8T
+        desc: voyance-par-tchat.com
+    code_promo_80:
+        id: 80
+        code: T2F
+        desc: voyance-par-tchat.com
+    code_promo_81:
+        id: 81
+        code: T3F
+        desc: voyance-par-tchat.com
+    code_promo_82:
+        id: 82
+        code: T4F
+        desc: voyance-par-tchat.com
+    code_promo_83:
+        id: 83
+        code: T5F
+        desc: voyance-par-tchat.com
+    code_promo_84:
+        id: 84
+        code: T6F
+        desc: voyance-par-tchat.com
+    code_promo_85:
+        id: 85
+        code: T7F
+        desc: voyance-par-tchat.com
+    code_promo_86:
+        id: 86
+        code: T8F
+        desc: voyance-par-tchat.com
+    code_promo_87:
+        id: 87
+        code: T2P2
+        desc: voyance-par-tchat.com
+    code_promo_88:
+        id: 88
+        code: T3P2
+        desc: voyance-par-tchat.com
+    code_promo_89:
+        id: 89
+        code: T4P2
+        desc: voyance-par-tchat.com
+    code_promo_90:
+        id: 90
+        code: T5P2
+        desc: voyance-par-tchat.com
+    code_promo_91:
+        id: 91
+        code: T6P2
+        desc: voyance-par-tchat.com
+    code_promo_92:
+        id: 92
+        code: T7P2
+        desc: voyance-par-tchat.com
+    code_promo_93:
+        id: 93
+        code: T8P2
+        desc: voyance-par-tchat.com
+    code_promo_94:
+        id: 94
+        code: HS
+        desc: Horoscope de la semaine
+    code_promo_95:
+        id: 95
+        code: MS
+        desc: Médium sérieux
+    code_promo_96:
+        id: 96
+        code: NG
+        desc: Numérologie gratuite
+    code_promo_97:
+        id: 97
+        code: TT
+        desc: Tirage tarot gratuit
+    code_promo_98:
+        id: 98
+        code: VV
+        desc: Voyant virtuel
+    code_promo_99:
+        id: 99
+        code: Q4
+        desc: ''
+    code_promo_100:
+        id: 100
+        code: MYLOVE
+        desc: Saint Valentin
+    code_promo_101:
+        id: 101
+        code: A7F
+        desc: Ascendant-astrologique.net
+    code_promo_102:
+        id: 102
+        code: A6F
+        desc: Ascendant-astrologique.net
+    code_promo_103:
+        id: 103
+        code: A5F
+        desc: Ascendant-astrologique.net
+    code_promo_104:
+        id: 104
+        code: A4F
+        desc: Ascendant-astrologique.net
+    code_promo_105:
+        id: 105
+        code: A3F
+        desc: Ascendant-astrologique.net
+    code_promo_106:
+        id: 106
+        code: A2F
+        desc: Ascendant-astrologique.net
+    code_promo_107:
+        id: 107
+        code: A8T
+        desc: Ascendant-astrologique.net
+    code_promo_108:
+        id: 108
+        code: A7T
+        desc: Ascendant-astrologique.net
+    code_promo_109:
+        id: 109
+        code: A6T
+        desc: Ascendant-astrologique.net
+    code_promo_110:
+        id: 110
+        code: A5T
+        desc: Ascendant-astrologique.net
+    code_promo_111:
+        id: 111
+        code: A4T
+        desc: Ascendant-astrologique.net
+    code_promo_112:
+        id: 112
+        code: A3T
+        desc: Ascendant-astrologique.net
+    code_promo_113:
+        id: 113
+        code: A2T
+        desc: Ascendant-astrologique.net
+    code_promo_114:
+        id: 114
+        code: A8P2
+        desc: Ascendant-astrologique.net
+    code_promo_115:
+        id: 115
+        code: A7P2
+        desc: Ascendant-astrologique.net
+    code_promo_116:
+        id: 116
+        code: A6P2
+        desc: Ascendant-astrologique.net
+    code_promo_117:
+        id: 117
+        code: A5P2
+        desc: Ascendant-astrologique.net
+    code_promo_118:
+        id: 118
+        code: A4P2
+        desc: Ascendant-astrologique.net
+    code_promo_119:
+        id: 119
+        code: A3P2
+        desc: Ascendant-astrologique.net
+    code_promo_120:
+        id: 120
+        code: A2P2
+        desc: Ascendant-astrologique.net
+    code_promo_121:
+        id: 121
+        code: A8
+        desc: Ascendant-astrologique.net
+    code_promo_122:
+        id: 122
+        code: A7
+        desc: Ascendant-astrologique.net
+    code_promo_123:
+        id: 123
+        code: A6
+        desc: Ascendant-astrologique.net
+    code_promo_124:
+        id: 124
+        code: A5
+        desc: Ascendant-astrologique.net
+    code_promo_125:
+        id: 125
+        code: A4
+        desc: Ascendant-astrologique.net
+    code_promo_126:
+        id: 126
+        code: A3
+        desc: Ascendant-astrologique.net
+    code_promo_127:
+        id: 127
+        code: A2
+        desc: Ascendant-astrologique.net

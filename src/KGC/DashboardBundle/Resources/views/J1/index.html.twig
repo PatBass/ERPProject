@@ -1,0 +1,92 @@
+{# src/KGC/DashboardBundle/Resources/views/J1/index.html.twig #}
+
+{% extends "KGCDashboardBundle::layout.html.twig" %}
+
+{% block ariane %}
+    {% set fil = ['Service J-1'] %}
+    {{ parent() }}
+{% endblock %}
+
+{% block page_header %}
+    {% set misc %}
+        <form class="form-inline data-form-ajax" id="j1_period_form">
+            <h5>Période :</h5>
+            {{ form_widget(form.period.begin) }}
+            {{ form_widget(form.period.end) }}
+            <button type="submit" class="btn btn-success btn-xs">
+                <i class="icon-arrow-right"></i> Appliquer
+            </button>
+        </form>
+    {% endset %}
+    {% set infos = { 'titre':'Recyclage des RDV Annulés','desc':'','misc': misc} %}
+    {% set reload = { 'url':'#rdv_j1_nrp, #rdv_j1_cb, #rdv_j1_nvp, #rdv_j1_min' } %}
+    {{ parent()}}
+{% endblock %}
+
+{% block dashboard_body %}
+    <div class="row">
+        <div class="col-md-6">
+            <form method="post" action="{{ path('kgc_j1_canceled_widget', {type: 'nrp'}) }}" class="ajax_load" data-ajax-form-from="j1_period_form" id="rdv_j1_nrp"></form>
+            {% if not is_granted('ROLE_J_1') %}
+                <div class="btn-group btn-block">
+                    <button data-toggle="dropdown" class="btn btn-inverse dropdown-toggle btn-block {{ compact|default(false) ? 'btn-sm'}}">
+                        Exporter
+                        <span class="icon-caret-down icon-on-right"></span>
+                    </button>
+                    <ul class="dropdown-menu dropdown-inverse">
+                        <li><a role="button" href="{{ path('kgc_j1_canceled_export', {type: 'nrp', format: 'rdv-crm'}) }}" target="_blank">CRM</a></li>
+                        <li><a  role="button" href="{{ path('kgc_j1_canceled_export', {type: 'nrp', format: 'rdv-global'}) }}" target="_blank">Fiches</a></li>
+                    </ul>
+                </div>
+            {% endif %}
+        </div>
+        <div class="col-md-6">
+            <form method="post" action="{{ path('kgc_j1_canceled_widget', {type: 'cb'}) }}" class="ajax_load" data-ajax-form-from="j1_period_form" id="rdv_j1_cb"></form>
+            {% if not is_granted('ROLE_J_1') %}
+                <div class="btn-group btn-block">
+                    <button data-toggle="dropdown" class="btn btn-inverse dropdown-toggle btn-block {{ compact|default(false) ? 'btn-sm'}}">
+                        Exporter
+                        <span class="icon-caret-down icon-on-right"></span>
+                    </button>
+                    <ul class="dropdown-menu dropdown-inverse">
+                        <li><a role="button" href="{{ path('kgc_j1_canceled_export', {type: 'cb', format: 'rdv-crm'}) }}" target="_blank">CRM</a></li>
+                        <li><a  role="button" href="{{ path('kgc_j1_canceled_export', {type: 'cb', format: 'rdv-global'}) }}" target="_blank">Fiches</a></li>
+                    </ul>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            <form method="post" action="{{ path('kgc_j1_canceled_widget', {type: 'nvp'}) }}" class="ajax_load" data-ajax-form-from="j1_period_form" id="rdv_j1_nvp"></form>
+            {% if not is_granted('ROLE_J_1') %}
+                <div class="btn-group btn-block">
+                    <button data-toggle="dropdown" class="btn btn-inverse dropdown-toggle btn-block {{ compact|default(false) ? 'btn-sm'}}">
+                        Exporter
+                        <span class="icon-caret-down icon-on-right"></span>
+                    </button>
+                    <ul class="dropdown-menu dropdown-inverse">
+                        <li><a role="button" href="{{ path('kgc_j1_canceled_export', {type: 'nvp', format: 'rdv-crm'}) }}" target="_blank">CRM</a></li>
+                        <li><a  role="button" href="{{ path('kgc_j1_canceled_export', {type: 'nvp', format: 'rdv-global'}) }}" target="_blank">Fiches</a></li>
+                    </ul>
+                </div>
+            {% endif %}
+        </div>
+        <div class="col-md-6">
+            <form method="post" action="{{ path('kgc_j1_min_widget') }}" class="ajax_load" data-ajax-form-from="j1_period_form" id="rdv_j1_min"></form>
+            {% if not is_granted('ROLE_J_1') %}
+                <div class="btn-group btn-block">
+                    <button data-toggle="dropdown" class="btn btn-inverse dropdown-toggle btn-block {{ compact|default(false) ? 'btn-sm'}}">
+                        Exporter
+                        <span class="icon-caret-down icon-on-right"></span>
+                    </button>
+                    <ul class="dropdown-menu dropdown-inverse">
+                        <li><a role="button" href="{{ path('kgc_j1_min_export', {format: 'rdv-crm'}) }}" target="_blank">CRM</a></li>
+                        <li><a  role="button" href="{{ path('kgc_j1_min_export', {format: 'rdv-global'}) }}" target="_blank">Fiches</a></li>
+                    </ul>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

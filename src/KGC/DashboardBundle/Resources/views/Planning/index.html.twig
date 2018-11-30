@@ -1,0 +1,42 @@
+{# src/KGC/DashboardBundle/Resources/views/Planning/index.html.twig #}
+
+{% extends "KGCDashboardBundle::layout.html.twig" %}
+
+{% block ariane %}
+    {% set fil = ['Planning'] %}
+    {{ parent() }}
+{% endblock %}
+
+{% block page_header %}
+    <div class="page-header">
+        <div class="pull-right">
+            <a class="close" href="" title="Recharger">
+                <i class="icon-refresh"></i>
+            </a>
+        </div>
+        <h1>
+            Planning du {{ date|date('d/m/Y')}}
+            <small>
+                <i class="icon-double-angle-right"></i>
+                <form action="" method="post" class="form-inline">
+                    Changer la date :
+                    {{ form_widget(form.date) }}
+                    {{ form_widget(form._token) }}
+                    <button type="submit" class="btn btn-success btn-xs">
+                        <i class="icon-arrow-right"></i> Appliquer
+                    </button>
+                </form>
+            </small>
+        </h1>
+    </div>
+{% endblock %}
+
+{% block dashboard_body %}
+<div class="row">
+    {{ render(controller('KGCRdvBundle:Planning:fullview',{'date':date})) }}
+</div>
+{% endblock %}
+
+{% block javascripts %}
+
+{% endblock %}

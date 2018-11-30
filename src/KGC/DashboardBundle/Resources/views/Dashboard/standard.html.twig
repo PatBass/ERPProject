@@ -1,0 +1,59 @@
+{# src/KGC/DashboardBundle/Ressources/views/Dashboard/standard.html.twig #}
+
+{% extends "KGCDashboardBundle::layout.html.twig" %}
+
+{% block ariane %}
+    {% set fil = ['Tableau de bord'] %}
+    {{ parent() }}
+{% endblock %}
+
+{% block page_header %}
+    {% set reload = {
+    'url':'#rdv_planning,#rdv_securisation,#rdv_encaissements,#rdv_effectues,#rdv_annulees,#rdv_cloturees, #standard_users, #standard_stats, #standard_support, #standard_phoning'
+    } %}
+    {{ parent() }}
+{% endblock %}
+
+{% block dashboard_body %}
+    <div class="row" style="min-height: 200px;">
+        <div class="col-lg-4">
+            <form method="post" action="{{ path('kgc_planning_widget') }}" class="ajax_load" id="rdv_planning"></form>
+        </div>
+        <div class="col-lg-8">
+            <div class="row">
+                <div class="col-lg-12">
+                    <form method="post" action="{{ path('kgc_elastic_search_client_widget', {'request_view': 'client.widget'}) }}" class="form-search form-search-ajax ajax_load" id="elastic_search_client"></form>
+                    <div class="space-6"></div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-6">
+                    <form method="post" action="{{ path('kgc_secu_list') }}" class="ajax_load" id="rdv_securisation"></form>
+                    <div class="space-6"></div>
+                    <form method="post" action="{{ path('kgc_encaissements_list') }}" class="ajax_load" id="rdv_encaissements"></form>
+                    <div class="space-6"></div>
+                    <form method="post" action="{{ path('kgc_rdv_effectues_widget') }}" class="ajax_load" id="rdv_effectues"></form>
+                    <div class="space-6"></div>
+                    <form method="post" action="{{ path('kgc_rdv_annulees_widget') }}" class="ajax_load" id="rdv_annulees"></form>
+                    <div class="space-6"></div>
+                </div>
+                <div class="col-lg-6">
+                    <a class="btn btn-block btn-lg btn-success modal-load" href="{{ path('kgc_rdv_add',{'vue':'modal'}) }}" role="button" title="Ajouter une consultation">
+                        <i class="icon-plus"></i>
+                        Nouvelle consultation
+                    </a>
+                    <div class="space-6"></div>
+                    <form method="post" action="{{ path('kgc_stat_standard_users') }}" class="ajax_load" id="standard_users"></form>
+                    <div class="space-6"></div>
+                    <form method="post" action="{{ path('kgc_stat_standard_stats') }}" class="ajax_load" id="standard_stats"></form>
+                    <div class="space-6"></div>
+                    <form method="post" action="{{ path('kgc_stat_standard_support') }}" class="ajax_load" id="standard_support"></form>
+                    <div class="space-6"></div>
+                    <form method="post" action="{{ path('kgc_stat_standard_phoning') }}" class="ajax_load" id="standard_phoning"></form>
+                    <div class="space-6"></div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+{% endblock %}

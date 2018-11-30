@@ -1,0 +1,50 @@
+
+{% extends not app.request.isXmlHttpRequest() ? '::layout.html.twig' : '::emptylayout.html.twig' %}
+
+{% block body %}
+  <div class="widget-box">
+    <div class="widget-header">
+      <h5>
+        <a href="#" data-action="collapse">
+          <i class="icon-chevron-up"></i>
+          Légende des Bonus<b></b>
+        </a>
+      </h5>
+      <div class="widget-toolbar">
+        <a class="ajax_reload" href="#phoniste_legend" title="Recharger">
+          <i class="icon-refresh"></i>
+        </a>
+      </div>
+    </div>
+    <div class="widget-body stat-phoniste-legend">
+      <div class="widget-main">
+        <table>
+          <thead>
+            <tr>
+              <th>RDV Pris</th>
+              <th>Prime Bonus</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><span class="badge badge-purple">{{ params.firstThreshold }}</span></td>
+              <td>{{ params.bonusFirstThreshold }} &euro;</td>
+            </tr>
+            <tr>
+              <td><span class="badge badge-warning">{{ params.secondThreshold }}</span></td>
+              <td>{{ params.bonusSecondThreshold }} &euro;</td>
+            </tr>
+            <tr>
+              <td><span class="badge badge-primary">{{ params.thirdThreshold }}</span></td>
+              <td>{{ params.bonusThirdThreshold }} &euro;</td>
+            </tr>
+            <tr>
+                <td><span class="badge badge-success">{{ params.fourthThreshold }}</span></td>
+                <td>{{ params.bonusFourthThreshold }} &euro;</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+{% endblock body %}

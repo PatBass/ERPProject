@@ -1,0 +1,28 @@
+<table class="table table-striped valign-middle">
+    <thead>
+        <tr>
+            <th class="center">Date</th>
+            <th class="center">ID astro</th>
+            <th class="center">Site</th>
+            <th class="center">Source</th>
+            <th class="center">URL</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tboby>
+        {% for elem in list %}
+            <tr>
+                <td class="center">{{ elem.createdAt|date("d/m/Y") }}</td>
+                <td class="center">{{ elem.myastroId }}</td>
+                <td class="center">{{ elem.website?elem.website.libelle:elem.myastroWebsite }}</td>
+                <td class="center">{{ elem.sourceConsult?elem.sourceConsult.label:elem.myastroSource }}</td>
+                <td class="center">{{ elem.formurl?elem.formurl.label:elem.myastroUrl }}</td>
+                <td class="center">
+                    <a href="{{ path('kgc_landinguser_fiche',{'id':elem.id}) }}" class="btn btn-xs btn-grey tooltip-grey modal-load" role="button" title="" data-rel="tooltip" data-placement="right" data-original-title="Ouvrir la fiche">
+                        <i class="icon-file"></i>
+                    </a>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+</table>

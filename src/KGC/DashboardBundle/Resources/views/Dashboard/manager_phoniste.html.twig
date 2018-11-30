@@ -1,0 +1,24 @@
+{# src/KGC/DashboardBundle/Ressources/views/Dashboard/phoniste.html.twig #}
+
+{% extends "KGCDashboardBundle::layout.html.twig" %}
+
+{% block ariane %}
+    {% set fil = ['Tableau de bord'] %}
+    {{ parent() }}
+{% endblock %}
+
+{% block page_header %}
+    {% set reload = { 'url':'#rdv-add, #phoniste_legend, #phoniste_objective, #phoniste_bonuses' } %}
+    {{ parent()}}
+{% endblock %}
+
+{% block dashboard_body %}
+    <div class="row">
+        <div class="col-lg-8">
+            <form method="post" action="{{ path('kgc_rdv_add') }}" class="ajax_load form-horizontal" data-refresh="#phoniste_objective,#phoniste_bonuses" id="rdv-add"></form>
+        </div>
+        <div class="col-lg-4">
+            <form method="post" action="{{ path('kgc_stat_standard_users') }}" class="ajax_load" id="standard_users"></form>
+        </div>
+    </div>
+{% endblock %}

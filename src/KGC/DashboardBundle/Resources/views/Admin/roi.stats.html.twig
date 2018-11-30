@@ -1,0 +1,18 @@
+{% extends "KGCDashboardBundle::layout.html.twig" %}
+
+{% block ariane %}
+    {% set fil = ['Administration'] %}
+    {{ parent() }}
+{% endblock %}
+
+{% block page_header %}
+    {% set infos = { 'titre':'Statistiques ROI','desc':''} %}
+    {% set reload = { 'url':'#admin_stats_ca' } %}
+    {{ parent()}}
+{% endblock %}
+
+{% block dashboard_body %}
+    <div class="well center text-muted">
+        <h1><i class="icon-wrench"></i> En construction</h1>
+    </div>
+{% endblock %}

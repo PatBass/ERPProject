@@ -1,0 +1,121 @@
+{# src/KGC/RdvBundle/Resources/views/Encaissement/listeFicheTab.html.twig #}
+
+{% extends not app.request.isXmlHttpRequest() ? '::layout.html.twig' : '::emptylayout.html.twig' %}
+
+{% import '::macros.html.twig' as common_macros %}
+
+{% block body %}
+    {% import 'KGCRdvBundle::interfacedata.html.twig' as interface %}
+
+    {% set tabClassementId = 'tab-classement-'~ idclassement ~ (app.request.query.get('unpaid') == 'old' ? '-old') %}
+    <div class="row">
+        <div class="col-lg-7 form-inline">
+            <h5>Période :</h5>
+            {{ form_widget(form.period.begin) }}
+            {{ form_widget(form.period.end) }}
+            {{ form_widget(form.period_field, {'attr': {'style': 'width: auto;'}}) }}
+            {{ form_widget(form._token) }}
+            <button type="submit" class="btn btn-success btn-xs">
+                <i class="icon-arrow-right"></i> Appliquer
+            </button>
+            <button type="button" class="btn btn-warning btn-xs js-reset-empty" data-reset-targets="#form_period_begin,#form_period_end">
+                <i class="icon-ban-circle"></i> Réinitialiser
+            </button>
+
+            {% set request_args_export = app.request.get('_route_params') | merge(app.request.query.all) | merge({ 'export': 1}) %}
+            <a title="Export Excel (.csv)" href="{{ path('kgc_fna_tab_list', request_args_export) }}"  class="btn btn-inverse btn-xs" >
+                <i class="icon-download-alt"></i> Exporter
+            </a><br />
+            <h5>Étiquettes :</h5>
+            {{ form_widget(form.tags, {'attr': { 'class':'inline-choices'} }) }}
+        </div>
+        <div class="col-lg-5">
+            {{ common_macros.pagination_select(paginator, {
+                'url' : 'kgc_fna_tab_list',
+                'urlparams' : {'idclassement':idclassement}|merge(app.request.query.all),
+                'target' : tabClassementId
+            }) }}
+        </div>
+    </div>
+    <div class="space-6"></div>
+    <div class="table-responsive">
+        <table id="datatable-impaye{{ idclassement }}" class="table table-striped table-bordered table-hover valign-middle dataTable" width="100%" data-order="[[ {{ orderColumn }}, &quot;desc&quot; ]]" data-paging="false">
+            <thead>
+                <tr class="align-center">
+                    <th data-color="blue"><span>Client</span></th>
+                    <th data-color="red" style="width: 102px"><span>Date consultation</span></th>
+                    <th data-type="moment-DD/MM/YYYY" style="width: 102px"><span>Dernier<br>encaissement</span></th>
+                    <th data-type="moment-DD/MM/YYYY" style="width: 102px"><span>Prochain<br>encaissement</span></th>
+                    <th data-orderable="false" style="width: 118px"></th>
+                    <th><span>Etiquettes</span></th>
+                    <th><span>Dernière action</span></th>
+                    <th><span>Montant de la consultation</span></th>
+                    <th><span>Montant encaissé à ce jour</span></th>
+                    <th><span>Montant restant dû </span></th>
+                    <th><span>Etat</span></th>
+                    <th data-orderable="false"></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for rdv in consults %}
+                    <tr>
+                        <td><b>{{ rdv.client.nom }}</b> {{ rdv.client.prenom }}</td>
+                        <td>{{ rdv.dateConsultation|date('d/m/Y H:i') }}</td>
+                        <td>
+                            {% set lastEncaissement = rdv.lastEncaissement %}
+                            {{ lastEncaissement is not null ? lastEncaissement.date|date('d/m/Y') : 'Aucun' }}
+                        </td>
+                        <td>
+                            {% set nextEncaissement = rdv.nextEncaissement %}
+                            {{ nextEncaissement is not null ? nextEncaissement.date|date('d/m/Y') : 'Aucun' }}
+                        </td>
+                        <td style="white-space: nowrap; text-align: center">{{ interface.stateline(rdv) }}</td>
+                        <td>
+                            {% for etiquette in rdv.etiquettes %}
+                            <span class="label arrowed tag"><i class="icon-tag"></i> {{ etiquette.libelle }}</span>&nbsp;
+                            {% endfor %}
+                        </td>
+                        <td>{{ rdv.historique[0].date|date('d/m/Y') }}</td>
+                        <td>{{ rdv.getMontantTotal() }} €</td>
+                        <td>{{ rdv.getMontantEncaisse() }} € <strong>({{ rdv.getPercentPaid() }} %)</strong></td>
+                        <td>{{ rdv.getRestantDu() }} €</td>
+                        <td>
+                            <select data-id="{{ rdv.id }}" id="stateOf{{ rdv.id }}" name="rdv[{{ rdv.id }}][state]" class="js-state-rdv-select form-control changeState" value="{{ rdv.state?rdv.state.id:'' }}" originally-disabled="1">
+                                <option value="">...</option>
+                                {% for RdvState in RdvStates %}
+                                    <option value="{{ RdvState.id }}" {% if rdv.state and RdvState.id == rdv.state.id  %} selected="selected" {% endif %} data-has-calendar="{{ RdvState.hasCalendarType }}">
+                                        {{ RdvState.name }}
+                                    </option>
+                                {% endfor %}
+                            </select>
+                            <span class="dateSpan" data-id="{{ rdv.id }}">
+                                {% if rdv.state and rdv.state.hasCalendarType == 1 %}
+                                    <input type="text" id="dateStateOf{{ rdv.id }}" value="{{ rdv.dateState?rdv.dateState|date("d/m/Y H:i"):"" }}" name="rdv[{{ rdv.id }}][dateState]" class="date-picker-hours form-control {{  rdv.state and rdv.state.hasCalendarType?'':'hide' }}">
+                                {% endif %}
+                            </span>
+                        </td>
+                        <td>
+                            <a href="{{ path('kgc_rdv_fiche', {'id':rdv.id}) }}" class="btn btn-xs btn-primary tooltip-primary modal-load" role="button" title="Ouvrir la fiche" data-rel="tooltip" data-placement="right">
+                                <i class="icon-file bigger-120"></i>
+                            </a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <div class="row">
+            <div class="col-lg-12">
+                {{ common_macros.pagination_select(paginator, {
+                    'url' : 'kgc_fna_tab_list',
+                    'urlparams' : {'idclassement':idclassement}|merge(app.request.query.all),
+                    'target' : tabClassementId
+                }) }}
+            </div>
+            <div class="col-lg-12">
+                <div class="align-center">
+                    <input type="submit" class="btn btn-success" name="Valider">
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock body %}

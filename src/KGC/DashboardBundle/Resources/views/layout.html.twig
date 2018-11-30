@@ -1,0 +1,36 @@
+{# src/KGC/DashboardBundle/Ressources/views/layout.html.twig #}
+
+{% extends "::layout.html.twig" %}
+
+{% block title %}
+    {{ parent() }} - Dashboard
+{% endblock %}
+
+{% block contenu %}
+    {% block page_header %}
+        {% set infos = infos|default({'titre':'Tableau de bord','desc': app.user.username }) %}
+    <div class="page-header">
+        {% if reload is defined %}
+        <div class="pull-right">
+            <a class="{{ reload.no_ajax|default(false) ? '' : 'ajax_reload' }} close" href="{{ reload.url|default('') }}" title="Recharger">
+                <i class="icon-refresh"></i>
+            </a>
+        </div>
+        {% endif %}
+        <h1>
+            {{ infos.titre|raw }}
+            <small>
+                <i class="icon-double-angle-right"></i>
+                {{ infos.desc|raw }}
+            </small>
+            {{ infos.misc|default('')|raw }}
+        </h1>
+    </div>
+    {% endblock %}
+
+    <div class="row">
+        <div class="col-xs-12">
+            {% block dashboard_body %}{% endblock %}
+        </div>
+    </div>
+{% endblock %}

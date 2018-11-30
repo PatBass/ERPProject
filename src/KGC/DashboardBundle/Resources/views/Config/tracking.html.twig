@@ -1,0 +1,31 @@
+{# src/KGC/DashboardBundle/Resources/views/Config/tracking.html.twig #}
+
+{% extends "KGCDashboardBundle::layout.html.twig" %}
+
+{% block ariane %}
+    {% set fil = ['Réglages'] %}
+    {{ parent() }}
+{% endblock %}
+
+{% block page_header %}
+    {% set infos = { 'titre':'Réglages','desc':'Données de tracking'} %}
+    {% set reload = { 'url':'#config_sources,#config_sources_ved,#config_formurl' } %}
+    {{ parent()}}
+{% endblock %}
+
+{% block dashboard_body %}
+    <div class="row">
+        <div class="col-md-7">
+            <form method="post" action="{{ path('kgc_config_source_list') }}" class="ajax_load" id="config_sources"></form>
+        </div>
+        <div class="col-md-5">
+            <form method="post" action="{{ path('kgc_config_formurl_list') }}" class="ajax_load" id="config_formurl"></form>
+        </div>
+    </div>
+    <div class="space-6"></div>
+    <div class="row">
+        <div class="col-md-3">
+            <form method="post" action="{{ path('kgc_config_source_ved_list') }}" class="ajax_load" id="config_sources_ved"></form>
+        </div>
+    </div>
+{% endblock %}

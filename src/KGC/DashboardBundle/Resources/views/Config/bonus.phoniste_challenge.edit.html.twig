@@ -1,0 +1,54 @@
+{# src/KGC/DashboardBundle/Resources/views/Config/bonus.phoniste_challenge.edit.html.twig #}
+
+{% extends not app.request.isXmlHttpRequest() ? '::layout.html.twig' : '::emptylayout.html.twig' %}
+
+{% block body %}
+    {% embed '::modallayout.html.twig' %}
+        {% block modal_header %}
+            {% set link = {
+                'txt' : (upd ? 'Édition' : 'Ajout') ~ ' de prime Challenge pour Phoniste',
+                'url' : path('kgc_config_phoniste_bonus_challenge_edit', {'id':o.id}),
+                'icon' : upd ? 'pencil' : 'plus'
+            } %}
+            {{ parent() }}
+        {% endblock %}
+
+        {% block modal_content %}
+            <form id="tpaiement_config_modal" method="post" action="{{ path('kgc_config_phoniste_bonus_challenge_edit', {'id': o.id}) }}" {{ form_enctype(form) }} data-close="1" data-refresh="#config_phoniste_bonus_challenge" class="ajax_modal_form form-horizontal">
+                {{ parent() }}
+                {{ form_widget(form._token) }}
+                {{ form_widget(form.code) }}
+            </form>
+        {% endblock modal_content %}
+
+        {% block modal_body %}
+            <div class="row">
+                <div class="col-md-4">
+                    <strong>Mois de :</strong><br />
+                    {{ form_widget(form.date) }}
+                </div>
+                <div class="col-md-4">
+                    <strong>Phoniste :</strong><br />
+                    {{ form_widget(form.user) }}
+                </div>
+                <div class="col-md-4">
+                    <strong>Montant :</strong><br />
+                    {{ form_widget(form.amount) }}
+                </div>
+            </div>
+        {% endblock modal_body %}
+
+        {% block modal_footer %}
+            <div class="modal-footer">
+                <div class="pull-left">
+                    <button type="button" class="btn btn-sm btn-danger" data-dismiss="modal"><i class="icon-remove"></i> Fermer</button>
+                </div>
+                <div class="pull-right">
+                    <button type="submit" class="btn btn-success btn-block btn-sm js-wysiwyg-btn">
+                        <i class="icon-arrow-right"></i> Enregistrer
+                    </button>
+                </div>
+            </div>
+        {% endblock modal_footer %}
+    {% endembed %}
+{% endblock body %}

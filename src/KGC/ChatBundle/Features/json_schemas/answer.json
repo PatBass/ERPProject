@@ -1,0 +1,25 @@
+{
+    "id": "answer.json",
+    "title": "Answer schema",
+    "type": "object",
+    "properties": {
+        "status": {
+            "type": "string"
+        },
+        "message": {
+            "type": "string"
+        },
+        "is_accepting": {
+            "type": "boolean"
+        },
+        "room": {
+            "type": "object",
+            "$ref": "room.json"
+        },
+        "new_psychic": {
+            "type": ["object", null],
+            "$ref": "user.json"
+        }
+    },
+    "required": ["status", "message", "is_accepting", "room", "new_psychic"]
+}
